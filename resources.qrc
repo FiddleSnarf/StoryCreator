@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/story_node_icons">
+        <file>Resources/story_node_icons/new_icon.png</file>
+    </qresource>
+</RCC>
