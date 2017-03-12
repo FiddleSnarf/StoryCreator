@@ -21,6 +21,7 @@ public:
 private:
     void initialize();
     void initSelectNodes(const StoryCommon::SelectNodeList& nodeList);
+    void initStoryScene();
 
 private:
     Ui::StoryCreator* ui;

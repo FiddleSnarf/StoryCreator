@@ -1,5 +1,6 @@
 #include "StoryCreator.hpp"
 #include "ui_StoryCreator.h"
+#include <QGraphicsItem>
 
 StoryCreator::StoryCreator(QWidget* parent) :
     QMainWindow(parent),
@@ -16,8 +17,6 @@ StoryCreator::~StoryCreator()
 
 void StoryCreator::initialize()
 {
-    ui->storyView->setScene(&m_storyManager.getStoryScene());
-
     // TODO временно для отладки (тут должна быть загрузка типов нодов из json/xml)
     StoryCommon::NodeTemplate node;
     node.toolTip = "lulz";
@@ -26,7 +25,14 @@ void StoryCreator::initialize()
     StoryCommon::SelectNodeList nodeList;
     nodeList << node << node << node;
     // ==========================
+    initStoryScene();
     initSelectNodes(nodeList);
+}
+
+void StoryCreator::initStoryScene()
+{
+    StoryScene& scene = m_storyManager.getStoryScene();
+    ui->storyView->setScene(&scene);
 }
 
 void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)

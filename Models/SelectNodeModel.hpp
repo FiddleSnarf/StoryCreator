@@ -2,8 +2,6 @@
 #define SELECTNODEMODEL_H
 
 #include <QAbstractListModel>
-#include <QMap>
-#include <QPixmap>
 #include "Common/StoryCommon.hpp"
 
 class QMimeData;

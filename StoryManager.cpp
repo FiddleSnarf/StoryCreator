@@ -17,15 +17,6 @@ SelectNodeModel& StoryManager::getStoryNodeSelectModel()
 
 void StoryManager::setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes)
 {
+    m_storyNodeSelectModel.clear();
     m_storyNodeSelectModel.addTemplateNodesList(listTNodes);
-    /*m_storyNodeSelectModel.clear();
-    m_storyNodeSelectModel.setRowCount(listTNodes.size());
-    m_storyNodeSelectModel.setColumnCount(1);
-
-    for (int i = 0; i < m_storyNodeSelectModel.rowCount() ; ++i)
-    {
-        QModelIndex idx = m_storyNodeSelectModel.index(i, 0);
-        m_storyNodeSelectModel.setData(idx, listTNodes[i].toolTip, Qt::ToolTipRole);
-        m_storyNodeSelectModel.setData(idx, listTNodes[i].icon, Qt::DecorationRole);
-    }*/
 }

@@ -53,7 +53,7 @@ QStringList SelectNodeModel::mimeTypes() const
 
 Qt::DropActions SelectNodeModel::supportedDropActions() const
 {
-    return Qt::IgnoreAction;
+    return Qt::CopyAction;
 }
 
 Qt::ItemFlags SelectNodeModel::flags(const QModelIndex &index) const
@@ -75,9 +75,9 @@ int SelectNodeModel::rowCount(const QModelIndex &parent) const
 
 void SelectNodeModel::clear()
 {
-    beginRemoveRows(QModelIndex(), 0, m_nodesTemplates.size() - 1);
+    //beginRemoveRows(QModelIndex(), 0, m_nodesTemplates.size() - 1);
     m_nodesTemplates.clear();
-    endRemoveRows();
+    //endRemoveRows();
 }
 
 void SelectNodeModel::addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate)

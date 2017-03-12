@@ -77,7 +77,11 @@
          <number>0</number>
         </property>
         <item row="0" column="0">
-         <widget class="StoryView" name="storyView"/>
+         <widget class="StoryView" name="storyView">
+          <property name="dragMode">
+           <enum>QGraphicsView::NoDrag</enum>
+          </property>
+         </widget>
         </item>
        </layout>
       </widget>
@@ -103,7 +107,7 @@
        <bool>false</bool>
       </property>
       <property name="dragDropMode">
-       <enum>QAbstractItemView::DragOnly</enum>
+       <enum>QAbstractItemView::DragDrop</enum>
       </property>
       <property name="selectionMode">
        <enum>QAbstractItemView::SingleSelection</enum>
