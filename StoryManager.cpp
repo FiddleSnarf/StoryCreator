@@ -4,8 +4,8 @@
 
 StoryManager::StoryManager(QObject* parent) :
     QObject(parent),
-    m_storyScene(new StoryScene()),
-    m_storyNodeSelectModel(new SelectNodeModel())
+    m_storyScene(new StoryScene),
+    m_storyNodeSelectModel(new SelectNodeModel)
 {
 
 }

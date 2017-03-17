@@ -3,6 +3,8 @@
 #include <QGraphicsObject>
 #include <QIcon>
 
+#include "Common/NodeInfo.hpp"
+
 class StoryNodeItem : public QGraphicsObject
 {
 public:
@@ -10,15 +12,17 @@ public:
     int type() const override{return Type;}
 
 public:
-    explicit StoryNodeItem(QGraphicsItem* parent = Q_NULLPTR);
+    explicit StoryNodeItem(int nodeID, const QString& typeNode, QGraphicsItem* parent = Q_NULLPTR);
     ~StoryNodeItem();
 
-    void setID(const int& id);
     void setIcon(const QIcon& icon);
-    void setType(const QString& type);
+
+    void setEntryPointFlag(bool state);
     void setTitle(const QString& title);
     void setText(const QString& text);
-    void setEntryPointFlag(bool state);
+    void setImageUrl(const QUrl& imageUrl);
+
+    StoryCommon::NodeInfo& nodeInfo();
 
 private:
     QRectF boundingRect() const override;
@@ -27,11 +31,7 @@ private:
 private:
     QRectF m_boundingRect;
     QPen m_pen;
-    bool m_isEntryPoint;
-
-    int m_nodeID;
     QIcon m_icon;
-    QString m_typeNode;
-    QString m_title;
-    QString m_text;
+
+    StoryCommon::NodeInfo m_nodeInfo;
 };

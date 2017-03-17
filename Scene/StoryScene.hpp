@@ -7,6 +7,10 @@ class StoryNodeItem;
 
 class StoryScene : public QGraphicsScene
 {
+private:
+    static const int NODE_Z_DEPTH = 2;
+    static const int LINK_Z_DEPTH = 1;
+
 public:
 	explicit StoryScene(QObject* parent = Q_NULLPTR);
 	~StoryScene();
@@ -26,7 +30,7 @@ protected:
 
 private:
     void addStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos);
+    int getFreeID() const;
 
 private:
-    int m_idCouter;
 };

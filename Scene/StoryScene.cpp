@@ -9,8 +9,7 @@
 //===================================== public ==========================================
 
 StoryScene::StoryScene(QObject* parent) :
-    QGraphicsScene(parent),
-    m_idCouter(0)
+    QGraphicsScene(parent)
 {
     /* Это конечно не круто, но ничего лучше не придумал
      * Эта точка выступает какбе якорем для правильного
@@ -49,7 +48,6 @@ QList<StoryNodeItem*> StoryScene::getStoryNodeList() const
 void StoryScene::clearScene()
 {
     clear();
-    m_idCouter = 0;
 }
 
 //=======================================================================================
@@ -98,17 +96,15 @@ void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 
 void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos)
 {
-    StoryNodeItem* node = new StoryNodeItem();
+    StoryNodeItem* node = new StoryNodeItem(getFreeID(), nodeType);
     node->setFlag(QGraphicsItem::ItemIsMovable, true);
-    node->setVisible(true);
-    node->setID(m_idCouter++);
+    //node->setVisible(true);
     node->setIcon(icon);
-    node->setType(nodeType);
     node->setPos(pos);
-    node->setZValue(-1);
+    node->setZValue(NODE_Z_DEPTH);
 
     // для отладки
-    node->setTitle("Загробная жизнь еще никому не повредила.");
+    node->setTitle("Петуханские бои.");
     node->setText("Собрались раз семеро швабов вместе, один из них был господин \n"
                   "Шульц, другой Яккли, третий Марли, четвертый Йергли, пятый Михаль,\n"
                   " шестой Ганс, а седьмой был Вейтли; и все семеро порешили весь свет \n"
@@ -120,6 +116,11 @@ void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const 
     //============
 
     addItem(node);
+}
+
+int StoryScene::getFreeID() const
+{
+    return 0;
 }
 
 //=======================================================================================
