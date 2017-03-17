@@ -1,12 +1,14 @@
-#ifndef STORYTYPES_H
-#define STORYTYPES_H
+#pragma once
 
 #include <QList>
 #include <QString>
 #include <QIcon>
+#include <QRectF>
 
 namespace StoryCommon
 {
+
+const QString NODE_MIME_TYPE = "story/node-template";
 
 struct NodeTemplate
 {
@@ -16,8 +18,4 @@ struct NodeTemplate
 };
 
 typedef QList<NodeTemplate> SelectNodeList;
-
-
 }
-
-#endif // STORYTYPES_H

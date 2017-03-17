@@ -1,7 +1,14 @@
 #include "SelectNodeModel.hpp"
 #include <QMimeData>
 
+//==================================== public ===========================================
+
 SelectNodeModel::SelectNodeModel(QObject* parent) : QAbstractListModel(parent)
+{
+
+}
+
+SelectNodeModel::~SelectNodeModel()
 {
 
 }
@@ -40,14 +47,14 @@ QMimeData* SelectNodeModel::mimeData(const QModelIndexList& indexes) const
     QString nodeType = data(idx, Qt::UserRole).toString();
     stream << nodeType << icon;
 
-    mimeData->setData("story/node-template", encodedData);
+    mimeData->setData(StoryCommon::NODE_MIME_TYPE, encodedData);
     return mimeData;
 }
 
 QStringList SelectNodeModel::mimeTypes() const
 {
     QStringList types;
-    types << "story/node-template";
+    types << StoryCommon::NODE_MIME_TYPE;
     return types;
 }
 
@@ -92,7 +99,13 @@ void SelectNodeModel::addTemplateNodesList(const StoryCommon::SelectNodeList& li
     removeDuplicates();
 }
 
+//=======================================================================================
+
+//=================================== private ===========================================
+
 void SelectNodeModel::removeDuplicates()
 {
     // TODO
 }
+
+//=======================================================================================

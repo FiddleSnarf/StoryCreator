@@ -18,7 +18,6 @@ SOURCES += main.cpp\
     StoryCreator.cpp \
     StoryManager.cpp \
     Views/StoryView.cpp \
-    Widgets/ItemsListWidget.cpp \
     Models/SelectNodeModel.cpp
 
 HEADERS  += \
@@ -27,7 +26,6 @@ HEADERS  += \
     Views/StoryView.hpp \
     StoryCreator.hpp \
     StoryManager.hpp \
-    Widgets/ItemsListWidget.hpp \
     Models/SelectNodeModel.hpp \
     Common/StoryCommon.hpp
 

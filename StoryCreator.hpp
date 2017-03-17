@@ -1,7 +1,8 @@
-#ifndef STORYCREATER_HPP
-#define STORYCREATER_HPP
+#pragma once
 
 #include <QMainWindow>
+#include <QAction>
+#include <QLabel>
 
 #include "StoryManager.hpp"
 
@@ -21,12 +22,21 @@ public:
 private:
     void initialize();
     void initSelectNodes(const StoryCommon::SelectNodeList& nodeList);
-    void initStoryScene();
+    void initStoryView();
+    void initToolBar();
+    void initConnects();
+
+private slots:
+    void slotStorySceneChanged();
+
 
 private:
     Ui::StoryCreator* ui;
 
     StoryManager m_storyManager;
+
+    // toolBar
+    QAction* m_actClear;
+    QLabel* m_nodeCounterView;
 };
 
-#endif // STORYCREATER_HPP

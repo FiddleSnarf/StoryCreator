@@ -1,10 +1,11 @@
-#ifndef STORYMANAGER_H
-#define STORYMANAGER_H
+#pragma once
 
 #include <QObject>
 #include "Models/SelectNodeModel.hpp"
-
 #include "Scene/StoryScene.hpp"
+
+typedef QSharedPointer<SelectNodeModel> SelectNodeModelPtr;
+typedef QSharedPointer<StoryScene> StoryScenePtr;
 
 class StoryManager : public QObject
 {
@@ -12,19 +13,20 @@ class StoryManager : public QObject
 
 public:
     explicit StoryManager(QObject* parent = 0);
+    StoryScene* getStoryScene();
+    SelectNodeModel* getStoryNodeSelectModel();
 
-    StoryScene& getStoryScene();
-    SelectNodeModel& getStoryNodeSelectModel();
-
+    // методы для работы с окном шаблонов нодов
     void setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes);
+
+    // методы для работы с основной сценой
+    int getCountStoryNodes() const;
 
 signals:
 
 public slots:
 
 private:
-    StoryScene m_storyScene;
-    SelectNodeModel m_storyNodeSelectModel;
+    StoryScenePtr m_storyScene;
+    SelectNodeModelPtr m_storyNodeSelectModel;
 };
-
-#endif // STORYMANAGER_H

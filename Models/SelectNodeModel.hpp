@@ -1,5 +1,4 @@
-#ifndef SELECTNODEMODEL_H
-#define SELECTNODEMODEL_H
+#pragma once
 
 #include <QAbstractListModel>
 #include "Common/StoryCommon.hpp"
@@ -12,6 +11,8 @@ class SelectNodeModel : public QAbstractListModel
 
 public:
     explicit SelectNodeModel(QObject* parent = 0);
+    ~SelectNodeModel();
+
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QMimeData* mimeData(const QModelIndexList& indexes) const override;
     QStringList mimeTypes() const override;
@@ -29,5 +30,3 @@ private:
 private:
     StoryCommon::SelectNodeList m_nodesTemplates;
 };
-
-#endif // SELECTNODEMODEL_H
