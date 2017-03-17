@@ -90,8 +90,8 @@ void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
         stream >> nodeType >> icon;
     }
     QPointF p = event->scenePos();
-    p.setX(p.x() - 50);
-    p.setY(p.y() - 50);
+    p.setX(p.x() - StoryNodeItem::DEFAULT_NODE_SIZE.width()/2);
+    p.setY(p.y() - StoryNodeItem::DEFAULT_NODE_SIZE.height()/2);
     addStoryNode(nodeType, icon, p);
 }
 
@@ -131,7 +131,14 @@ int StoryScene::getFreeID() const
     {
         currIDSet.insert(node->getNodeInfo().getNodeID());
     }
-    return *(m_setLimitID - currIDSet).begin();
+    IDSet resultSet = m_setLimitID - currIDSet;
+    if (!resultSet.isEmpty())
+        return *resultSet.begin();
+    else
+    {
+        //TODO Выводить что-нить в лог ошибок
+        return -1;
+    }
 }
 
 //=======================================================================================

@@ -4,10 +4,13 @@
 
 //================================== public =============================================
 
+const QSize StoryNodeItem::DEFAULT_NODE_SIZE(150, 150);
+
 StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem* parent) :
     QGraphicsObject(parent)
-    , m_boundingRect(QRectF(0, 0, 150, 150))
+    , m_boundingRect(QRectF(0, 0, DEFAULT_NODE_SIZE.width(), DEFAULT_NODE_SIZE.height()))
     , m_pen(QPen(QColor("#009966"), 2))
+    , m_penForHead(QPen(QColor("#7308d1"), 3))
     , m_nodeInfo(nodeID, typeNode)
 {
 
@@ -52,7 +55,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     const qreal w = m_boundingRect.width();
     const qreal h = m_boundingRect.height();
 
-    painter->setPen(m_pen);
+    painter->setPen(m_nodeInfo.getEntryPointFlag() ? m_penForHead : m_pen);
     painter->drawRect(QRectF(5, 5, w - 10, h - 10));
 
     // рисуем title и Node ID

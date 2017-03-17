@@ -2,12 +2,14 @@
 
 #include <QGraphicsObject>
 #include <QIcon>
+#include <QSize>
 
 #include "Common/NodeInfo.hpp"
 
 class StoryNodeItem : public QGraphicsObject
 {
 public:
+    static const QSize DEFAULT_NODE_SIZE;
     enum { Type = UserType + 1 };
     int type() const override{return Type;}
 
@@ -26,6 +28,7 @@ private:
 private:
     QRectF m_boundingRect;
     QPen m_pen;
+    QPen m_penForHead;
     QIcon m_icon;
 
     StoryCommon::NodeInfo m_nodeInfo;
