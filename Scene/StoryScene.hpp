@@ -2,14 +2,19 @@
 
 #include <QGraphicsScene>
 #include <QList>
+#include <QSet>
 
 class StoryNodeItem;
+
+typedef QSet<int> IDSet;
 
 class StoryScene : public QGraphicsScene
 {
 private:
     static const int NODE_Z_DEPTH = 2;
     static const int LINK_Z_DEPTH = 1;
+
+    static const int LIMIT_ID = 1000;
 
 public:
 	explicit StoryScene(QObject* parent = Q_NULLPTR);
@@ -33,4 +38,5 @@ private:
     int getFreeID() const;
 
 private:
+    IDSet m_setLimitID;
 };

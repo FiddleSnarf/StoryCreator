@@ -23,27 +23,12 @@ void StoryNodeItem::setIcon(const QIcon& icon)
     m_icon = icon;
 }
 
-void StoryNodeItem::setTitle(const QString& title)
+StoryCommon::NodeInfo& StoryNodeItem::getNodeInfo()
 {
-    m_nodeInfo.setTitle(title);
+    return m_nodeInfo;
 }
 
-void StoryNodeItem::setText(const QString& text)
-{
-    m_nodeInfo.setText(text);
-}
-
-void StoryNodeItem::setEntryPointFlag(bool state)
-{
-    m_nodeInfo.setEntryPointFlag(state);
-}
-
-void StoryNodeItem::setImageUrl(const QUrl& imageUrl)
-{
-    m_nodeInfo.setImageUrl(imageUrl);
-}
-
-StoryCommon::NodeInfo& StoryNodeItem::nodeInfo()
+StoryCommon::NodeInfo StoryNodeItem::getNodeInfo() const
 {
     return m_nodeInfo;
 }
@@ -75,7 +60,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     // TODO сделать нормальное расположение текста на iteme
     const QString formatTitle = (srcTitle.length() > 17) ? srcTitle.left(15) + "..." : srcTitle;
     painter->drawText(QPointF(20, 20), tr("Title: ") + formatTitle);
-    painter->drawText(QPointF(20, h - 20), tr("Node ID: ") + QString::number(m_nodeInfo.getNodeID()));
+    painter->drawText(QPointF(20, h - 15), tr("Node ID: ") + QString::number(m_nodeInfo.getNodeID()));
 
     const qreal pixW = w/3;
     const qreal pixH = h/3;

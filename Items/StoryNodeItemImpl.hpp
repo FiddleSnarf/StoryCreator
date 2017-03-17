@@ -16,13 +16,8 @@ public:
     ~StoryNodeItem();
 
     void setIcon(const QIcon& icon);
-
-    void setEntryPointFlag(bool state);
-    void setTitle(const QString& title);
-    void setText(const QString& text);
-    void setImageUrl(const QUrl& imageUrl);
-
-    StoryCommon::NodeInfo& nodeInfo();
+    StoryCommon::NodeInfo& getNodeInfo();
+    StoryCommon::NodeInfo getNodeInfo() const;
 
 private:
     QRectF boundingRect() const override;

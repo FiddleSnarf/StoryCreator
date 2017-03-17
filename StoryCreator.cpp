@@ -59,7 +59,9 @@ void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
 }
 
 void StoryCreator::initToolBar()
-{
+{ 
+    ui->mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
+
     QList<QAction*> actions;
     m_actClear = new QAction(QIcon(":/tool_bar_icons/Resources/clear.png"), "Clear");
     actions << m_actClear;

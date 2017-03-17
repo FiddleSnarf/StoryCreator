@@ -1,6 +1,7 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
 #include <Qpen>
+#include <limits>
 
 #include "StoryScene.hpp"
 #include "Items/StoryNodeItemImpl.hpp"
@@ -17,6 +18,10 @@ StoryScene::StoryScene(QObject* parent) :
      * добавлении новых элементов (в частности первого)
      */
     addLine(0, 0, 1, 1, QPen(Qt::white, 0));
+    for (int i = 0; i < LIMIT_ID; i++)
+    {
+        m_setLimitID.insert(i);
+    }
 }
 
 StoryScene::~StoryScene()
@@ -98,14 +103,15 @@ void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const 
 {
     StoryNodeItem* node = new StoryNodeItem(getFreeID(), nodeType);
     node->setFlag(QGraphicsItem::ItemIsMovable, true);
-    //node->setVisible(true);
     node->setIcon(icon);
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
+    if (getStoryNodeList().isEmpty())
+        node->getNodeInfo().setEntryPointFlag(true);
 
     // для отладки
-    node->setTitle("Петуханские бои.");
-    node->setText("Собрались раз семеро швабов вместе, один из них был господин \n"
+    node->getNodeInfo().setTitle("Петуханские бои.");
+    node->getNodeInfo().setText("Собрались раз семеро швабов вместе, один из них был господин \n"
                   "Шульц, другой Яккли, третий Марли, четвертый Йергли, пятый Михаль,\n"
                   " шестой Ганс, а седьмой был Вейтли; и все семеро порешили весь свет \n"
                   "обойти, поискать приключений и великие подвиги совершить. А чтоб идти \n"
@@ -120,7 +126,12 @@ void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const 
 
 int StoryScene::getFreeID() const
 {
-    return 0;
+    IDSet currIDSet;
+    foreach (auto& node, getStoryNodeList())
+    {
+        currIDSet.insert(node->getNodeInfo().getNodeID());
+    }
+    return *(m_setLimitID - currIDSet).begin();
 }
 
 //=======================================================================================
