@@ -4,18 +4,10 @@
 #include <QUrl>
 #include <QList>
 
+#include "StoryCommon.hpp"
+
 namespace StoryCommon
 {
-    struct Action
-    {
-        explicit Action()
-        {
-        }
-
-        QString type;
-        QString action;
-    };
-
     class NodeInfo
     {
     public:
@@ -33,7 +25,7 @@ namespace StoryCommon
         QString getText() const;
         QUrl getImageUrl() const;
 
-        void addAction(const Action& action);
+        //void addAction(const Action& action);
         int actionCount() const;
 
     private:
@@ -44,6 +36,6 @@ namespace StoryCommon
         QString m_title;
         QString m_text;
         QUrl m_imageUrl;
-        QList<Action> m_actions;
+        QList<CompleteAction> m_actions;
     };
 }

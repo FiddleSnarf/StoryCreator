@@ -60,10 +60,10 @@ QUrl NodeInfo::getImageUrl() const
     return m_imageUrl;
 }
 
-void NodeInfo::addAction(const Action& action)
+/*void NodeInfo::addAction(const Action& action)
 {
     m_actions << action;
-}
+}*/
 
 int NodeInfo::actionCount() const
 {

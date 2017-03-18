@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     StoryManager.cpp \
     Views/StoryView.cpp \
     Models/SelectNodeModel.cpp \
-    Common/NodeInfo.cpp
+    Common/NodeInfo.cpp \
+    Common/RawActionInfo.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \
@@ -29,7 +30,8 @@ HEADERS  += \
     StoryManager.hpp \
     Models/SelectNodeModel.hpp \
     Common/StoryCommon.hpp \
-    Common/NodeInfo.hpp
+    Common/NodeInfo.hpp \
+    Common/RawActionInfo.hpp
 
 FORMS    += \
     StoryCreator.ui
