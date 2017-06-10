@@ -6,6 +6,8 @@
 #include <QJsonArray>
 #include <QMessageBox>
 
+QString JsonStoryHelper::storyFileExtension = "*.json"; // TODO мне кажется что лучше сделать расширение файла *.story
+
 bool JsonStoryHelper::loadJsonStory(const QString& filePath, StoryCommon::StoryInfo& storyInfo)
 {
     QFile file(filePath);
@@ -50,24 +52,22 @@ bool JsonStoryHelper::saveJsonStory(const QString& filePath, const StoryCommon::
 
 QString JsonStoryHelper::selectLoadStoryFilePath()
 {
-    // TODO мне кажется что лучше сделать расширение файла *.story
-    return QFileDialog::getOpenFileName(nullptr, "Open story", QApplication::applicationDirPath(), "*.json");
+    return QFileDialog::getOpenFileName(nullptr, "Open story", QApplication::applicationDirPath(), storyFileExtension);
 }
 
-QString JsonStoryHelper::selectSaveStoryFilePath()
+QString JsonStoryHelper::selectSaveStoryFilePath(const QString& defaultFileName)
 {
-    // TODO мне кажется что лучше сделать расширение файла *.story
-    const QString defaultPathName = QApplication::applicationDirPath() + "/storyName"; // TODO подумать над именем файла по умолчанию
-    return QFileDialog::getSaveFileName(nullptr, "Open story", defaultPathName, "*.json");
+    const QString defaultPathName = QApplication::applicationDirPath() + "/" + defaultFileName;
+    return QFileDialog::getSaveFileName(nullptr, "Open story", defaultPathName, storyFileExtension);
 }
 
 bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::StoryInfo& storyInfo)
 {
-    if (!jsonStory.contains("story_format_ver") || !jsonStory.contains("story_node_arr")) // TODO вынести имена тегов в Common
+    if (!jsonStory.contains(StoryJsonTags::story_format_ver_tag) || !jsonStory.contains(StoryJsonTags::story_node_arr_tag))
         return false;
 
-    storyInfo.version = jsonStory["story_format_ver"].toString();
-    const QJsonArray nodesArray = jsonStory["story_node_arr"].toArray();
+    storyInfo.version = jsonStory[StoryJsonTags::story_format_ver_tag].toString();
+    const QJsonArray nodesArray = jsonStory[StoryJsonTags::story_node_arr_tag].toArray();
     for(int nodeIdx = 0; nodeIdx < nodesArray.size(); nodeIdx++)
     {
         StoryNode node;
@@ -90,7 +90,7 @@ bool JsonStoryHelper::saveJsonStory(QJsonObject& jsonStory, const StoryCommon::S
         storyNode.write(nodeObject);
         nodesArray.append(nodeObject);
     }
-    jsonStory["story_format_ver"] = storyInfo.version;
-    jsonStory["story_node_arr"] = nodesArray;
+    jsonStory[StoryJsonTags::story_format_ver_tag] = storyInfo.version;
+    jsonStory[StoryJsonTags::story_node_arr_tag] = nodesArray;
     return true;
 }
