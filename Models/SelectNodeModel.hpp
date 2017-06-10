@@ -11,23 +11,26 @@ class SelectNodeModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit SelectNodeModel(QObject* parent = 0);
-    ~SelectNodeModel();
+    explicit SelectNodeModel(QObject* parent = nullptr);
+    virtual ~SelectNodeModel();
 
+    // ========== наследие QAbstractListModel ============
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     QMimeData* mimeData(const QModelIndexList& indexes) const override;
     QStringList mimeTypes() const override;
     Qt::DropActions supportedDropActions() const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
     int rowCount(const QModelIndex &parent) const override;
+    // ===================================================
 
-    void clear();
-    /*void addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate);
-    void addTemplateNodesList(const StoryCommon::SelectNodeList& listTNodes);*/
+    void addTemplateNode(const StoryCommon::NodeSelectTemplate& nodeTemplate);
+    void addTemplateNodesList(const StoryCommon::SelectTNodeList& listTNodes);
 
 private:
     void removeDuplicates();
 
 private:
-    //StoryCommon::SelectNodeList m_nodesTemplates;
+    StoryCommon::SelectTNodeList m_nodesTemplates;
 };
+
+typedef QSharedPointer<SelectNodeModel> SelectNodeModelPtr;

@@ -40,3 +40,5 @@ private:
 private:
     IDSet m_setLimitID;
 };
+
+typedef QSharedPointer<StoryScene> StoryScenePtr;

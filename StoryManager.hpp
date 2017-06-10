@@ -4,17 +4,14 @@
 #include "Models/SelectNodeModel.hpp"
 #include "Scene/StoryScene.hpp"
 
-typedef QSharedPointer<SelectNodeModel> SelectNodeModelPtr;
-typedef QSharedPointer<StoryScene> StoryScenePtr;
-
 class StoryManager : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit StoryManager(QObject* parent = 0);
-    StoryScene* getStoryScene();
-    SelectNodeModel* getStoryNodeSelectModel();
+    explicit StoryManager(QObject* parent = nullptr);
+    StoryScenePtr getStoryScene();
+    SelectNodeModelPtr getStoryNodeSelectModel();
 
     // методы для работы с окном шаблонов нодов
     //void setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes);

@@ -1,11 +1,11 @@
 #include "SelectNodeModel.hpp"
 #include <QMimeData>
 #include <QDataStream>
-#include <QIcon>
 
 //==================================== public ===========================================
 
-SelectNodeModel::SelectNodeModel(QObject* parent) : QAbstractListModel(parent)
+SelectNodeModel::SelectNodeModel(QObject* parent) :
+    QAbstractListModel(parent)
 {
 
 }
@@ -20,7 +20,7 @@ QVariant SelectNodeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    /*switch(role)
+    switch(role)
     {
         case Qt::DecorationRole:
             return m_nodesTemplates.value(index.row()).icon;
@@ -30,8 +30,7 @@ QVariant SelectNodeModel::data(const QModelIndex &index, int role) const
 
         case Qt::UserRole:
             return m_nodesTemplates.value(index.row()).nodeType;
-    }*/
-
+    }
     return QVariant();
 }
 
@@ -83,24 +82,17 @@ int SelectNodeModel::rowCount(const QModelIndex &parent) const
     return 0;
 }
 
-void SelectNodeModel::clear()
-{
-    //beginRemoveRows(QModelIndex(), 0, m_nodesTemplates.size() - 1); // строка под сомнением
-    //m_nodesTemplates.clear();
-    //endRemoveRows(); // строка под сомнением
-}
-
-/*void SelectNodeModel::addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate)
+void SelectNodeModel::addTemplateNode(const StoryCommon::NodeSelectTemplate& nodeTemplate)
 {
     m_nodesTemplates.append(nodeTemplate);
     removeDuplicates();
 }
 
-void SelectNodeModel::addTemplateNodesList(const StoryCommon::SelectNodeList& listTNodes)
+void SelectNodeModel::addTemplateNodesList(const StoryCommon::SelectTNodeList& listTNodes)
 {
     m_nodesTemplates += listTNodes;
     removeDuplicates();
-}*/
+}
 
 //=======================================================================================
 
@@ -108,7 +100,7 @@ void SelectNodeModel::addTemplateNodesList(const StoryCommon::SelectNodeList& li
 
 void SelectNodeModel::removeDuplicates()
 {
-    // TODO
+    // TODO не уверен надо ли это вообще (по идее эта модель заполняется при старте и больше не редактируется)
 }
 
 //=======================================================================================

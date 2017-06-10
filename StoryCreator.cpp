@@ -47,7 +47,7 @@ void StoryCreator::initialize()
 
 void StoryCreator::initStoryView()
 {
-    ui->storyView->setScene(m_storyManager->getStoryScene());
+    ui->storyView->setScene(m_storyManager->getStoryScene().data());
 }
 
 /*void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
@@ -80,10 +80,10 @@ void StoryCreator::initToolBar()
 void StoryCreator::initConnects()
 {
     // для story scene/view
-    connect(m_storyManager->getStoryScene(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
+    connect(m_storyManager->getStoryScene().data(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
 
     // для toolbar
-    connect(m_actClear, &QAction::triggered, m_storyManager->getStoryScene(), &StoryScene::clearScene);
+    connect(m_actClear, &QAction::triggered, m_storyManager->getStoryScene().data(), &StoryScene::clearScene);
 }
 
 //=======================================================================================

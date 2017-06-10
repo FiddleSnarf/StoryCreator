@@ -10,14 +10,14 @@ StoryManager::StoryManager(QObject* parent) :
 
 }
 
-StoryScene* StoryManager::getStoryScene()
+StoryScenePtr StoryManager::getStoryScene()
 {
-    return m_storyScene.data();
+    return m_storyScene;
 }
 
-SelectNodeModel* StoryManager::getStoryNodeSelectModel()
+SelectNodeModelPtr StoryManager::getStoryNodeSelectModel()
 {
-    return m_storyNodeSelectModel.data();
+    return m_storyNodeSelectModel;
 }
 
 /*void StoryManager::setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes)
