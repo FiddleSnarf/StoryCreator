@@ -14,3 +14,5 @@ public:
 
     virtual StoryManagerPtr getStoryManager() const = 0;
 };
+
+typedef QSharedPointer<ICore> ICorePtr;

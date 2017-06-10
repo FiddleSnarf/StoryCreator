@@ -22,9 +22,9 @@ SOURCES += main.cpp\
     Views/StoryView.cpp \
     Models/SelectNodeModel.cpp \
     Core/CoreImpl.cpp \
-    JsonStoryHelper/JsonStoryProvider.cpp \
     JsonStoryHelper/NodeAction.cpp \
-    JsonStoryHelper/StoryNode.cpp
+    JsonStoryHelper/StoryNode.cpp \
+    JsonStoryHelper/JsonStoryHelper.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \

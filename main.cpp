@@ -1,15 +1,16 @@
 #include "StoryCreator.hpp"
-#include "StoryManager.hpp"
+#include "Core/ICore.hpp"
+#include "Core/CoreImpl.hpp"
 #include <QApplication>
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
-    //StoryManager storyManager;
-    //StoryCreator w(storyManager);
-    //w.show();
+    ICorePtr core(new CoreImpl());
+    StoryCreator storyCreator(core);
+    storyCreator.show();
 
-    return a.exec();
+    return app.exec();
 }
 

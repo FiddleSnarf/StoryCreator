@@ -4,6 +4,8 @@
 #include <QAction>
 #include <QLabel>
 
+#include "Core/ICore.hpp"
+
 
 namespace Ui
 {
@@ -17,7 +19,7 @@ class StoryCreator : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StoryCreator(StoryManager& storyManager, QWidget* parent = 0);
+    explicit StoryCreator(ICorePtr core, QWidget* parent = 0);
     ~StoryCreator();
 
 private:
@@ -34,7 +36,8 @@ private slots:
 private:
     Ui::StoryCreator* ui;
 
-    StoryManager& m_storyManager;
+    ICorePtr m_core;
+    StoryManagerPtr m_storyManager;
 
     // toolBar
     QAction* m_actClear;

@@ -3,10 +3,11 @@
 #include "ui_StoryCreator.h"
 #include <QGraphicsItem>
 
-StoryCreator::StoryCreator(StoryManager &storyManager, QWidget* parent) :
+StoryCreator::StoryCreator(ICorePtr core, QWidget* parent) :
     QMainWindow(parent),
     ui(new Ui::StoryCreator),
-    m_storyManager(storyManager)
+    m_core(core),
+    m_storyManager(core->getStoryManager())
 {
     ui->setupUi(this);
     initialize();
@@ -46,7 +47,7 @@ void StoryCreator::initialize()
 
 void StoryCreator::initStoryView()
 {
-    ui->storyView->setScene(m_storyManager.getStoryScene());
+    ui->storyView->setScene(m_storyManager->getStoryScene());
 }
 
 /*void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
@@ -79,10 +80,10 @@ void StoryCreator::initToolBar()
 void StoryCreator::initConnects()
 {
     // для story scene/view
-    connect(m_storyManager.getStoryScene(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
+    connect(m_storyManager->getStoryScene(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
 
     // для toolbar
-    connect(m_actClear, &QAction::triggered, m_storyManager.getStoryScene(), &StoryScene::clearScene);
+    connect(m_actClear, &QAction::triggered, m_storyManager->getStoryScene(), &StoryScene::clearScene);
 }
 
 //=======================================================================================
@@ -91,7 +92,7 @@ void StoryCreator::initConnects()
 
 void StoryCreator::slotStorySceneChanged()
 {
-    m_nodeCounterView->setText(QString(tr("Node count: %1")).arg(m_storyManager.getCountStoryNodes()));
+    m_nodeCounterView->setText(QString(tr("Node count: %1")).arg(m_storyManager->getCountStoryNodes()));
 }
 
 //=======================================================================================
