@@ -5,17 +5,17 @@
 
 StoryCreator::StoryCreator(ICorePtr core, QWidget* parent) :
     QMainWindow(parent),
-    ui(new Ui::StoryCreator),
+    m_ui(new Ui::StoryCreator),
     m_core(core),
     m_storyManager(core->getStoryManager())
 {
-    ui->setupUi(this);
+    m_ui->setupUi(this);
     initialize();
 }
 
 StoryCreator::~StoryCreator()
 {
-    delete ui;
+
 }
 
 //===================================== private =========================================
@@ -32,33 +32,34 @@ void StoryCreator::initialize()
 
 void StoryCreator::initStoryView()
 {
-    ui->storyView->setScene(m_storyManager->getStoryScene().data());
+    m_ui->storyView->setScene(m_storyManager->getStoryScene().data());
 }
 
 void StoryCreator::initSelectTemplateNodesView()
 {
-    ui->viewNodes->setModel(m_storyManager->getStoryNodeSelectModel().data());
+    m_ui->viewNodes->setModel(m_storyManager->getStoryNodeSelectModel().data());
 
-    QSize sizeNode = ui->viewNodes->size();
+    // Устанавливаем размер иконок
+    QSize sizeNode = m_ui->viewNodes->size();
     sizeNode.setWidth(sizeNode.width() - 10);
     sizeNode.setHeight(sizeNode.width());
-    ui->viewNodes->setIconSize(sizeNode);
+    m_ui->viewNodes->setIconSize(sizeNode);
 }
 
 void StoryCreator::initToolBar()
 { 
-    ui->mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
+    m_ui->mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     QList<QAction*> actions;
     m_actClear = new QAction(QIcon(":/tool_bar_icons/Resources/clear.png"), "Clear");
     actions << m_actClear;
-    ui->mainToolBar->addActions(actions);
+    m_ui->mainToolBar->addActions(actions);
 
 
-    ui->mainToolBar->addSeparator();
-    ui->mainToolBar->addSeparator();
+    m_ui->mainToolBar->addSeparator();
+    m_ui->mainToolBar->addSeparator();
     m_nodeCounterView = new QLabel(QString("Node count: %1").arg(0));
-    ui->mainToolBar->addWidget(m_nodeCounterView);
+    m_ui->mainToolBar->addWidget(m_nodeCounterView);
 }
 
 void StoryCreator::initConnects()

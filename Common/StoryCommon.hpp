@@ -5,25 +5,66 @@
 #include <QIcon>
 #include "JsonStoryHelper/StoryNode.h"
 
+namespace SoryGUI
+{
+    const QString NODE_MIME_TYPE = "story/node-template"; /**< Для работы drag&drop. */
+
+
+    typedef QMap<int, QPointF> SceneNodePositionMap; /**< key - nodeID, value - координата на сцене. */
+
+    /** \struct StoryAdditionalInfo
+     *  \brief Структура описывает параметры отображения story на графической сцене.
+     *  \note Эти дополнительные параметры будут храниться в отдельном файле.
+     *        если при загрузке story файл с параметрами отображения не будет найден
+     *        то размещение нодов на сцене произойдет по автоматическому алгоритму.
+     */
+    struct StoryAdditionalInfo
+    {
+        SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
+        QRectF sceneRect;                   /**< Параметры сцены. */
+
+        /** \brief Проверка на валидность
+         */
+        bool isValid() const
+        {
+            return !sceneRect.isNull();
+        }
+    };
+}
+
 namespace StoryCommon
 {
     struct StoryInfo
     {
-        QString version;
-        QString storyName;
-        QString filePath;
-        StoryNodeList nodeList;
+        QString version;        /**< Версия json story. */
+        QString storyName;      /**< Название story. */
+        QString filePath;       /**< Путь к файлу json. */
+        StoryNodeList nodeList; /**< Список нодов. */
+        SoryGUI::StoryAdditionalInfo additionalViewParams;  /**< Дополнительные параметры отображения. */
+
+        StoryInfo()
+        {
+
+        }
+
+        StoryInfo(const QString& _version)
+        {
+            version = _version;
+        }
 
         void clear()
         {
             version.clear();
             storyName.clear();
+            filePath.clear();
             nodeList.clear();
         }
 
+        /** \brief Проверка на валидность
+         */
         bool isValid() const
         {
-            return (!version.isEmpty() && !nodeList.isEmpty());
+            return (!version.isEmpty());
         }
     };
 
@@ -50,9 +91,4 @@ namespace StoryCommon
         }
     };
     typedef QList<NodeSelectTemplate> SelectTNodeList;
-}
-
-namespace SoryGUI
-{
-    const QString NODE_MIME_TYPE = "story/node-template";
 }

@@ -8,6 +8,8 @@ class StoryManager : public QObject
 {
     Q_OBJECT
 
+    static const QString CURR_JSON_VERSION;
+
 public:
     explicit StoryManager(QObject* parent = nullptr);
     virtual ~StoryManager();
@@ -19,8 +21,12 @@ public:
     int getCountStoryNodes() const;
 
 signals:
+    void signalStoryOpened();
+    void signalStoryClosed();
 
 public slots:
+    void createNewStory();
+    void loadStoryFile();
 
 private:
     void initialization();
@@ -28,4 +34,6 @@ private:
 private:
     StoryScenePtr m_storyScene;
     SelectNodeModelPtr m_storyNodeSelectModel;
+
+    StoryCommon::StoryInfo m_currentStory;
 };

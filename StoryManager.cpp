@@ -1,6 +1,7 @@
 #include "StoryManager.hpp"
+#include "JsonStoryHelper/JsonStoryHelper.h"
 
-//===================================== public ==========================================
+const QString StoryManager::CURR_JSON_VERSION = "1.0";
 
 StoryManager::StoryManager(QObject* parent) :
     QObject(parent),
@@ -30,25 +31,27 @@ int StoryManager::getCountStoryNodes() const
     return m_storyScene->nodeCount();
 }
 
-//=======================================================================================
-
 void StoryManager::initialization()
 {
-    // TODO это для отладки, тут должны быть реальные типы нодов
     StoryCommon::NodeSelectTemplate templateNode;
-    templateNode.toolTip = "lulz";
-    templateNode.nodeType = "story";
+    templateNode.toolTip = tr("The most typical node");
+    templateNode.nodeType = "common";
     templateNode.icon = QIcon(":/story_node_icons/Resources/new_icon.png");
+    //TODO сюда добавить остальные типы нодов
 
     StoryCommon::SelectTNodeList templateNodeList;
     templateNodeList << templateNode;
 
-    templateNode.icon = QIcon(":/story_node_icons/Resources/airplane_icon.png");
-    templateNodeList << templateNode;
-
-    templateNode.icon = QIcon(":/story_node_icons/Resources/bear_icon.png");
-    templateNodeList << templateNode;
-    //===========================================================
-
     m_storyNodeSelectModel->addTemplateNodesList(templateNodeList);
+}
+
+void StoryManager::createNewStory()
+{
+    m_currentStory = StoryCommon::StoryInfo(CURR_JSON_VERSION);
+    emit signalStoryOpened();
+}
+
+void StoryManager::loadStoryFile()
+{
+
 }

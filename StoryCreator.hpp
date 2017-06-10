@@ -3,15 +3,14 @@
 #include <QMainWindow>
 #include <QAction>
 #include <QLabel>
+#include <QPointer>
 
 #include "Core/ICore.hpp"
-
 
 namespace Ui
 {
     class StoryCreator;
 }
-
 class StoryManager;
 
 class StoryCreator : public QMainWindow
@@ -19,7 +18,7 @@ class StoryCreator : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StoryCreator(ICorePtr core, QWidget* parent = 0);
+    explicit StoryCreator(ICorePtr core, QWidget* parent = nullptr);
     ~StoryCreator();
 
 private:
@@ -34,13 +33,12 @@ private slots:
 
 
 private:
-    Ui::StoryCreator* ui;
-
+    QScopedPointer<Ui::StoryCreator> m_ui;
     ICorePtr m_core;
     StoryManagerPtr m_storyManager;
 
     // toolBar
-    QAction* m_actClear;
-    QLabel* m_nodeCounterView;
+    QAction* m_actClear; // TODO всю эту шляпу заменить на отдельный тул бар
+    QPointer<QLabel> m_nodeCounterView; // TODO всю эту шляпу заменить на отдельный статус бар
 };
 
