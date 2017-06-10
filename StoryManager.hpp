@@ -10,11 +10,10 @@ class StoryManager : public QObject
 
 public:
     explicit StoryManager(QObject* parent = nullptr);
+    virtual ~StoryManager();
+
     StoryScenePtr getStoryScene();
     SelectNodeModelPtr getStoryNodeSelectModel();
-
-    // методы для работы с окном шаблонов нодов
-    //void setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes);
 
     // методы для работы с основной сценой
     int getCountStoryNodes() const;
@@ -22,6 +21,9 @@ public:
 signals:
 
 public slots:
+
+private:
+    void initialization();
 
 private:
     StoryScenePtr m_storyScene;

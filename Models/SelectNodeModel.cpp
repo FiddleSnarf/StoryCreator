@@ -75,11 +75,12 @@ Qt::ItemFlags SelectNodeModel::flags(const QModelIndex &index) const
 
 int SelectNodeModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
+    // TODO не помню почему я так сделал) но и без этого вроде работает)
     /*if (parent.isValid())
         return 0;
-    else
-        return m_nodesTemplates.size();*/
-    return 0;
+    else*/
+        return m_nodesTemplates.size();
 }
 
 void SelectNodeModel::addTemplateNode(const StoryCommon::NodeSelectTemplate& nodeTemplate)

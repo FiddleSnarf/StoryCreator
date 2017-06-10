@@ -22,27 +22,12 @@ StoryCreator::~StoryCreator()
 
 void StoryCreator::initialize()
 {
-    // TODO временно для отладки (тут должна быть загрузка типов нодов из json/xml)
-    /*StoryCommon::NodeTemplate node;
-    node.toolTip = "lulz";
-    node.nodeType = "story";
-    node.icon = QIcon(":/story_node_icons/Resources/new_icon.png");
-
-    StoryCommon::SelectNodeList nodeList;
-    nodeList << node;
-
-    node.icon = QIcon(":/story_node_icons/Resources/airplane_icon.png");
-    nodeList << node;
-
-    node.icon = QIcon(":/story_node_icons/Resources/bear_icon.png");
-    nodeList << node;*/
-    // ==========================
-
     showMaximized();
+
     initToolBar();
     initConnects();
     initStoryView();
-    //initSelectNodes(nodeList);
+    initSelectTemplateNodesView();
 }
 
 void StoryCreator::initStoryView()
@@ -50,16 +35,15 @@ void StoryCreator::initStoryView()
     ui->storyView->setScene(m_storyManager->getStoryScene().data());
 }
 
-/*void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
+void StoryCreator::initSelectTemplateNodesView()
 {
-    ui->viewNodes->setModel(m_storyManager.getStoryNodeSelectModel());
-    m_storyManager.setSelectListStoryNodes(nodeList);
+    ui->viewNodes->setModel(m_storyManager->getStoryNodeSelectModel().data());
 
     QSize sizeNode = ui->viewNodes->size();
     sizeNode.setWidth(sizeNode.width() - 10);
     sizeNode.setHeight(sizeNode.width());
     ui->viewNodes->setIconSize(sizeNode);
-}*/
+}
 
 void StoryCreator::initToolBar()
 { 

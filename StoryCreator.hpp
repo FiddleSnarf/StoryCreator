@@ -24,10 +24,10 @@ public:
 
 private:
     void initialize();
-    //void initSelectNodes(const StoryCommon::SelectNodeList& nodeList);
-    void initStoryView();
     void initToolBar();
     void initConnects();
+    void initStoryView();
+    void initSelectTemplateNodesView();
 
 private slots:
     void slotStorySceneChanged();
