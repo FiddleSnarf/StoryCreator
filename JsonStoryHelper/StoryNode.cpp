@@ -1,6 +1,6 @@
 #include <QJsonArray>
 #include "StoryNode.h"
-#include "Common/StoryCommon.hpp"
+#include "Common/StoryJsonTags.hpp"
 
 StoryNode::StoryNode() :
     m_id(-1),

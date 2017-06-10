@@ -1,10 +1,11 @@
-#include "JsonStoryHelper.h"
-
 #include <QFileDialog>
 #include <QApplication>
 #include <QJsonDocument>
 #include <QJsonArray>
 #include <QMessageBox>
+
+#include "JsonStoryHelper.h"
+#include "Common/StoryJsonTags.hpp"
 
 QString JsonStoryHelper::storyFileExtension = "*.json"; // TODO мне кажется что лучше сделать расширение файла *.story
 
@@ -33,7 +34,7 @@ bool JsonStoryHelper::saveJsonStory(const QString& filePath, const StoryCommon::
       QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(nullptr, QObject::tr("Warning"), QObject::tr("Failed to save file"));
+        QMessageBox::warning(nullptr, QObject::tr("Warning"), QObject::tr("Failed to save file")); // TODO Избавиться от мессаджбоксов, сделать Result class
         return false;
     }
 

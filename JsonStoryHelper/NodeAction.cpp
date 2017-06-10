@@ -1,5 +1,5 @@
 #include "NodeAction.h"
-#include "Common/StoryCommon.hpp"
+#include "Common/StoryJsonTags.hpp"
 
 NodeAction::NodeAction() :
     m_isValid(false)
