@@ -11,6 +11,8 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = StroryCreater
 TEMPLATE = app
 
+QMAKE_LFLAGS += -static #вроде как для статик линковки Mingw
+
 
 SOURCES += main.cpp\
     Items/StoryNodeItemImpl.cpp \
@@ -19,9 +21,10 @@ SOURCES += main.cpp\
     StoryManager.cpp \
     Views/StoryView.cpp \
     Models/SelectNodeModel.cpp \
-    JsonStoryProvider/NodeAction.cpp \
-    JsonStoryProvider/StoryNode.cpp \
-    JsonStoryProvider/JsonStoryProvider.cpp
+    Core/CoreImpl.cpp \
+    JsonStoryHelper/JsonStoryProvider.cpp \
+    JsonStoryHelper/NodeAction.cpp \
+    JsonStoryHelper/StoryNode.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \
@@ -30,9 +33,12 @@ HEADERS  += \
     StoryCreator.hpp \
     StoryManager.hpp \
     Models/SelectNodeModel.hpp \
-    JsonStoryProvider/NodeAction.h \
-    JsonStoryProvider/StoryNode.h \
-    JsonStoryProvider/JsonStoryProvider.h
+    Common/StoryCommon.hpp \
+    Core/CoreImpl.hpp \
+    Core/ICore.hpp \
+    JsonStoryHelper/NodeAction.h \
+    JsonStoryHelper/StoryNode.h \
+    JsonStoryHelper/JsonStoryHelper.h
 
 FORMS    += \
     StoryCreator.ui

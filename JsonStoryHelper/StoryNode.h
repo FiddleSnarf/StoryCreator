@@ -22,4 +22,4 @@ private:
     bool m_isValid;
 };
 
-typedef QList<StoryNode> StoryNodeList;
+typedef QList<class StoryNode> StoryNodeList;

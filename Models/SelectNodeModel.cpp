@@ -1,5 +1,7 @@
 #include "SelectNodeModel.hpp"
 #include <QMimeData>
+#include <QDataStream>
+#include <QIcon>
 
 //==================================== public ===========================================
 
@@ -18,7 +20,7 @@ QVariant SelectNodeModel::data(const QModelIndex &index, int role) const
     if (!index.isValid())
         return QVariant();
 
-    switch(role)
+    /*switch(role)
     {
         case Qt::DecorationRole:
             return m_nodesTemplates.value(index.row()).icon;
@@ -28,7 +30,7 @@ QVariant SelectNodeModel::data(const QModelIndex &index, int role) const
 
         case Qt::UserRole:
             return m_nodesTemplates.value(index.row()).nodeType;
-    }
+    }*/
 
     return QVariant();
 }
@@ -47,14 +49,14 @@ QMimeData* SelectNodeModel::mimeData(const QModelIndexList& indexes) const
     QString nodeType = data(idx, Qt::UserRole).toString();
     stream << nodeType << icon;
 
-    mimeData->setData(StoryCommon::NODE_MIME_TYPE, encodedData);
+    mimeData->setData(SoryGUI::NODE_MIME_TYPE, encodedData);
     return mimeData;
 }
 
 QStringList SelectNodeModel::mimeTypes() const
 {
     QStringList types;
-    types << StoryCommon::NODE_MIME_TYPE;
+    types << SoryGUI::NODE_MIME_TYPE;
     return types;
 }
 
@@ -74,20 +76,21 @@ Qt::ItemFlags SelectNodeModel::flags(const QModelIndex &index) const
 
 int SelectNodeModel::rowCount(const QModelIndex &parent) const
 {
-    if (parent.isValid())
+    /*if (parent.isValid())
         return 0;
     else
-        return m_nodesTemplates.size();
+        return m_nodesTemplates.size();*/
+    return 0;
 }
 
 void SelectNodeModel::clear()
 {
-    //beginRemoveRows(QModelIndex(), 0, m_nodesTemplates.size() - 1);
-    m_nodesTemplates.clear();
-    //endRemoveRows();
+    //beginRemoveRows(QModelIndex(), 0, m_nodesTemplates.size() - 1); // строка под сомнением
+    //m_nodesTemplates.clear();
+    //endRemoveRows(); // строка под сомнением
 }
 
-void SelectNodeModel::addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate)
+/*void SelectNodeModel::addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate)
 {
     m_nodesTemplates.append(nodeTemplate);
     removeDuplicates();
@@ -97,7 +100,7 @@ void SelectNodeModel::addTemplateNodesList(const StoryCommon::SelectNodeList& li
 {
     m_nodesTemplates += listTNodes;
     removeDuplicates();
-}
+}*/
 
 //=======================================================================================
 

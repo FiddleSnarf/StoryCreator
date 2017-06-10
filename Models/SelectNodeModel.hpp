@@ -1,6 +1,7 @@
 #pragma once
 
 #include <QAbstractListModel>
+
 #include "Common/StoryCommon.hpp"
 
 class QMimeData;
@@ -21,12 +22,12 @@ public:
     int rowCount(const QModelIndex &parent) const override;
 
     void clear();
-    void addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate);
-    void addTemplateNodesList(const StoryCommon::SelectNodeList& listTNodes);
+    /*void addTemplateNode(const StoryCommon::NodeTemplate& nodeTemplate);
+    void addTemplateNodesList(const StoryCommon::SelectNodeList& listTNodes);*/
 
 private:
     void removeDuplicates();
 
 private:
-    StoryCommon::SelectNodeList m_nodesTemplates;
+    //StoryCommon::SelectNodeList m_nodesTemplates;
 };

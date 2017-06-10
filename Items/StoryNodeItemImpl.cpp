@@ -11,7 +11,7 @@ StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem*
     , m_boundingRect(QRectF(0, 0, DEFAULT_NODE_SIZE.width(), DEFAULT_NODE_SIZE.height()))
     , m_pen(QPen(QColor("#009966"), 2))
     , m_penForHead(QPen(QColor("#7308d1"), 3))
-    , m_nodeInfo(nodeID, typeNode)
+    //, m_nodeInfo(nodeID, typeNode)
 {
 
 }
@@ -26,7 +26,7 @@ void StoryNodeItem::setIcon(const QIcon& icon)
     m_icon = icon;
 }
 
-StoryCommon::NodeInfo& StoryNodeItem::getNodeInfo()
+/*StoryCommon::NodeInfo& StoryNodeItem::getNodeInfo()
 {
     return m_nodeInfo;
 }
@@ -34,7 +34,7 @@ StoryCommon::NodeInfo& StoryNodeItem::getNodeInfo()
 StoryCommon::NodeInfo StoryNodeItem::getNodeInfo() const
 {
     return m_nodeInfo;
-}
+}*/
 
 //=======================================================================================
 
@@ -52,7 +52,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
     // тут будет немного магии чисел, но уж ничего не поделать
 
-    const qreal w = m_boundingRect.width();
+    /*const qreal w = m_boundingRect.width();
     const qreal h = m_boundingRect.height();
 
     painter->setPen(m_nodeInfo.getEntryPointFlag() ? m_penForHead : m_pen);
@@ -67,7 +67,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
 
     const qreal pixW = w/3;
     const qreal pixH = h/3;
-    painter->drawPixmap(QPointF(w/2 - pixW/2, h/2 - pixH/4), m_icon.pixmap(pixW, pixH));
+    painter->drawPixmap(QPointF(w/2 - pixW/2, h/2 - pixH/4), m_icon.pixmap(pixW, pixH));*/
 }
 
 //=======================================================================================

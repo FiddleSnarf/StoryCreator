@@ -4,8 +4,6 @@
 #include <QIcon>
 #include <QSize>
 
-#include "Common/NodeInfo.hpp"
-
 class StoryNodeItem : public QGraphicsObject
 {
 public:
@@ -18,8 +16,8 @@ public:
     ~StoryNodeItem();
 
     void setIcon(const QIcon& icon);
-    StoryCommon::NodeInfo& getNodeInfo();
-    StoryCommon::NodeInfo getNodeInfo() const;
+    //StoryCommon::NodeInfo& getNodeInfo();
+    //StoryCommon::NodeInfo getNodeInfo() const;
 
 private:
     QRectF boundingRect() const override;
@@ -31,5 +29,5 @@ private:
     QPen m_penForHead;
     QIcon m_icon;
 
-    StoryCommon::NodeInfo m_nodeInfo;
+    //StoryCommon::NodeInfo m_nodeInfo;
 };

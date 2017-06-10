@@ -1,10 +1,12 @@
 #include "StoryCreator.hpp"
+#include "StoryManager.hpp"
 #include "ui_StoryCreator.h"
 #include <QGraphicsItem>
 
-StoryCreator::StoryCreator(QWidget* parent) :
+StoryCreator::StoryCreator(StoryManager &storyManager, QWidget* parent) :
     QMainWindow(parent),
-    ui(new Ui::StoryCreator)
+    ui(new Ui::StoryCreator),
+    m_storyManager(storyManager)
 {
     ui->setupUi(this);
     initialize();
@@ -20,7 +22,7 @@ StoryCreator::~StoryCreator()
 void StoryCreator::initialize()
 {
     // TODO временно для отладки (тут должна быть загрузка типов нодов из json/xml)
-    StoryCommon::NodeTemplate node;
+    /*StoryCommon::NodeTemplate node;
     node.toolTip = "lulz";
     node.nodeType = "story";
     node.icon = QIcon(":/story_node_icons/Resources/new_icon.png");
@@ -32,14 +34,14 @@ void StoryCreator::initialize()
     nodeList << node;
 
     node.icon = QIcon(":/story_node_icons/Resources/bear_icon.png");
-    nodeList << node;
+    nodeList << node;*/
     // ==========================
 
     showMaximized();
     initToolBar();
     initConnects();
     initStoryView();
-    initSelectNodes(nodeList);
+    //initSelectNodes(nodeList);
 }
 
 void StoryCreator::initStoryView()
@@ -47,7 +49,7 @@ void StoryCreator::initStoryView()
     ui->storyView->setScene(m_storyManager.getStoryScene());
 }
 
-void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
+/*void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
 {
     ui->viewNodes->setModel(m_storyManager.getStoryNodeSelectModel());
     m_storyManager.setSelectListStoryNodes(nodeList);
@@ -56,7 +58,7 @@ void StoryCreator::initSelectNodes(const StoryCommon::SelectNodeList& nodeList)
     sizeNode.setWidth(sizeNode.width() - 10);
     sizeNode.setHeight(sizeNode.width());
     ui->viewNodes->setIconSize(sizeNode);
-}
+}*/
 
 void StoryCreator::initToolBar()
 { 

@@ -61,7 +61,7 @@ void StoryScene::clearScene()
 
 void StoryScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
-    if (event->mimeData()->hasFormat(StoryCommon::NODE_MIME_TYPE))
+    if (event->mimeData()->hasFormat(SoryGUI::NODE_MIME_TYPE))
         event->acceptProposedAction();
 }
 
@@ -78,10 +78,10 @@ void StoryScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
 void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
     const QMimeData* data = event->mimeData();
-    if (!data->hasFormat(StoryCommon::NODE_MIME_TYPE))
+    if (!data->hasFormat(SoryGUI::NODE_MIME_TYPE))
         return;
 
-    QByteArray encodedData = data->data(StoryCommon::NODE_MIME_TYPE);
+    QByteArray encodedData = data->data(SoryGUI::NODE_MIME_TYPE);
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     QIcon icon;
     QString nodeType;
@@ -106,19 +106,19 @@ void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const 
     node->setIcon(icon);
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
-    if (getStoryNodeList().isEmpty())
+    /*if (getStoryNodeList().isEmpty())
         node->getNodeInfo().setEntryPointFlag(true);
 
-    addItem(node);
+    addItem(node);*/
 }
 
 int StoryScene::getFreeID() const
 {
     IDSet currIDSet;
-    foreach (auto& node, getStoryNodeList())
+    /*foreach (auto& node, getStoryNodeList())
     {
         currIDSet.insert(node->getNodeInfo().getNodeID());
-    }
+    }*/
     IDSet resultSet = m_setLimitID - currIDSet;
     if (!resultSet.isEmpty())
         return *resultSet.begin();

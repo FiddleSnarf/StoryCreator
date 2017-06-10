@@ -17,7 +17,7 @@ public:
     SelectNodeModel* getStoryNodeSelectModel();
 
     // методы для работы с окном шаблонов нодов
-    void setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes);
+    //void setSelectListStoryNodes(const StoryCommon::SelectNodeList& listTNodes);
 
     // методы для работы с основной сценой
     int getCountStoryNodes() const;
