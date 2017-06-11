@@ -14,7 +14,7 @@ bool JsonStoryHelper::loadJsonStory(const QString& filePath, StoryCommon::StoryI
     QFile file(filePath);
     if (!file.open(QIODevice::ReadOnly))
     {
-        QMessageBox::warning(nullptr, QObject::tr("Warning"), QObject::tr("Failed to open file"));
+        QMessageBox::warning(Q_NULLPTR, QObject::tr("Warning"), QObject::tr("Failed to open file"));
         return false;
     }
     storyInfo.filePath = filePath;
@@ -34,7 +34,7 @@ bool JsonStoryHelper::saveJsonStory(const QString& filePath, const StoryCommon::
       QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly))
     {
-        QMessageBox::warning(nullptr, QObject::tr("Warning"), QObject::tr("Failed to save file")); // TODO Избавиться от мессаджбоксов, сделать Result class
+        QMessageBox::warning(Q_NULLPTR, QObject::tr("Warning"), QObject::tr("Failed to save file")); // TODO Избавиться от мессаджбоксов, сделать Result class
         return false;
     }
 
@@ -53,13 +53,13 @@ bool JsonStoryHelper::saveJsonStory(const QString& filePath, const StoryCommon::
 
 QString JsonStoryHelper::selectLoadStoryFilePath()
 {
-    return QFileDialog::getOpenFileName(nullptr, "Open story", QApplication::applicationDirPath(), storyFileExtension);
+    return QFileDialog::getOpenFileName(Q_NULLPTR, "Open story", QApplication::applicationDirPath(), storyFileExtension);
 }
 
 QString JsonStoryHelper::selectSaveStoryFilePath(const QString& defaultFileName)
 {
     const QString defaultPathName = QApplication::applicationDirPath() + "/" + defaultFileName;
-    return QFileDialog::getSaveFileName(nullptr, "Open story", defaultPathName, storyFileExtension);
+    return QFileDialog::getSaveFileName(Q_NULLPTR, "Open story", defaultPathName, storyFileExtension);
 }
 
 bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::StoryInfo& storyInfo)

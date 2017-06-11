@@ -4,10 +4,11 @@
 #include <QIcon>
 #include <QSize>
 
+#include "JsonStoryHelper/StoryNode.h"
+
 class StoryNodeItem : public QGraphicsObject
 {
 public:
-    static const QSize DEFAULT_NODE_SIZE;
     enum { Type = UserType + 1 };
     int type() const override{return Type;}
 
@@ -16,18 +17,21 @@ public:
     ~StoryNodeItem();
 
     void setIcon(const QIcon& icon);
-    //StoryCommon::NodeInfo& getNodeInfo();
-    //StoryCommon::NodeInfo getNodeInfo() const;
+    StoryNode& getNodeInfo();
+    StoryNode getNodeInfo() const;
 
 private:
     QRectF boundingRect() const override;
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
+    bool isHeadNode() const;
+
 private:
     QRectF m_boundingRect;
-    QPen m_pen;
-    QPen m_penForHead;
     QIcon m_icon;
 
-    //StoryCommon::NodeInfo m_nodeInfo;
+    StoryNode m_nodeInfo;   /**< Информация о ноде в том виде в котором она хранится в json. */
 };
+
+typedef class StoryNodeItem* StoryNodeItemPtr;
+typedef QList<StoryNodeItemPtr> StoryNodeItemList;

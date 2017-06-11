@@ -9,6 +9,14 @@ StoryNode::StoryNode() :
 
 }
 
+StoryNode::StoryNode(int id, const QString& type) :
+    m_id(id),
+    m_type(type),
+    m_isValid(true)
+{
+
+}
+
 StoryNode::~StoryNode()
 {
 
@@ -72,4 +80,24 @@ void StoryNode::write(QJsonObject& jsonObject) const
 bool StoryNode::isValid() const
 {
     return m_isValid;
+}
+
+int StoryNode::getId() const
+{
+    return m_id;
+}
+
+QString StoryNode::getType() const
+{
+    return m_type;
+}
+
+QString StoryNode::getTitle() const
+{
+    return m_title;
+}
+
+QString StoryNode::getText() const
+{
+    return m_text;
 }

@@ -11,7 +11,7 @@ class StoryManager : public QObject
     static const QString CURR_JSON_VERSION;
 
 public:
-    explicit StoryManager(QObject* parent = nullptr);
+    explicit StoryManager(QObject* parent = Q_NULLPTR);
     virtual ~StoryManager();
 
     StoryScenePtr getStoryScene();
@@ -26,7 +26,8 @@ signals:
 
 public slots:
     void createNewStory();
-    void loadStoryFile();
+    void loadStory();
+    void closeStory();
 
 private:
     void initialization();
@@ -34,6 +35,4 @@ private:
 private:
     StoryScenePtr m_storyScene;
     SelectNodeModelPtr m_storyNodeSelectModel;
-
-    StoryCommon::StoryInfo m_currentStory;
 };

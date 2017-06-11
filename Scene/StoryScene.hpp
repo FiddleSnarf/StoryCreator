@@ -2,11 +2,12 @@
 
 #include <QGraphicsScene>
 #include <QList>
-#include <QSet>
+#include <set>
+
+#include "Items/StoryNodeItemImpl.hpp"
+#include "Common/StoryCommon.hpp"
 
 class StoryNodeItem;
-
-typedef QSet<int> IDSet;
 
 class StoryScene : public QGraphicsScene
 {
@@ -21,7 +22,9 @@ public:
 	~StoryScene();
 
     int nodeCount() const;
-    QList<StoryNodeItem*> getStoryNodeList() const;
+    StoryNodeItemList getStoryNodeList() const;
+
+    void initStoryInfo(const StoryCommon::StoryInfo& storyInfo);
 
 public slots:
     void clearScene();
@@ -34,11 +37,12 @@ protected:
 
 
 private:
-    void addStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos);
+    bool addEmptyStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos);
+    bool addStoryNode(const StoryNode& node);
     int getFreeID() const;
 
 private:
-    IDSet m_setLimitID;
+    std::set<int> m_idSet;  /**< Множество выданных id-шников. */
 };
 
 typedef QSharedPointer<StoryScene> StoryScenePtr;

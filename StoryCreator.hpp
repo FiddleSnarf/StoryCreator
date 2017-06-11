@@ -18,7 +18,7 @@ class StoryCreator : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit StoryCreator(ICorePtr core, QWidget* parent = nullptr);
+    explicit StoryCreator(ICorePtr core, QWidget* parent = Q_NULLPTR);
     ~StoryCreator();
 
 private:

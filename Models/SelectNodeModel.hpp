@@ -11,7 +11,7 @@ class SelectNodeModel : public QAbstractListModel
     Q_OBJECT
 
 public:
-    explicit SelectNodeModel(QObject* parent = nullptr);
+    explicit SelectNodeModel(QObject* parent = Q_NULLPTR);
     virtual ~SelectNodeModel();
 
     // ========== наследие QAbstractListModel ============

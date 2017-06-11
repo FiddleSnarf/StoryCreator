@@ -1,27 +1,14 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
-#include <Qpen>
-#include <limits>
 
 #include "StoryScene.hpp"
-#include "Items/StoryNodeItemImpl.hpp"
-#include "Common/StoryCommon.hpp"
 
 //===================================== public ==========================================
 
 StoryScene::StoryScene(QObject* parent) :
     QGraphicsScene(parent)
 {
-    /* Это конечно не круто, но ничего лучше не придумал
-     * Эта точка выступает какбе якорем для правильного
-     * увеличения размера сцены относительно начала координал при
-     * добавлении новых элементов (в частности первого)
-     */
-    addLine(0, 0, 1, 1, QPen(Qt::white, 0));
-    for (int i = 0; i < LIMIT_ID; i++)
-    {
-        m_setLimitID.insert(i);
-    }
+
 }
 
 StoryScene::~StoryScene()
@@ -34,16 +21,21 @@ int StoryScene::nodeCount() const
     return getStoryNodeList().size();
 }
 
-QList<StoryNodeItem*> StoryScene::getStoryNodeList() const
+StoryNodeItemList StoryScene::getStoryNodeList() const
 {
-    QList<StoryNodeItem*> storyNodes;
+    StoryNodeItemList storyNodes;
     foreach(auto& item, items())
     {
-        StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItem*>(item);
+        StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItemPtr>(item);
         if (storyItem)
             storyNodes << storyItem;
     }
     return storyNodes;
+}
+
+void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
+{
+    // TODO теперь надо добавить все ноды на сцену
 }
 
 //=======================================================================================
@@ -52,7 +44,7 @@ QList<StoryNodeItem*> StoryScene::getStoryNodeList() const
 
 void StoryScene::clearScene()
 {
-    clear();
+    //clear();
 }
 
 //=======================================================================================
@@ -61,7 +53,7 @@ void StoryScene::clearScene()
 
 void StoryScene::dragEnterEvent(QGraphicsSceneDragDropEvent* event)
 {
-    if (event->mimeData()->hasFormat(SoryGUI::NODE_MIME_TYPE))
+    if (event->mimeData()->hasFormat(StoryGUI::NODE_MIME_TYPE))
         event->acceptProposedAction();
 }
 
@@ -78,10 +70,10 @@ void StoryScene::dragMoveEvent(QGraphicsSceneDragDropEvent* event)
 void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
 {
     const QMimeData* data = event->mimeData();
-    if (!data->hasFormat(SoryGUI::NODE_MIME_TYPE))
+    if (!data->hasFormat(StoryGUI::NODE_MIME_TYPE))
         return;
 
-    QByteArray encodedData = data->data(SoryGUI::NODE_MIME_TYPE);
+    QByteArray encodedData = data->data(StoryGUI::NODE_MIME_TYPE);
     QDataStream stream(&encodedData, QIODevice::ReadOnly);
     QIcon icon;
     QString nodeType;
@@ -89,44 +81,50 @@ void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
     {
         stream >> nodeType >> icon;
     }
-    QPointF p = event->scenePos();
-    p.setX(p.x() - StoryNodeItem::DEFAULT_NODE_SIZE.width()/2);
-    p.setY(p.y() - StoryNodeItem::DEFAULT_NODE_SIZE.height()/2);
-    addStoryNode(nodeType, icon, p);
+    QPointF pos = event->scenePos(); // TODO Поправить рассчет координат для сцены фиксированного размера, и вообще при дропе сделать рамку показывающую куда ляжет нод
+    pos.setX(pos.x() - StoryGUI::NODE_ITEM_SIZE.width() / 2);
+    pos.setY(pos.y() - StoryGUI::NODE_ITEM_SIZE.height() / 2);
+    addEmptyStoryNode(nodeType, icon, pos);
 }
 
 //=======================================================================================
 
 //===================================== private =========================================
 
-void StoryScene::addStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos)
+bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos)
 {
-    StoryNodeItem* node = new StoryNodeItem(getFreeID(), nodeType);
+    const int newId = getFreeID();
+    if (newId == StoryCommon::ERROR_NODE_ID)
+        return false;
+
+    StoryNodeItem* node = new StoryNodeItem(newId, nodeType);
     node->setFlag(QGraphicsItem::ItemIsMovable, true);
     node->setIcon(icon);
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
-    /*if (getStoryNodeList().isEmpty())
-        node->getNodeInfo().setEntryPointFlag(true);
 
-    addItem(node);*/
+    addItem(node);
+    m_idSet.insert(newId);
+    return true;
+}
+
+bool StoryScene::addStoryNode(const StoryNode& node)
+{
+    // TODO
+    return true;
 }
 
 int StoryScene::getFreeID() const
 {
-    IDSet currIDSet;
-    /*foreach (auto& node, getStoryNodeList())
+    if (!m_idSet.empty())
     {
-        currIDSet.insert(node->getNodeInfo().getNodeID());
-    }*/
-    IDSet resultSet = m_setLimitID - currIDSet;
-    if (!resultSet.isEmpty())
-        return *resultSet.begin();
-    else
-    {
-        //TODO Выводить что-нить в лог ошибок
-        return -1;
+        int lastId = *m_idSet.crbegin();
+        if (lastId < INT_MAX - 1)
+            return ++lastId;
+        else
+            return StoryCommon::ERROR_NODE_ID;
     }
+    return StoryCommon::HEAD_NODE_ID;
 }
 
 //=======================================================================================

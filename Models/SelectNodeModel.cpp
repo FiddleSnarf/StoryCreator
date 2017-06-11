@@ -48,14 +48,14 @@ QMimeData* SelectNodeModel::mimeData(const QModelIndexList& indexes) const
     QString nodeType = data(idx, Qt::UserRole).toString();
     stream << nodeType << icon;
 
-    mimeData->setData(SoryGUI::NODE_MIME_TYPE, encodedData);
+    mimeData->setData(StoryGUI::NODE_MIME_TYPE, encodedData);
     return mimeData;
 }
 
 QStringList SelectNodeModel::mimeTypes() const
 {
     QStringList types;
-    types << SoryGUI::NODE_MIME_TYPE;
+    types << StoryGUI::NODE_MIME_TYPE;
     return types;
 }
 

@@ -39,7 +39,8 @@ HEADERS  += \
     JsonStoryHelper/NodeAction.h \
     JsonStoryHelper/StoryNode.h \
     JsonStoryHelper/JsonStoryHelper.h \
-    Common/StoryJsonTags.hpp
+    Common/StoryJsonTags.hpp \
+    Common/StoryTypesNodeCollector.hpp
 
 FORMS    += \
     StoryCreator.ui
