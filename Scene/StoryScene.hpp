@@ -12,6 +12,8 @@ class StoryNodeItem;
 
 class StoryScene : public QGraphicsScene
 {
+    Q_OBJECT
+
 private:
     static const int NODE_Z_DEPTH = 2;
     static const int LINK_Z_DEPTH = 1;
@@ -28,7 +30,11 @@ public:
     int getFreeID() const;
 
 public slots:
-    void clearScene();
+    void slotClearScene();
+    void slotItemSelection();
+
+signals:
+    void signalItemSelected();
 
 protected:
     void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;

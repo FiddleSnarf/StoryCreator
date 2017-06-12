@@ -1,4 +1,5 @@
 #include <QPainter>
+#include <QGraphicsSceneMouseEvent>
 #include "StoryNodeItemImpl.hpp"
 #include "Common/StoryCommon.hpp"
 #include "Scene/StoryScene.hpp"
@@ -20,6 +21,7 @@ StoryNodeItem::StoryNodeItem(const StoryNode& nodeInfo, QGraphicsItem* parent) :
         }
     }
     m_nodeInfo = nodeInfo;
+    initialization();
 }
 
 StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem* parent) :
@@ -27,12 +29,18 @@ StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem*
     m_boundingRect(StoryGUI::DEFAULT_NODE_RECT),
     m_nodeInfo(nodeID, typeNode)
 {
-
+    initialization();
 }
 
 StoryNodeItem::~StoryNodeItem()
 {
 
+}
+
+void StoryNodeItem::initialization()
+{
+    setFlag(QGraphicsItem::ItemIsSelectable);
+    m_borderPen = isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN;
 }
 
 void StoryNodeItem::setIcon(const QIcon& icon)
@@ -48,6 +56,20 @@ StoryNode& StoryNodeItem::getNodeInfo()
 const StoryNode& StoryNodeItem::getNodeInfo() const
 {
     return m_nodeInfo;
+}
+
+bool StoryNodeItem::isHeadNode() const
+{
+    return m_nodeInfo.getId() == StoryCommon::HEAD_NODE_ID;
+}
+
+//=======================================================================================
+
+//================================== protected ==========================================
+void StoryNodeItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton)
+        emit signalSelected();
 }
 
 //=======================================================================================
@@ -69,7 +91,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     const qreal w = m_boundingRect.width();
     const qreal h = m_boundingRect.height();
 
-    painter->setPen(isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN);
+    painter->setPen(m_borderPen);
     painter->drawRect(QRectF(5, 5, w - 10, h - 10));
 
     // рисуем title и Node ID
@@ -83,10 +105,4 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     const qreal pixH = h/3;
     painter->drawPixmap(QPointF(w/2 - pixW/2, h/2 - pixH/4), m_icon.pixmap(pixW, pixH));
 }
-
-bool StoryNodeItem::isHeadNode() const
-{
-    return m_nodeInfo.getId() == StoryCommon::HEAD_NODE_ID;
-}
-
 //=======================================================================================

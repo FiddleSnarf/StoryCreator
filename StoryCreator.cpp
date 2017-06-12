@@ -92,10 +92,12 @@ void StoryCreator::slotStorySceneChanged()
 
 void StoryCreator::slotStoryOpened()
 {
+    m_actCloseStory->setEnabled(true);
 }
 
 void StoryCreator::slotStoryClosed()
 {
+    m_actCloseStory->setEnabled(false);
 }
 
 //=======================================================================================

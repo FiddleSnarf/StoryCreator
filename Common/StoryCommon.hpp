@@ -40,7 +40,7 @@ namespace StoryGUI
 
     const int DEFAULT_SCENE_WIDTH = 1200;
     const int DEFAULT_SCENE_HEIGHT = 1200;
-    const QRectF DEFAULT_SCENE_RECT = QRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
+    const QRectF DEFAULT_SCENE_RECT = QRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT); // TODO возможно не понадобится
 }
 
 namespace StoryCommon

@@ -86,9 +86,20 @@ void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 
 //===================================== public slots ====================================
 
-void StoryScene::clearScene()
+void StoryScene::slotClearScene()
 {
     //clear();
+}
+
+void StoryScene::slotItemSelection()
+{
+    clearSelection();
+    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(sender());
+    if (item)
+    {
+        item->setSelected(true);
+        emit signalItemSelected();
+    }
 }
 
 //=======================================================================================
@@ -147,6 +158,7 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
+    connect(node, &StoryNodeItem::signalSelected, this, &StoryScene::slotItemSelection);
     addItem(node);
     m_idSet.insert(newId);
     return true;
@@ -160,6 +172,7 @@ bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
+    connect(node, &StoryNodeItem::signalSelected, this, &StoryScene::slotItemSelection);
     addItem(node);
     m_idSet.insert(node->getNodeInfo().getId());
     return true;

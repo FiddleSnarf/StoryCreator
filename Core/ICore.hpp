@@ -4,6 +4,9 @@
 
 typedef QSharedPointer<class StoryManager> StoryManagerPtr;
 
+/** \class ICore
+ *  \brief Класс интерфейс ядра.
+ */
 class ICore
 {
 public:
