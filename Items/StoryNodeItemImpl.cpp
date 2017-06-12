@@ -1,13 +1,31 @@
 #include <QPainter>
 #include "StoryNodeItemImpl.hpp"
 #include "Common/StoryCommon.hpp"
+#include "Scene/StoryScene.hpp"
 
 //================================== public =============================================
 
+StoryNodeItem::StoryNodeItem(const StoryNode& nodeInfo, QGraphicsItem* parent) :
+    QGraphicsObject(parent),
+    m_boundingRect(StoryGUI::DEFAULT_NODE_RECT)
+{
+    const int id = nodeInfo.getId();
+    if (id < 0)
+    {
+        StoryScene* myScene = dynamic_cast<StoryScene*>(this->scene());
+        if (myScene)
+        {
+            m_nodeInfo = StoryNode(myScene->getFreeID(), nodeInfo.getType());
+            return;
+        }
+    }
+    m_nodeInfo = nodeInfo;
+}
+
 StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem* parent) :
-    QGraphicsObject(parent)
-    , m_boundingRect(QRectF(0, 0, StoryGUI::NODE_ITEM_SIZE.width(), StoryGUI::NODE_ITEM_SIZE.height()))
-    , m_nodeInfo(nodeID, typeNode)
+    QGraphicsObject(parent),
+    m_boundingRect(StoryGUI::DEFAULT_NODE_RECT),
+    m_nodeInfo(nodeID, typeNode)
 {
 
 }
@@ -27,7 +45,7 @@ StoryNode& StoryNodeItem::getNodeInfo()
     return m_nodeInfo;
 }
 
-StoryNode StoryNodeItem::getNodeInfo() const
+const StoryNode& StoryNodeItem::getNodeInfo() const
 {
     return m_nodeInfo;
 }

@@ -2,13 +2,12 @@
 #include "JsonStoryHelper/JsonStoryHelper.h"
 #include "Common/StoryTypesNodeCollector.hpp"
 
-const QString StoryManager::CURR_JSON_VERSION = "1.0";
-
 StoryManager::StoryManager(QObject* parent) :
     QObject(parent),
-    m_storyScene(new StoryScene),
+    m_storyScene(new StoryScene()),
     m_storyNodeSelectModel(new SelectNodeModel)
 {
+    m_storyScene->setTypesNodeCollector(m_typesCollector);
     initialization();
 }
 
@@ -34,13 +33,12 @@ int StoryManager::getCountStoryNodes() const
 
 void StoryManager::initialization()
 {
-    StoryTypesNodeCollector typesCollector;
     StoryCommon::SelectTNodeList templateNodeList;
-    QStringList nodesNameList = typesCollector.getNodesNameList();
+    QStringList nodesNameList = m_typesCollector.getNodesNameList();
     foreach(const QString& nodeName, nodesNameList)
     {
         StoryCommon::NodeSelectTemplate templateNode;
-        const StoryTypesNodeCollector::TypeInfo typeInfo = typesCollector.getNodeTypeInfo(nodeName);
+        const StoryTypesNodeCollector::TypeInfo typeInfo = m_typesCollector.getNodeTypeInfo(nodeName);
 
         templateNode.nodeType = nodeName;
         templateNode.toolTip = typeInfo.descriptionType;
@@ -53,14 +51,29 @@ void StoryManager::initialization()
 
 void StoryManager::createNewStory()
 {
-    const StoryCommon::StoryInfo newStoryInfo(CURR_JSON_VERSION);
+    const StoryCommon::StoryInfo newStoryInfo(StoryCommon::CURR_JSON_VERSION);
+    // TODO Возможно тут прийдется добавлять пустой айтем и тут же удалять его, чтобы установить размер сцены и при этом дать ей возможность расширяться
+    //m_storyScene->setSceneRect(StoryGUI::DEFAULT_SCENE_RECT);
     m_storyScene->initStoryInfo(newStoryInfo);
     emit signalStoryOpened();
 }
 
 void StoryManager::loadStory()
 {
+    const QString filePath = JsonStoryHelper::selectLoadStoryFilePath();
+    if (!filePath.isEmpty())
+    {
+        StoryCommon::StoryInfo storyInfo;
+        if (!JsonStoryHelper::loadJsonStory(filePath, storyInfo))
+        {
+            return; // TODO сделать что-нить
+        }
+        //if (!storyInfo.additionalViewParams.isValid()) // TODO с размерами сцены вообще сложный вопрос, надо подумать
+        //    m_storyScene->setSceneRect(StoryGUI::DEFAULT_SCENE_RECT);
 
+        m_storyScene->initStoryInfo(storyInfo);
+        emit signalStoryOpened();
+    }
 }
 
 void StoryManager::closeStory()

@@ -13,12 +13,13 @@ public:
     int type() const override{return Type;}
 
 public:
+    explicit StoryNodeItem(const StoryNode& nodeInfo, QGraphicsItem* parent = Q_NULLPTR);
     explicit StoryNodeItem(int nodeID, const QString& typeNode, QGraphicsItem* parent = Q_NULLPTR);
     ~StoryNodeItem();
 
     void setIcon(const QIcon& icon);
     StoryNode& getNodeInfo();
-    StoryNode getNodeInfo() const;
+    const StoryNode& getNodeInfo() const;
 
 private:
     QRectF boundingRect() const override;

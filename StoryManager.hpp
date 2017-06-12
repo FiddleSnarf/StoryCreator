@@ -8,10 +8,8 @@ class StoryManager : public QObject
 {
     Q_OBJECT
 
-    static const QString CURR_JSON_VERSION;
-
 public:
-    explicit StoryManager(QObject* parent = Q_NULLPTR);
+    StoryManager(QObject* parent = Q_NULLPTR);
     virtual ~StoryManager();
 
     StoryScenePtr getStoryScene();
@@ -33,6 +31,7 @@ private:
     void initialization();
 
 private:
+    StoryTypesNodeCollector m_typesCollector;
     StoryScenePtr m_storyScene;
     SelectNodeModelPtr m_storyNodeSelectModel;
 };

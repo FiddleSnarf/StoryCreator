@@ -12,6 +12,8 @@ public:
      */
     virtual ~ICore() {}
 
+    /** \brief Метод возвращает указатель на StoryManager.
+     */
     virtual StoryManagerPtr getStoryManager() const = 0;
 };
 

@@ -22,23 +22,31 @@ namespace StoryGUI
     struct StoryAdditionalInfo
     {
         SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
-        QRectF sceneRect;                   /**< Параметры сцены. */
+        //QRectF sceneRect;                   /**< Параметры сцены. */ // TODO Скорее всего это не понадобится
 
         /** \brief Проверка на валидность
          */
         bool isValid() const
         {
-            return !sceneRect.isNull();
+            return !nodesPosMap.isEmpty();
         }
     };
 
-    const QSize NODE_ITEM_SIZE = QSize(150, 150);           /**< Размер ноды на сцене в пикселах. */
+    const int DEFAULT_NODE_WIDTH = 150;
+    const int DEFAULT_NODE_HEIGHT = 150;
+    const QRectF DEFAULT_NODE_RECT = QRect(0, 0, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT);
     const QPen NODE_PEN = QPen(QColor("#009966"), 2);       /**< Pen (в данном случае - цвет рамки) для нода. */
     const QPen HEAD_NODE_PEN = QPen(QColor("#7308d1"), 3);  /**< Pen (в данном случае - цвет рамки) для нода. */
+
+    const int DEFAULT_SCENE_WIDTH = 1200;
+    const int DEFAULT_SCENE_HEIGHT = 1200;
+    const QRectF DEFAULT_SCENE_RECT = QRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT);
 }
 
 namespace StoryCommon
 {
+    const QString CURR_JSON_VERSION = "1.0";
+
     const int HEAD_NODE_ID = 0;     /**< ID головного нода. */
     const int ERROR_NODE_ID = -1;    /**< некорректный ID нода. */
 

@@ -37,8 +37,12 @@ private:
     ICorePtr m_core;
     StoryManagerPtr m_storyManager;
 
-    // toolBar
-    QAction* m_actClear; // TODO всю эту шляпу заменить на отдельный тул бар
+    // Tool bar
+    QPointer<QAction> m_actCreateNewStory;
+    QPointer<QAction> m_actLoadStory;
+    QPointer<QAction> m_actCloseStory;
+
+    // Status bar
     QPointer<QLabel> m_nodeCounterView; // TODO всю эту шляпу заменить на отдельный статус бар
 };
 

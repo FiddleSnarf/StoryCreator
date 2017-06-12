@@ -16,8 +16,9 @@ public:
      */
     virtual ~CoreImpl();
 
-    /////////////////////////////наследие ICore////////////////////////////////
+    //==================== наследие ICore ======================
     StoryManagerPtr getStoryManager() const override;
+    //==========================================================
 
 private:
     StoryManagerPtr m_storyManager;

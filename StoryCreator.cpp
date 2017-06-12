@@ -51,24 +51,31 @@ void StoryCreator::initToolBar()
     m_ui->mainToolBar->setContextMenuPolicy(Qt::PreventContextMenu);
 
     QList<QAction*> actions;
-    m_actClear = new QAction(QIcon(":/tool_bar_icons/Resources/clear.png"), "Clear");
-    actions << m_actClear;
+    m_actCreateNewStory = new QAction(QIcon(":/tool_bar_icons/Resources/new_story.png"), tr("Create new story"));
+    m_actLoadStory = new QAction(QIcon(":/tool_bar_icons/Resources/load_story.png"), tr("Open story"));
+    m_actCloseStory = new QAction(QIcon(":/tool_bar_icons/Resources/close_story.png"), tr("Close story"));
+    actions << m_actCreateNewStory << m_actLoadStory << m_actCloseStory;
     m_ui->mainToolBar->addActions(actions);
 
+    m_actCloseStory->setEnabled(false);
+
 
     m_ui->mainToolBar->addSeparator();
     m_ui->mainToolBar->addSeparator();
-    m_nodeCounterView = new QLabel(QString("Node count: %1").arg(0));
+    m_nodeCounterView = new QLabel(tr("The number of nodes: %1").arg(0));
     m_ui->mainToolBar->addWidget(m_nodeCounterView);
 }
 
 void StoryCreator::initConnects()
 {
-    // для story scene/view
+    //TODO сделать проверку коннектов
+    // Для story scene/view
     connect(m_storyManager->getStoryScene().data(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
 
-    // для toolbar
-    connect(m_actClear, &QAction::triggered, m_storyManager->getStoryScene().data(), &StoryScene::clearScene);
+    // Для toolbar
+    connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::createNewStory);
+    connect(m_actLoadStory, &QAction::triggered, m_storyManager.data(), &StoryManager::loadStory);
+    connect(m_actCloseStory, &QAction::triggered, m_storyManager.data(), &StoryManager::closeStory);
 }
 
 //=======================================================================================

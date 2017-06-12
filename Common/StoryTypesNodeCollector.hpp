@@ -23,28 +23,14 @@ public:
         QString descriptionType;    /**< Описание типа. */
         QIcon iconType;             /**< Иконка. */
     };
+    typedef QMap<QString, TypeInfo> TypeInfoMap;
 
-    StoryTypesNodeCollector()
-    {
-        // Добавляем все возможные стори ноды
-        m_typesMap["common"] = TypeInfo(QObject::tr("The most typical node"), QIcon(":/story_node_icons/Resources/new_icon.png"));
-    }
+    StoryTypesNodeCollector();
+    virtual ~StoryTypesNodeCollector();
 
-    QStringList getNodesNameList() const
-    {
-        return m_typesMap.keys();
-    }
-
-    StoryTypesNodeCollector::TypeInfo getNodeTypeInfo(const QString nodeType) const
-    {
-        TypeInfoMap::const_iterator it = m_typesMap.find(nodeType);
-        if (it != m_typesMap.cend())
-            return *it;
-
-        return StoryTypesNodeCollector::TypeInfo();
-    }
+    QStringList getNodesNameList() const;
+    StoryTypesNodeCollector::TypeInfo getNodeTypeInfo(const QString nodeType) const;
 
 private:
-    typedef QMap<QString, TypeInfo> TypeInfoMap;
     TypeInfoMap m_typesMap;     /**< Мапа всех допустимых типов нодов. */
 };

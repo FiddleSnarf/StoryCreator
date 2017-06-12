@@ -24,7 +24,8 @@ SOURCES += main.cpp\
     Core/CoreImpl.cpp \
     JsonStoryHelper/NodeAction.cpp \
     JsonStoryHelper/StoryNode.cpp \
-    JsonStoryHelper/JsonStoryHelper.cpp
+    JsonStoryHelper/JsonStoryHelper.cpp \
+    Common/StoryTypesNodeCollector.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \

@@ -1,9 +1,9 @@
+#include <QApplication>
 #include "StoryCreator.hpp"
 #include "Core/ICore.hpp"
 #include "Core/CoreImpl.hpp"
-#include <QApplication>
 
-int main(int argc, char *argv[])
+int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
 

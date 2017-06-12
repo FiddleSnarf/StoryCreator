@@ -5,6 +5,8 @@
         <file>Resources/bear_icon.png</file>
     </qresource>
     <qresource prefix="/tool_bar_icons">
-        <file>Resources/clear.png</file>
+        <file>Resources/close_story.png</file>
+        <file>Resources/new_story.png</file>
+        <file>Resources/load_story.png</file>
     </qresource>
 </RCC>

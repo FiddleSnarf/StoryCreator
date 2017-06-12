@@ -33,9 +33,53 @@ StoryNodeItemList StoryScene::getStoryNodeList() const
     return storyNodes;
 }
 
+int StoryScene::getFreeID() const
+{
+    if (!m_idSet.empty())
+    {
+        int lastId = *m_idSet.crbegin();
+        if (lastId < INT_MAX - 1)
+            return ++lastId;
+        else
+            return StoryCommon::ERROR_NODE_ID;
+    }
+    return StoryCommon::HEAD_NODE_ID;
+}
+
+void StoryScene::setTypesNodeCollector(const StoryTypesNodeCollector& collector)
+{
+    m_storyTypesNodeCollector = collector;
+}
+
 void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 {
-    // TODO теперь надо добавить все ноды на сцену
+    // Добавляем все ноды на сцену
+    if (storyInfo.additionalViewParams.isValid())
+    {
+        foreach(const StoryNode& node, storyInfo.nodeList)
+        {
+            addStoryNode(node, storyInfo.additionalViewParams.nodesPosMap[node.getId()]);
+        }
+    }
+    else
+    {
+        // TODO А вот тут должно быть умное авто-размещение нодов по сцене (пока что временная шляпа)
+        const int SHIFT = 5;
+        int counter = 0;
+        QPointF pos;
+        foreach(const StoryNode& node, storyInfo.nodeList)
+        {
+            if (counter == 30)
+            {
+                pos.setY(pos.y() + StoryGUI::DEFAULT_NODE_HEIGHT + SHIFT);
+                pos.setX(0.);
+                counter = 0;
+            }
+            addStoryNode(node, pos);
+            pos.setX(pos.x() + StoryGUI::DEFAULT_NODE_WIDTH + SHIFT);
+            counter++;
+        }
+    }
 }
 
 //=======================================================================================
@@ -82,8 +126,8 @@ void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
         stream >> nodeType >> icon;
     }
     QPointF pos = event->scenePos(); // TODO Поправить рассчет координат для сцены фиксированного размера, и вообще при дропе сделать рамку показывающую куда ляжет нод
-    pos.setX(pos.x() - StoryGUI::NODE_ITEM_SIZE.width() / 2);
-    pos.setY(pos.y() - StoryGUI::NODE_ITEM_SIZE.height() / 2);
+    pos.setX(pos.x() - StoryGUI::DEFAULT_NODE_WIDTH / 2);
+    pos.setY(pos.y() - StoryGUI::DEFAULT_NODE_HEIGHT / 2);
     addEmptyStoryNode(nodeType, icon, pos);
 }
 
@@ -108,23 +152,17 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
     return true;
 }
 
-bool StoryScene::addStoryNode(const StoryNode& node)
+bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
 {
-    // TODO
-    return true;
-}
+    StoryNodeItem* node = new StoryNodeItem(nodeInfo);
+    node->setFlag(QGraphicsItem::ItemIsMovable, true);
+    node->setIcon(m_storyTypesNodeCollector.getNodeTypeInfo(nodeInfo.getType()).iconType);
+    node->setPos(pos);
+    node->setZValue(NODE_Z_DEPTH);
 
-int StoryScene::getFreeID() const
-{
-    if (!m_idSet.empty())
-    {
-        int lastId = *m_idSet.crbegin();
-        if (lastId < INT_MAX - 1)
-            return ++lastId;
-        else
-            return StoryCommon::ERROR_NODE_ID;
-    }
-    return StoryCommon::HEAD_NODE_ID;
+    addItem(node);
+    m_idSet.insert(node->getNodeInfo().getId());
+    return true;
 }
 
 //=======================================================================================

@@ -12,9 +12,10 @@ StoryNode::StoryNode() :
 StoryNode::StoryNode(int id, const QString& type) :
     m_id(id),
     m_type(type),
-    m_isValid(true)
+    m_isValid(false)
 {
-
+    if (id > 0 && !type.isEmpty())
+        m_isValid = true;
 }
 
 StoryNode::~StoryNode()
@@ -24,10 +25,7 @@ StoryNode::~StoryNode()
 
 void StoryNode::read(const QJsonObject& jsonNode)
 {
-    if (!jsonNode.contains(StoryJsonTags::nodeID_tag) ||
-        !jsonNode.contains(StoryJsonTags::title_tag) ||
-        !jsonNode.contains(StoryJsonTags::text_tag) ||
-        !jsonNode.contains(StoryJsonTags::type_tag))
+    if (!jsonNode.contains(StoryJsonTags::nodeID_tag) || !jsonNode.contains(StoryJsonTags::type_tag))
     {
         m_isValid = false;
         return;
@@ -37,6 +35,12 @@ void StoryNode::read(const QJsonObject& jsonNode)
     m_type = jsonNode[StoryJsonTags::type_tag].toString();
     m_title = jsonNode[StoryJsonTags::title_tag].toString();
     m_text = jsonNode[StoryJsonTags::text_tag].toString();
+
+    if (m_id < 0 || m_type.isEmpty())
+        m_isValid = false;
+    else
+        m_isValid = true;
+
     if (jsonNode.contains(StoryJsonTags::actions_tag))
     {
         QJsonArray actionsArray = jsonNode[StoryJsonTags::actions_tag].toArray();
@@ -51,7 +55,6 @@ void StoryNode::read(const QJsonObject& jsonNode)
             }
         }
     }
-    m_isValid = true;
 }
 
 void StoryNode::write(QJsonObject& jsonObject) const
