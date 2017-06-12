@@ -31,6 +31,9 @@ private:
 private slots:
     void slotStorySceneChanged();
 
+    void slotStoryOpened();
+    void slotStoryClosed();
+
 
 private:
     QScopedPointer<Ui::StoryCreator> m_ui;

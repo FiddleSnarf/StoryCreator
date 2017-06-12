@@ -66,11 +66,12 @@ void StoryManager::loadStory()
         StoryCommon::StoryInfo storyInfo;
         if (!JsonStoryHelper::loadJsonStory(filePath, storyInfo))
         {
-            return; // TODO сделать что-нить
+            return; // TODO сделать какое-нить сообщение пользователю
         }
         //if (!storyInfo.additionalViewParams.isValid()) // TODO с размерами сцены вообще сложный вопрос, надо подумать
         //    m_storyScene->setSceneRect(StoryGUI::DEFAULT_SCENE_RECT);
 
+        // TODO А вот тут надо бы сделать проверку StoryInfo на всякие ошибки, типа дублирование нодов и.т.д
         m_storyScene->initStoryInfo(storyInfo);
         emit signalStoryOpened();
     }
@@ -78,5 +79,6 @@ void StoryManager::loadStory()
 
 void StoryManager::closeStory()
 {
-
+    // TODO сделать что-то со сценой
+    emit signalStoryClosed();
 }

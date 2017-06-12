@@ -69,6 +69,9 @@ void StoryCreator::initToolBar()
 void StoryCreator::initConnects()
 {
     //TODO сделать проверку коннектов
+    connect(m_storyManager.data(), &StoryManager::signalStoryOpened, this, &StoryCreator::slotStoryOpened);
+    connect(m_storyManager.data(), &StoryManager::signalStoryClosed, this, &StoryCreator::slotStoryClosed);
+
     // Для story scene/view
     connect(m_storyManager->getStoryScene().data(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
 
@@ -85,6 +88,14 @@ void StoryCreator::initConnects()
 void StoryCreator::slotStorySceneChanged()
 {
     m_nodeCounterView->setText(QString(tr("Node count: %1")).arg(m_storyManager->getCountStoryNodes()));
+}
+
+void StoryCreator::slotStoryOpened()
+{
+}
+
+void StoryCreator::slotStoryClosed()
+{
 }
 
 //=======================================================================================
