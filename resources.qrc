@@ -1,8 +1,6 @@
 <RCC>
     <qresource prefix="/story_node_icons">
         <file>Resources/new_icon.png</file>
-        <file>Resources/airplane_icon.png</file>
-        <file>Resources/bear_icon.png</file>
     </qresource>
     <qresource prefix="/tool_bar_icons">
         <file>Resources/close_story.png</file>
