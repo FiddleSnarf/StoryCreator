@@ -4,6 +4,7 @@
 #include <QIcon>
 #include <QSize>
 #include <QPen>
+#include <QTimeLine>
 
 #include "JsonStoryHelper/StoryNode.h"
 
@@ -15,6 +16,18 @@
 class StoryNodeItem : public QGraphicsObject
 {
     Q_OBJECT
+
+    // Параметры для мигания
+    static const int RED_MIN    = 180;
+    static const int RED_MAX    = 255;
+    static const int GREEN_MIN  = 130;
+    static const int GREEN_MAX  = 190;
+    static const int GREEN_MIN_HEAD  = 25;
+    static const int GREEN_MAX_HEAD  = 125;
+    static const int FRAMES     = 30;
+    static const int TIME_LINE  = 600;
+
+    static const int SELECTED_NODE_FRAME_WIDTH = 4; /**< Толщина рамки выделенного нода. */
 
 public:
     enum { Type = UserType + 1 };
@@ -38,20 +51,30 @@ public:
      */
     bool isHeadNode() const;
 
-signals:
-    /** \brief Сигнал испускается при выделении нода.
+    /** \brief Устанавливает статус нода как "выбранный".
      */
-    void signalSelected();
-
-protected:
-    /** \brief Переопределенное событие нажатия мыши.
-     */
-    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
+    void setNodeSelection(bool state);
 
 private:
     /** \brief Инициализация начальных параметров.
      */
     void initialization();
+
+    /** \brief Инициализация параметров пульсации при выделении.
+     */
+    void initSelectedPulse();
+
+    /** \brief Инициализация параметров пульсации при ошибке.
+     */
+    void initErrorPulse();
+
+    /** \brief Устанавливает цвет рамки нода по умолчанию.
+     */
+    void setDefaultPen();
+
+    /** \brief Устанавливает заливку нода по умолчанию.
+     */
+    void setDefaultBrush();
 
     /** \brief Переопределенный метод возвращающий область для перерисовки (весь айтем должен быть нарисован внутри этой области).
      */
@@ -62,10 +85,15 @@ private:
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
 private:
-    QPen m_borderPen;       /**< Ручка для отрисовки нода. */ // TODO
+    QPen m_borderPen;       /**< Ручка для отрисовки нода. */
+    QBrush m_brush;         /**< Заливка фона нода. */
+
     QRectF m_boundingRect;  /**< Перерисовываемая область. */
     QIcon m_icon;           /**< Иконка. */
     StoryNode m_nodeInfo;   /**< Информация о ноде в том виде в котором она хранится в json. */
+
+    QTimeLine m_selectedTimeline;   /**< Для пульсации рамки нода во время выделения */
+    QTimeLine m_errorTimeline;      /**< Для пульсации рамки нода в случае ошибки */
 };
 
 typedef class StoryNodeItem* StoryNodeItemPtr;

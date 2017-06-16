@@ -40,7 +40,79 @@ StoryNodeItem::~StoryNodeItem()
 void StoryNodeItem::initialization()
 {
     setFlag(QGraphicsItem::ItemIsSelectable);
+    setDefaultPen();
+    setDefaultBrush();
+
+    initSelectedPulse();
+    initErrorPulse();
+}
+
+void StoryNodeItem::initSelectedPulse()
+{
+    m_selectedTimeline.setDuration(TIME_LINE);
+    m_selectedTimeline.setEasingCurve(QEasingCurve::Linear);
+    m_selectedTimeline.setFrameRange(0, FRAMES);
+
+    connect(&m_selectedTimeline, &QTimeLine::valueChanged, [=](double value)
+    {
+        QColor color;
+        if (isHeadNode())
+        {
+            const int green = ((GREEN_MAX_HEAD - GREEN_MIN_HEAD) * value) + GREEN_MIN_HEAD;
+            color = QColor(160, green, 245);
+        }
+        else
+        {
+            const int green = ((GREEN_MAX - GREEN_MIN) * value) + GREEN_MIN;
+            color = QColor(70, green, 70);
+        }
+        m_borderPen.setColor(color);
+        update();
+    });
+
+    connect(&m_selectedTimeline, &QTimeLine::finished, [=]()
+    {
+        if (m_selectedTimeline.direction() == QTimeLine::Forward)
+            m_selectedTimeline.setDirection(QTimeLine::Backward);
+        else if (m_selectedTimeline.direction() == QTimeLine::Backward)
+            m_selectedTimeline.setDirection(QTimeLine::Forward);
+
+        m_selectedTimeline.start();
+    });
+}
+
+void StoryNodeItem::initErrorPulse()
+{
+    m_errorTimeline.setDuration(TIME_LINE);
+    m_errorTimeline.setEasingCurve(QEasingCurve::OutQuad);
+    m_errorTimeline.setFrameRange(0, FRAMES);
+
+    connect(&m_errorTimeline, &QTimeLine::valueChanged, [=](double value)
+    {
+        const int red = ((RED_MAX - RED_MIN) * value) + RED_MIN;
+        m_borderPen.setColor(QColor(red, 0, 0));
+        update();
+    });
+
+    connect(&m_errorTimeline, &QTimeLine::finished, [=]()
+    {
+        if (m_errorTimeline.direction() == QTimeLine::Forward)
+            m_errorTimeline.setDirection(QTimeLine::Backward);
+        else if (m_errorTimeline.direction() == QTimeLine::Backward)
+            m_errorTimeline.setDirection(QTimeLine::Forward);
+
+        m_errorTimeline.start();
+    });
+}
+
+void StoryNodeItem::setDefaultPen()
+{
     m_borderPen = isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN;
+}
+
+void StoryNodeItem::setDefaultBrush()
+{
+    m_brush = isHeadNode() ? StoryGUI::HEAD_NODE_BRUSH : StoryGUI::NODE_BRUSH;
 }
 
 void StoryNodeItem::setIcon(const QIcon& icon)
@@ -63,17 +135,22 @@ bool StoryNodeItem::isHeadNode() const
     return m_nodeInfo.getId() == StoryCommon::HEAD_NODE_ID;
 }
 
-//=======================================================================================
-
-//================================== protected ==========================================
-void StoryNodeItem::mousePressEvent(QGraphicsSceneMouseEvent* event)
+void StoryNodeItem::setNodeSelection(bool state)
 {
-    if (event->button() == Qt::LeftButton)
-        emit signalSelected();
+    if (state)
+    {
+        m_borderPen.setWidth(SELECTED_NODE_FRAME_WIDTH);
+        m_selectedTimeline.start();
+    }
+    else
+    {
+        m_selectedTimeline.stop();
+        setDefaultPen();
+    }
+    setSelected(state);
 }
 
 //=======================================================================================
-
 //===================================== private =========================================
 
 QRectF StoryNodeItem::boundingRect() const
@@ -91,6 +168,7 @@ void StoryNodeItem::paint(QPainter* painter, const QStyleOptionGraphicsItem* opt
     const qreal w = m_boundingRect.width();
     const qreal h = m_boundingRect.height();
 
+    painter->setBrush(m_brush);
     painter->setPen(m_borderPen);
     painter->drawRect(QRectF(5, 5, w - 10, h - 10));
 

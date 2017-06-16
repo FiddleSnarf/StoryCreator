@@ -52,8 +52,6 @@ void StoryManager::initialization()
 void StoryManager::createNewStory()
 {
     const StoryCommon::StoryInfo newStoryInfo(StoryCommon::CURR_JSON_VERSION);
-    // TODO Возможно тут прийдется добавлять пустой айтем и тут же удалять его, чтобы установить размер сцены и при этом дать ей возможность расширяться
-    //m_storyScene->setSceneRect(StoryGUI::DEFAULT_SCENE_RECT);
     m_storyScene->initStoryInfo(newStoryInfo);
     emit signalStoryOpened();
 }

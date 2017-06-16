@@ -35,12 +35,13 @@ namespace StoryGUI
     const int DEFAULT_NODE_WIDTH = 150;
     const int DEFAULT_NODE_HEIGHT = 150;
     const QRectF DEFAULT_NODE_RECT = QRect(0, 0, DEFAULT_NODE_WIDTH, DEFAULT_NODE_HEIGHT);
-    const QPen NODE_PEN = QPen(QColor("#009966"), 2);       /**< Pen (в данном случае - цвет рамки) для нода. */
-    const QPen HEAD_NODE_PEN = QPen(QColor("#7308d1"), 3);  /**< Pen (в данном случае - цвет рамки) для нода. */
+    const QPen NODE_PEN = QPen(QColor("#009966"), 2);           /**< Pen (в данном случае - цвет рамки) для нода. */
+    const QPen HEAD_NODE_PEN = QPen(QColor("#7308D1"), 3);      /**< Pen (в данном случае - цвет рамки) для головного нода. */
+    const QBrush NODE_BRUSH = QBrush(QColor("#D4FFEB"));        /**< Brush (в данном случае - заливка) для нода. */
+    const QBrush HEAD_NODE_BRUSH = QBrush(QColor("#EFDAF5"));   /**< Brush (в данном случае - заливка) для головного нода. */
 
     const int DEFAULT_SCENE_WIDTH = 1200;
     const int DEFAULT_SCENE_HEIGHT = 1200;
-    const QRectF DEFAULT_SCENE_RECT = QRect(0, 0, DEFAULT_SCENE_WIDTH, DEFAULT_SCENE_HEIGHT); // TODO возможно не понадобится
 }
 
 namespace StoryCommon

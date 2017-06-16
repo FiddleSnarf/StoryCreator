@@ -31,16 +31,16 @@ public:
 
 public slots:
     void slotClearScene();
-    void slotItemSelection();
 
 signals:
     void signalItemSelected();
 
 protected:
-    void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
-    void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
-    void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
-    void dropEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
+    virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
 
 
 private:

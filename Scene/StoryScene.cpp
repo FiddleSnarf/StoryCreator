@@ -91,17 +91,6 @@ void StoryScene::slotClearScene()
     //clear();
 }
 
-void StoryScene::slotItemSelection()
-{
-    clearSelection();
-    QGraphicsItem* item = dynamic_cast<QGraphicsItem*>(sender());
-    if (item)
-    {
-        item->setSelected(true);
-        emit signalItemSelected();
-    }
-}
-
 //=======================================================================================
 
 //===================================== protected =======================================
@@ -142,6 +131,34 @@ void StoryScene::dropEvent(QGraphicsSceneDragDropEvent* event)
     addEmptyStoryNode(nodeType, icon, pos);
 }
 
+void StoryScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
+{
+    if (event->button() == Qt::LeftButton)
+    {
+        // Если нажали на уже выделенный нод, то ничего не делаем
+        StoryNodeItem* selectedNodeItem = dynamic_cast<StoryNodeItem*>(itemAt(event->scenePos(), QTransform()));
+        if (selectedNodeItem && selectedNodeItem->isSelected())
+        {
+            QGraphicsScene::mousePressEvent(event);
+            return;
+        }
+
+        // Снимаем выделение со всех выделенных нодов
+        QList<QGraphicsItem*> selectedItemsList = selectedItems();
+        for(QList<QGraphicsItem*>::iterator it = selectedItemsList.begin(); it != selectedItemsList.end(); ++it)
+        {
+            StoryNodeItem* nodeItem = dynamic_cast<StoryNodeItem*>(*it);
+            if (nodeItem)
+                nodeItem->setNodeSelection(false);
+        }
+
+        // Если нажали на нод, то выделяем его
+        if (selectedNodeItem)
+            selectedNodeItem->setNodeSelection(true);
+    }
+    QGraphicsScene::mousePressEvent(event);
+}
+
 //=======================================================================================
 
 //===================================== private =========================================
@@ -158,7 +175,6 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
-    connect(node, &StoryNodeItem::signalSelected, this, &StoryScene::slotItemSelection);
     addItem(node);
     m_idSet.insert(newId);
     return true;
@@ -172,7 +188,6 @@ bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
-    connect(node, &StoryNodeItem::signalSelected, this, &StoryScene::slotItemSelection);
     addItem(node);
     m_idSet.insert(node->getNodeInfo().getId());
     return true;
