@@ -5,6 +5,7 @@
 #include <QSize>
 #include <QPen>
 #include <QTimeLine>
+#include <QUuid>
 
 #include "JsonStoryHelper/StoryNode.h"
 
@@ -27,7 +28,7 @@ class StoryNodeItem : public QGraphicsObject
     static const int FRAMES     = 30;
     static const int TIME_LINE  = 600;
 
-    static const int SELECTED_NODE_FRAME_WIDTH = 4; /**< Толщина рамки выделенного нода. */
+    static const int SELECTED_NODE_FRAME_WIDTH = 5; /**< Толщина рамки выделенного нода. */
 
 public:
     enum { Type = UserType + 1 };
@@ -54,6 +55,10 @@ public:
     /** \brief Устанавливает статус нода как "выбранный".
      */
     void setNodeSelection(bool state);
+
+    /** \brief Получить GUID нода.
+     */
+    const QUuid& getNodeGUID();
 
 private:
     /** \brief Инициализация начальных параметров.
@@ -94,6 +99,8 @@ private:
 
     QTimeLine m_selectedTimeline;   /**< Для пульсации рамки нода во время выделения */
     QTimeLine m_errorTimeline;      /**< Для пульсации рамки нода в случае ошибки */
+
+    QUuid m_guid;                   /**< Совсем уникальный идентификатор нода */
 };
 
 typedef class StoryNodeItem* StoryNodeItemPtr;

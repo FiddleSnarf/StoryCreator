@@ -37,8 +37,63 @@ StoryNodeItem::~StoryNodeItem()
 
 }
 
+const QUuid& StoryNodeItem::getNodeGUID()
+{
+    return m_guid;
+}
+
+void StoryNodeItem::setDefaultPen()
+{
+    m_borderPen = isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN;
+}
+
+void StoryNodeItem::setDefaultBrush()
+{
+    m_brush = isHeadNode() ? StoryGUI::HEAD_NODE_BRUSH : StoryGUI::NODE_BRUSH;
+}
+
+void StoryNodeItem::setIcon(const QIcon& icon)
+{
+    m_icon = icon;
+}
+
+StoryNode& StoryNodeItem::getNodeInfo()
+{
+    return m_nodeInfo;
+}
+
+const StoryNode& StoryNodeItem::getNodeInfo() const
+{
+    return m_nodeInfo;
+}
+
+bool StoryNodeItem::isHeadNode() const
+{
+    return m_nodeInfo.getId() == StoryCommon::HEAD_NODE_ID;
+}
+
+void StoryNodeItem::setNodeSelection(bool state)
+{
+    if (state)
+    {
+        m_borderPen.setWidth(SELECTED_NODE_FRAME_WIDTH);
+        m_selectedTimeline.start();
+    }
+    else
+    {
+        m_selectedTimeline.stop();
+        setDefaultPen();
+    }
+    setSelected(state);
+}
+
+//=======================================================================================
+//===================================== private =========================================
+
 void StoryNodeItem::initialization()
 {
+    m_guid = QUuid::createUuid();
+
     setFlag(QGraphicsItem::ItemIsSelectable);
     setDefaultPen();
     setDefaultBrush();
@@ -104,54 +159,6 @@ void StoryNodeItem::initErrorPulse()
         m_errorTimeline.start();
     });
 }
-
-void StoryNodeItem::setDefaultPen()
-{
-    m_borderPen = isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN;
-}
-
-void StoryNodeItem::setDefaultBrush()
-{
-    m_brush = isHeadNode() ? StoryGUI::HEAD_NODE_BRUSH : StoryGUI::NODE_BRUSH;
-}
-
-void StoryNodeItem::setIcon(const QIcon& icon)
-{
-    m_icon = icon;
-}
-
-StoryNode& StoryNodeItem::getNodeInfo()
-{
-    return m_nodeInfo;
-}
-
-const StoryNode& StoryNodeItem::getNodeInfo() const
-{
-    return m_nodeInfo;
-}
-
-bool StoryNodeItem::isHeadNode() const
-{
-    return m_nodeInfo.getId() == StoryCommon::HEAD_NODE_ID;
-}
-
-void StoryNodeItem::setNodeSelection(bool state)
-{
-    if (state)
-    {
-        m_borderPen.setWidth(SELECTED_NODE_FRAME_WIDTH);
-        m_selectedTimeline.start();
-    }
-    else
-    {
-        m_selectedTimeline.stop();
-        setDefaultPen();
-    }
-    setSelected(state);
-}
-
-//=======================================================================================
-//===================================== private =========================================
 
 QRectF StoryNodeItem::boundingRect() const
 {

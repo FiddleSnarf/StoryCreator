@@ -10,29 +10,51 @@
 
 class StoryNodeItem;
 
+/** \class StoryScene
+ *  \brief Класс главной сцены.
+ */
 class StoryScene : public QGraphicsScene
 {
     Q_OBJECT
 
 private:
-    static const int NODE_Z_DEPTH = 2;
-    static const int LINK_Z_DEPTH = 1;
+    static const int NODE_Z_DEPTH = 2;  /**< Глубина слоя нодов. */
+    static const int LINK_Z_DEPTH = 1;  /**< Глубина слоя связей между нодами. */
 
 public:
     StoryScene(QObject* parent = Q_NULLPTR);
 	~StoryScene();
 
+    /** \brief Количество нодов на сцене.
+     */
     int nodeCount() const;
+
+    /** \brief Получить список нодов сцены.
+     */
     StoryNodeItemList getStoryNodeList() const;
 
+    /** \brief Установка описания типов нодов.
+     */
     void setTypesNodeCollector(const StoryTypesNodeCollector& collector);
+
+    /** \brief Инициализация сцены новой историей.
+     */
     void initStoryInfo(const StoryCommon::StoryInfo& storyInfo);
+
+    /** \brief Получение свободного ID для нода.
+     */
     int getFreeID() const;
 
 public slots:
+
+    /** \brief Очистка сцены.
+     */
     void slotClearScene();
 
 signals:
+
+    /** \brief Сигнал испускается при выделении ноды.
+     */
     void signalItemSelected();
 
 protected:
@@ -44,7 +66,13 @@ protected:
 
 
 private:
+
+    /** \brief Добавить на сцену пустой шаблон нода.
+     */
     bool addEmptyStoryNode(const QString& nodeType, const QIcon& icon, const QPointF& pos);
+
+    /** \brief Добавить на сцену ноду.
+     */
     bool addStoryNode(const StoryNode& nodeInfo, const QPointF& pos);
 
 private:

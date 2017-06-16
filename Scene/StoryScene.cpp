@@ -154,7 +154,10 @@ void StoryScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
 
         // Если нажали на нод, то выделяем его
         if (selectedNodeItem)
+        {
             selectedNodeItem->setNodeSelection(true);
+            emit signalItemSelected();
+        }
     }
     QGraphicsScene::mousePressEvent(event);
 }
