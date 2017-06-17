@@ -12,6 +12,7 @@ namespace Ui
     class StoryCreator;
 }
 class StoryManager;
+class StoryNodeItem;
 
 class StoryCreator : public QMainWindow
 {
@@ -19,7 +20,7 @@ class StoryCreator : public QMainWindow
 
 public:
     explicit StoryCreator(ICorePtr core, QWidget* parent = Q_NULLPTR);
-    ~StoryCreator();
+    virtual ~StoryCreator();
 
 private:
     void initialize();
@@ -29,10 +30,17 @@ private:
     void initSelectTemplateNodesView();
 
 private slots:
-    void slotStorySceneChanged();
+    /** \brief Слот вызывается при добавлении/удалении нодов.
+     */
+    void slotCountStoryNodesChanged();
 
-    void slotStoryOpened();
-    void slotStoryClosed();
+    /** \brief Слот вызывается при открытии/закрытии истории.
+     */
+    void slotStoryStateChanged(bool state);
+
+    /** \brief Слот вызывается при изменении состояния выделения нодов.
+     */
+    void slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
 
 
 private:

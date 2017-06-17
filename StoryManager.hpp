@@ -15,12 +15,11 @@ public:
     StoryScenePtr getStoryScene();
     SelectNodeModelPtr getStoryNodeSelectModel();
 
-    // методы для работы с основной сценой
     int getCountStoryNodes() const;
+    bool isStoryOpen() const;
 
 signals:
-    void signalStoryOpened();
-    void signalStoryClosed();
+    void signalStoryStateChanged(bool state);
 
 public slots:
     void createNewStory();
@@ -34,4 +33,6 @@ private:
     StoryTypesNodeCollector m_typesCollector;
     StoryScenePtr m_storyScene;
     SelectNodeModelPtr m_storyNodeSelectModel;
+
+    bool m_isStoryOpen;
 };

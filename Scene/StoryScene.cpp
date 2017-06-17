@@ -33,6 +33,18 @@ StoryNodeItemList StoryScene::getStoryNodeList() const
     return storyNodes;
 }
 
+StoryNodeItemList StoryScene::getSelectedStoryNodeList() const
+{
+    StoryNodeItemList selectedStoryNodes;
+    foreach(auto& item, selectedItems())
+    {
+        StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItemPtr>(item);
+        if (storyItem)
+            selectedStoryNodes << storyItem;
+    }
+    return selectedStoryNodes;
+}
+
 int StoryScene::getFreeID() const
 {
     if (!m_idSet.empty())
@@ -80,6 +92,7 @@ void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
             counter++;
         }
     }
+    emit signalCountStoryNodesChanged();
 }
 
 //=======================================================================================
@@ -156,8 +169,10 @@ void StoryScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
         if (selectedNodeItem)
         {
             selectedNodeItem->setNodeSelection(true);
-            emit signalItemSelected();
+            emit signalItemSelectedChanged(true, selectedNodeItem);
         }
+        else
+            emit signalItemSelectedChanged(false, nullptr);
     }
     QGraphicsScene::mousePressEvent(event);
 }
@@ -180,6 +195,7 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
 
     addItem(node);
     m_idSet.insert(newId);
+    emit signalCountStoryNodesChanged();
     return true;
 }
 

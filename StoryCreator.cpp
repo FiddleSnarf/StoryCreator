@@ -28,6 +28,11 @@ void StoryCreator::initialize()
     initConnects();
     initStoryView();
     initSelectTemplateNodesView();
+
+    m_ui->nodeRedactorTab->setEnabled(false);
+    m_ui->itemsRedactorTab->setEnabled(false);
+    m_actCloseStory->setEnabled(false);
+    m_ui->nodeInfoWidget->setVisible(false);
 }
 
 void StoryCreator::initStoryView()
@@ -68,12 +73,10 @@ void StoryCreator::initToolBar()
 
 void StoryCreator::initConnects()
 {
-    //TODO сделать проверку коннектов
-    connect(m_storyManager.data(), &StoryManager::signalStoryOpened, this, &StoryCreator::slotStoryOpened);
-    connect(m_storyManager.data(), &StoryManager::signalStoryClosed, this, &StoryCreator::slotStoryClosed);
+    connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
 
     // Для story scene/view
-    connect(m_storyManager->getStoryScene().data(), &QGraphicsScene::changed, this, &StoryCreator::slotStorySceneChanged);
+    connect(m_storyManager->getStoryScene().data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
 
     // Для toolbar
     connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::createNewStory);
@@ -85,19 +88,28 @@ void StoryCreator::initConnects()
 
 //============================================ private slots ============================
 
-void StoryCreator::slotStorySceneChanged()
+void StoryCreator::slotCountStoryNodesChanged()
 {
     m_nodeCounterView->setText(QString(tr("Node count: %1")).arg(m_storyManager->getCountStoryNodes()));
 }
 
-void StoryCreator::slotStoryOpened()
+void StoryCreator::slotStoryStateChanged(bool state)
 {
-    m_actCloseStory->setEnabled(true);
+    m_ui->nodeRedactorTab->setEnabled(state);
+    m_ui->itemsRedactorTab->setEnabled(state);
+    m_actCloseStory->setEnabled(state);
 }
 
-void StoryCreator::slotStoryClosed()
+void StoryCreator::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode)
 {
-    m_actCloseStory->setEnabled(false);
+    if (!state)
+    {
+        m_ui->nodeInfoWidget->setVisible(state);
+        return;
+    }else
+    {
+
+    }
 }
 
 //=======================================================================================

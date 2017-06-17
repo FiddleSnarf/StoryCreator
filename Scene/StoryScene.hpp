@@ -29,9 +29,13 @@ public:
      */
     int nodeCount() const;
 
-    /** \brief Получить список нодов сцены.
+    /** \brief Получить список нодов.
      */
     StoryNodeItemList getStoryNodeList() const;
+
+    /** \brief Получить список выделенных нодов.
+     */
+    StoryNodeItemList getSelectedStoryNodeList() const;
 
     /** \brief Установка описания типов нодов.
      */
@@ -55,7 +59,11 @@ signals:
 
     /** \brief Сигнал испускается при выделении ноды.
      */
-    void signalItemSelected();
+    void signalItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
+
+    /** \brief Сигнал испускается при добавлении/удалении нодов.
+     */
+    void signalCountStoryNodesChanged();
 
 protected:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
