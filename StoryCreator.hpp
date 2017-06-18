@@ -53,9 +53,12 @@ private:
     StoryManagerPtr m_storyManager;
 
     // Tool bar
-    QPointer<QAction> m_actCreateNewStory;
-    QPointer<QAction> m_actLoadStory;
-    QPointer<QAction> m_actCloseStory;
+    QPointer<QMenu>     m_saveMenu;
+    QPointer<QAction>   m_actCreateNewStory;
+    QPointer<QAction>   m_actLoadStory;
+    QPointer<QAction>   m_actCloseStory;
+    QPointer<QAction>   m_actSaveStory;
+    QPointer<QAction>   m_actSaveAsStory;
 
     // Status bar
     QPointer<QLabel> m_nodeCounterView; // TODO всю эту шляпу заменить на отдельный статус бар

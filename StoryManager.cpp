@@ -7,7 +7,8 @@ StoryManager::StoryManager(StoryTypesNodeCollector &collector, QObject* parent) 
     m_typesCollector(collector),
     m_storyScene(new StoryScene(collector)),
     m_storyNodeSelectModel(new SelectNodeModel),
-    m_isStoryOpen(false)
+    m_isStoryOpen(false),
+    m_isLoadedStory(false)
 {
     initialization();
 }
@@ -35,6 +36,11 @@ int StoryManager::getCountStoryNodes() const
 bool StoryManager::isStoryOpen() const
 {
     return m_isStoryOpen;
+}
+
+bool StoryManager::isStoryBeLoaded() const
+{
+    return m_isLoadedStory;
 }
 
 void StoryManager::initialization()
@@ -77,6 +83,7 @@ void StoryManager::slotLoadStory()
         // TODO А вот тут надо бы сделать проверку StoryInfo на всякие ошибки, типа дублирование нодов и.т.д
         m_storyScene->initStoryInfo(storyInfo);
         m_isStoryOpen = true;
+        m_isLoadedStory = true;
         emit signalStoryStateChanged(m_isStoryOpen);
     }
 }
@@ -85,5 +92,16 @@ void StoryManager::slotCloseStory()
 {
     m_storyScene.reset(new StoryScene(m_typesCollector));
     m_isStoryOpen = false;
+    m_isLoadedStory = false;
     emit signalStoryStateChanged(m_isStoryOpen);
+}
+
+void StoryManager::slotSaveStory()
+{
+    // TODO
+}
+
+void StoryManager::slotSaveAsStory()
+{
+    // TODO
 }

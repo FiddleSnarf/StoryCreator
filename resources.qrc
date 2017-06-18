@@ -6,5 +6,6 @@
         <file>Resources/close_story.png</file>
         <file>Resources/new_story.png</file>
         <file>Resources/load_story.png</file>
+        <file>Resources/save_story.png</file>
     </qresource>
 </RCC>

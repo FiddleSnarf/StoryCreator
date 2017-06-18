@@ -17,6 +17,7 @@ public:
 
     int getCountStoryNodes() const;
     bool isStoryOpen() const;
+    bool isStoryBeLoaded() const;
 
 signals:
     void signalStoryStateChanged(bool state);
@@ -25,6 +26,8 @@ public slots:
     void slotCreateNewStory();
     void slotLoadStory();
     void slotCloseStory();
+    void slotSaveStory();
+    void slotSaveAsStory();
 
 private:
     void initialization();
@@ -35,4 +38,5 @@ private:
     SelectNodeModelPtr m_storyNodeSelectModel;
 
     bool m_isStoryOpen;
+    bool m_isLoadedStory;   /**< Имеет ли текущая история путь к файлу для сохранения. */
 };
