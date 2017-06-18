@@ -12,6 +12,13 @@ NodeAction::~NodeAction()
 
 }
 
+bool NodeAction::operator==(const NodeAction& other) const
+{
+    return (m_actLogic == other.getActionLogic() &&
+            m_type == other.getActionType() &&
+            m_text == other.getActionText());
+}
+
 void NodeAction::read(const QJsonObject& jsonAction)
 {
     if (!jsonAction.contains(StoryJsonTags::type_tag))
@@ -46,4 +53,19 @@ void NodeAction::write(QJsonObject& jsonObject) const
 bool NodeAction::isValid() const
 {
     return m_isValid;
+}
+
+QString NodeAction::getActionLogic() const
+{
+    return m_actLogic;
+}
+
+QString NodeAction::getActionType() const
+{
+    return m_type;
+}
+
+QString NodeAction::getActionText() const
+{
+    return m_text;
 }

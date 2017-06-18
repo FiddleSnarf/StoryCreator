@@ -28,6 +28,15 @@ bool StoryNode::operator< (const StoryNode& other) const
     return m_id < other.getId();
 }
 
+bool StoryNode::operator==(const StoryNode& other) const
+{
+    return (m_id == other.getId() &&
+            m_type == other.getType() &&
+            m_title == other.getTitle() &&
+            m_text == other.getText() &&
+            m_actionList == other.getNodeActionList());
+}
+
 void StoryNode::read(const QJsonObject& jsonNode)
 {
     if (!jsonNode.contains(StoryJsonTags::nodeID_tag) || !jsonNode.contains(StoryJsonTags::type_tag))
@@ -105,6 +114,11 @@ QString StoryNode::getTitle() const
 QString StoryNode::getText() const
 {
     return m_text;
+}
+
+const NodeActionList& StoryNode::getNodeActionList() const
+{
+    return m_actionList;
 }
 
 void StoryNode::setType(const QString& type)

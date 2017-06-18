@@ -33,6 +33,11 @@ namespace StoryGUI
         {
             nodesPosMap.clear();
         }
+
+        bool operator==(const StoryAdditionalInfo& other) const
+        {
+            return nodesPosMap == other.nodesPosMap;
+        }
     };
 
     const int DEFAULT_NODE_WIDTH = 150;
@@ -91,6 +96,14 @@ namespace StoryCommon
         bool isValid() const
         {
             return (!version.isEmpty());
+        }
+
+        bool operator==(const StoryInfo& other) const
+        {
+            return (version == other.version &&
+                    storyName == other.storyName &&
+                    nodeList == other.nodeList &&
+                    additionalViewParams == other.additionalViewParams);
         }
     };
 

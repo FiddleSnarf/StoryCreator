@@ -17,12 +17,14 @@ public:
     QString getType() const;
     QString getTitle() const;
     QString getText() const;
+    const NodeActionList& getNodeActionList() const;
 
     void setType(const QString& type);
     void setTitle(const QString& title);
     void setText(const QString& text);
 
     bool operator< (const StoryNode& other) const;
+    bool operator==(const StoryNode& other) const;
 
 private:
     int m_id;

@@ -13,6 +13,12 @@ public:
     void write(QJsonObject& jsonObject) const;
     bool isValid() const;
 
+    bool operator==(const NodeAction& other) const;
+
+    QString getActionLogic() const;
+    QString getActionType() const;
+    QString getActionText() const;
+
 private:
     QString m_actLogic;
     QString m_type;
