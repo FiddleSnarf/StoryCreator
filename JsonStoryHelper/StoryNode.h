@@ -18,6 +18,10 @@ public:
     QString getTitle() const;
     QString getText() const;
 
+    void setType(const QString& type);
+    void setTitle(const QString& title);
+    void setText(const QString& text);
+
 private:
     int m_id;
     QString m_type;

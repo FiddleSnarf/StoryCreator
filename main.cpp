@@ -7,7 +7,9 @@ int main(int argc, char* argv[])
 {
     QApplication app(argc, argv);
 
-    ICorePtr core(new CoreImpl());
+    StoryTypesNodeCollector typesCollector;
+
+    ICorePtr core(new CoreImpl(typesCollector));
     StoryCreator storyCreator(core);
     storyCreator.show();
 

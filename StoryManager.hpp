@@ -9,7 +9,7 @@ class StoryManager : public QObject
     Q_OBJECT
 
 public:
-    StoryManager(QObject* parent = Q_NULLPTR);
+    StoryManager(StoryTypesNodeCollector& collector, QObject* parent = Q_NULLPTR);
     virtual ~StoryManager();
 
     StoryScenePtr getStoryScene();
@@ -22,15 +22,15 @@ signals:
     void signalStoryStateChanged(bool state);
 
 public slots:
-    void createNewStory();
-    void loadStory();
-    void closeStory();
+    void slotCreateNewStory();
+    void slotLoadStory();
+    void slotCloseStory();
 
 private:
     void initialization();
 
 private:
-    StoryTypesNodeCollector m_typesCollector;
+    StoryTypesNodeCollector& m_typesCollector;
     StoryScenePtr m_storyScene;
     SelectNodeModelPtr m_storyNodeSelectModel;
 

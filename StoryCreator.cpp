@@ -3,6 +3,10 @@
 #include "ui_StoryCreator.h"
 #include <QGraphicsItem>
 
+
+const QString StoryCreator::NODE_COUNT_CAPT = QObject::tr("Node count: %1");
+
+
 StoryCreator::StoryCreator(ICorePtr core, QWidget* parent) :
     QMainWindow(parent),
     m_ui(new Ui::StoryCreator),
@@ -67,7 +71,7 @@ void StoryCreator::initToolBar()
 
     m_ui->mainToolBar->addSeparator();
     m_ui->mainToolBar->addSeparator();
-    m_nodeCounterView = new QLabel(tr("The number of nodes: %1").arg(0));
+    m_nodeCounterView = new QLabel(NODE_COUNT_CAPT.arg("---"));
     m_ui->mainToolBar->addWidget(m_nodeCounterView);
 }
 
@@ -76,12 +80,23 @@ void StoryCreator::initConnects()
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
 
     // Для story scene/view
-    connect(m_storyManager->getStoryScene().data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
+    const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
+    connect(scenePtr.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
+    connect(scenePtr.data(), &StoryScene::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
 
     // Для toolbar
-    connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::createNewStory);
-    connect(m_actLoadStory, &QAction::triggered, m_storyManager.data(), &StoryManager::loadStory);
-    connect(m_actCloseStory, &QAction::triggered, m_storyManager.data(), &StoryManager::closeStory);
+    connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCreateNewStory);
+    connect(m_actLoadStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotLoadStory);
+    connect(m_actCloseStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCloseStory);
+}
+
+void StoryCreator::storyClosed()
+{
+    const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
+    m_ui->storyView->setScene(scenePtr.data());
+    connect(scenePtr.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
+    connect(scenePtr.data(), &StoryScene::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
+    m_ui->nodeInfoWidget->setVisible(false);
 }
 
 //=======================================================================================
@@ -90,7 +105,10 @@ void StoryCreator::initConnects()
 
 void StoryCreator::slotCountStoryNodesChanged()
 {
-    m_nodeCounterView->setText(QString(tr("Node count: %1")).arg(m_storyManager->getCountStoryNodes()));
+    if (m_storyManager->isStoryOpen())
+        m_nodeCounterView->setText(NODE_COUNT_CAPT.arg(m_storyManager->getCountStoryNodes()));
+    else
+        m_nodeCounterView->setText(NODE_COUNT_CAPT.arg("---"));
 }
 
 void StoryCreator::slotStoryStateChanged(bool state)
@@ -98,18 +116,23 @@ void StoryCreator::slotStoryStateChanged(bool state)
     m_ui->nodeRedactorTab->setEnabled(state);
     m_ui->itemsRedactorTab->setEnabled(state);
     m_actCloseStory->setEnabled(state);
+    slotCountStoryNodesChanged();
+
+    // Надо переконнектиться т.к. пересоздали сцену
+    if (!state)
+        storyClosed();
 }
 
 void StoryCreator::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode)
 {
-    if (!state)
+    if (state)
     {
-        m_ui->nodeInfoWidget->setVisible(state);
-        return;
-    }else
-    {
+        if (!selectedNode)
+            return;
 
+        m_ui->nodeInfoWidget->setCurrentNodeItem(selectedNode);
     }
+    m_ui->nodeInfoWidget->setVisible(state);
 }
 
 //=======================================================================================

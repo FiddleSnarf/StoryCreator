@@ -2,13 +2,13 @@
 #include "JsonStoryHelper/JsonStoryHelper.h"
 #include "Common/StoryTypesNodeCollector.hpp"
 
-StoryManager::StoryManager(QObject* parent) :
+StoryManager::StoryManager(StoryTypesNodeCollector &collector, QObject* parent) :
     QObject(parent),
-    m_storyScene(new StoryScene()),
+    m_typesCollector(collector),
+    m_storyScene(new StoryScene(collector)),
     m_storyNodeSelectModel(new SelectNodeModel),
     m_isStoryOpen(false)
 {
-    m_storyScene->setTypesNodeCollector(m_typesCollector);
     initialization();
 }
 
@@ -55,7 +55,7 @@ void StoryManager::initialization()
     m_storyNodeSelectModel->addTemplateNodesList(templateNodeList);
 }
 
-void StoryManager::createNewStory()
+void StoryManager::slotCreateNewStory()
 {
     const StoryCommon::StoryInfo newStoryInfo(StoryCommon::CURR_JSON_VERSION);
     m_storyScene->initStoryInfo(newStoryInfo);
@@ -63,7 +63,7 @@ void StoryManager::createNewStory()
     emit signalStoryStateChanged(m_isStoryOpen);
 }
 
-void StoryManager::loadStory()
+void StoryManager::slotLoadStory()
 {
     const QString filePath = JsonStoryHelper::selectLoadStoryFilePath();
     if (!filePath.isEmpty())
@@ -73,8 +73,6 @@ void StoryManager::loadStory()
         {
             return; // TODO сделать какое-нить сообщение пользователю
         }
-        //if (!storyInfo.additionalViewParams.isValid()) // TODO с размерами сцены вообще сложный вопрос, надо подумать
-        //    m_storyScene->setSceneRect(StoryGUI::DEFAULT_SCENE_RECT);
 
         // TODO А вот тут надо бы сделать проверку StoryInfo на всякие ошибки, типа дублирование нодов и.т.д
         m_storyScene->initStoryInfo(storyInfo);
@@ -83,9 +81,9 @@ void StoryManager::loadStory()
     }
 }
 
-void StoryManager::closeStory()
+void StoryManager::slotCloseStory()
 {
-    // TODO сделать что-то со сценой
+    m_storyScene.reset(new StoryScene(m_typesCollector));
     m_isStoryOpen = false;
     emit signalStoryStateChanged(m_isStoryOpen);
 }

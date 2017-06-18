@@ -104,3 +104,19 @@ QString StoryNode::getText() const
 {
     return m_text;
 }
+
+void StoryNode::setType(const QString& type)
+{
+    m_type = type;
+    m_isValid = !type.isEmpty();
+}
+
+void StoryNode::setTitle(const QString& title)
+{
+    m_title = title;
+}
+
+void StoryNode::setText(const QString& text)
+{
+    m_text = text;
+}

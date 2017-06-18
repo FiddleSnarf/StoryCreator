@@ -22,7 +22,7 @@ private:
     static const int LINK_Z_DEPTH = 1;  /**< Глубина слоя связей между нодами. */
 
 public:
-    StoryScene(QObject* parent = Q_NULLPTR);
+    StoryScene(StoryTypesNodeCollector& collector, QObject* parent = Q_NULLPTR);
 	~StoryScene();
 
     /** \brief Количество нодов на сцене.
@@ -36,10 +36,6 @@ public:
     /** \brief Получить список выделенных нодов.
      */
     StoryNodeItemList getSelectedStoryNodeList() const;
-
-    /** \brief Установка описания типов нодов.
-     */
-    void setTypesNodeCollector(const StoryTypesNodeCollector& collector);
 
     /** \brief Инициализация сцены новой историей.
      */
@@ -84,7 +80,7 @@ private:
     bool addStoryNode(const StoryNode& nodeInfo, const QPointF& pos);
 
 private:
-    StoryTypesNodeCollector m_storyTypesNodeCollector;   /**< Класс хранящий информацию о возможных типах нодов. */
+    StoryTypesNodeCollector& m_storyTypesNodeCollector;  /**< Класс хранящий информацию о возможных типах нодов. */
     std::set<int> m_idSet;                               /**< Множество выданных id-шников. */
 };
 

@@ -18,6 +18,8 @@ class StoryCreator : public QMainWindow
 {
     Q_OBJECT
 
+    static const QString NODE_COUNT_CAPT;
+
 public:
     explicit StoryCreator(ICorePtr core, QWidget* parent = Q_NULLPTR);
     virtual ~StoryCreator();
@@ -28,6 +30,8 @@ private:
     void initConnects();
     void initStoryView();
     void initSelectTemplateNodesView();
+
+    void storyClosed();
 
 private slots:
     /** \brief Слот вызывается при добавлении/удалении нодов.

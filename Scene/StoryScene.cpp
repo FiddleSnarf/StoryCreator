@@ -5,8 +5,9 @@
 
 //===================================== public ==========================================
 
-StoryScene::StoryScene(QObject* parent) :
-    QGraphicsScene(parent)
+StoryScene::StoryScene(StoryTypesNodeCollector& collector, QObject* parent) :
+    QGraphicsScene(parent),
+    m_storyTypesNodeCollector(collector)
 {
 
 }
@@ -58,11 +59,6 @@ int StoryScene::getFreeID() const
     return StoryCommon::HEAD_NODE_ID;
 }
 
-void StoryScene::setTypesNodeCollector(const StoryTypesNodeCollector& collector)
-{
-    m_storyTypesNodeCollector = collector;
-}
-
 void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 {
     // Добавляем все ноды на сцену
@@ -101,7 +97,8 @@ void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 
 void StoryScene::slotClearScene()
 {
-    //clear();
+    clear();
+    m_idSet.clear();
 }
 
 //=======================================================================================
