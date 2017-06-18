@@ -23,6 +23,11 @@ StoryNode::~StoryNode()
 
 }
 
+bool StoryNode::operator< (const StoryNode& other) const
+{
+    return m_id < other.getId();
+}
+
 void StoryNode::read(const QJsonObject& jsonNode)
 {
     if (!jsonNode.contains(StoryJsonTags::nodeID_tag) || !jsonNode.contains(StoryJsonTags::type_tag))
@@ -59,9 +64,6 @@ void StoryNode::read(const QJsonObject& jsonNode)
 
 void StoryNode::write(QJsonObject& jsonObject) const
 {
-    if (!m_isValid)
-        return;
-
     jsonObject[StoryJsonTags::nodeID_tag] = m_id;
     jsonObject[StoryJsonTags::type_tag] = m_type;
     jsonObject[StoryJsonTags::title_tag] = m_title;

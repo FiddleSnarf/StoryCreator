@@ -13,7 +13,6 @@ public:
     static bool saveJsonStory(const QString& filePath, const StoryCommon::StoryInfo& storyInfo);
 
 private:
-    static QString storyFileExtension;
     static bool loadJsonStory(const QJsonObject& jsonStory, StoryCommon::StoryInfo& storyInfo);
     static bool saveJsonStory(QJsonObject& jsonStory, const StoryCommon::StoryInfo& storyInfo);
 };

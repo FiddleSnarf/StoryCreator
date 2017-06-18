@@ -7,8 +7,6 @@
 #include "JsonStoryHelper.h"
 #include "Common/StoryJsonTags.hpp"
 
-QString JsonStoryHelper::storyFileExtension = "*.json"; // TODO мне кажется что лучше сделать расширение файла *.story
-
 bool JsonStoryHelper::loadJsonStory(const QString& filePath, StoryCommon::StoryInfo& storyInfo)
 {
     QFile file(filePath);
@@ -53,13 +51,13 @@ bool JsonStoryHelper::saveJsonStory(const QString& filePath, const StoryCommon::
 
 QString JsonStoryHelper::selectLoadStoryFilePath()
 {
-    return QFileDialog::getOpenFileName(Q_NULLPTR, "Open story", QApplication::applicationDirPath(), storyFileExtension);
+    return QFileDialog::getOpenFileName(Q_NULLPTR, "Open story", QApplication::applicationDirPath(), StoryCommon::STORY_FILE_EXTENSION);
 }
 
 QString JsonStoryHelper::selectSaveStoryFilePath(const QString& defaultFileName)
 {
     const QString defaultPathName = QApplication::applicationDirPath() + "/" + defaultFileName;
-    return QFileDialog::getSaveFileName(Q_NULLPTR, "Open story", defaultPathName, storyFileExtension);
+    return QFileDialog::getSaveFileName(Q_NULLPTR, "Open story", defaultPathName, StoryCommon::STORY_FILE_EXTENSION);
 }
 
 bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::StoryInfo& storyInfo)
@@ -85,7 +83,12 @@ bool JsonStoryHelper::saveJsonStory(QJsonObject& jsonStory, const StoryCommon::S
         return false;
 
     QJsonArray nodesArray;
-    foreach (const StoryNode& storyNode, storyInfo.nodeList)
+
+    // Отсортируем ноды по ID
+    StoryNodeList nodeList = storyInfo.nodeList;
+    qSort(nodeList);
+
+    foreach (const StoryNode& storyNode, nodeList)
     {
         QJsonObject nodeObject;
         storyNode.write(nodeObject);

@@ -21,13 +21,17 @@ namespace StoryGUI
     struct StoryAdditionalInfo
     {
         SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
-        //QRectF sceneRect;                   /**< Параметры сцены. */ // TODO Скорее всего это не понадобится
 
         /** \brief Проверка на валидность
          */
         bool isValid() const
         {
             return !nodesPosMap.isEmpty();
+        }
+
+        void clear()
+        {
+            nodesPosMap.clear();
         }
     };
 
@@ -46,6 +50,7 @@ namespace StoryGUI
 namespace StoryCommon
 {
     const QString CURR_JSON_VERSION = "1.0";
+    const QString STORY_FILE_EXTENSION = "*.json";
 
     const int HEAD_NODE_ID = 0;     /**< ID головного нода. */
     const int ERROR_NODE_ID = -1;    /**< некорректный ID нода. */
@@ -78,6 +83,7 @@ namespace StoryCommon
             storyName.clear();
             filePath.clear();
             nodeList.clear();
+            additionalViewParams.clear();
         }
 
         /** \brief Проверка на валидность

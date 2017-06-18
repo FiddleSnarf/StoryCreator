@@ -58,7 +58,7 @@ void NodeInfoWidget::updateUI()
     }else
     {
         const StoryNode& nodeInfo = m_currentNodeItem->getNodeInfo();
-        m_ui->nodeIdLabel->setText(QString::number(nodeInfo.getId()));
+        m_ui->nodeIdLabel->setText(QString::number(nodeInfo.getId())); // TODO выводить подпись, если это head node
         m_ui->nodeTitleLineEdit->setText(nodeInfo.getTitle());
         m_ui->nodeTextEdit->setText(nodeInfo.getText());
         for(int idx = 0; idx < m_ui->nodeTypeComboBox->count(); idx++)

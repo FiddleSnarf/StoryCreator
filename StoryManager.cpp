@@ -2,6 +2,8 @@
 #include "JsonStoryHelper/JsonStoryHelper.h"
 #include "Common/StoryTypesNodeCollector.hpp"
 
+const QString StoryManager::DEF_STORY_FILE_NAME = QObject::tr("Just story");
+
 StoryManager::StoryManager(StoryTypesNodeCollector &collector, QObject* parent) :
     QObject(parent),
     m_typesCollector(collector),
@@ -66,6 +68,7 @@ void StoryManager::slotCreateNewStory()
     const StoryCommon::StoryInfo newStoryInfo(StoryCommon::CURR_JSON_VERSION);
     m_storyScene->initStoryInfo(newStoryInfo);
     m_isStoryOpen = true;
+    m_currentStoryInfo.version = newStoryInfo.version;
     emit signalStoryStateChanged(m_isStoryOpen);
 }
 
@@ -84,6 +87,10 @@ void StoryManager::slotLoadStory()
         m_storyScene->initStoryInfo(storyInfo);
         m_isStoryOpen = true;
         m_isLoadedStory = true;
+        m_currentStoryInfo.version = storyInfo.version;
+        m_currentStoryInfo.filePath = storyInfo.filePath;
+        m_currentStoryInfo.storyName = storyInfo.storyName;
+
         emit signalStoryStateChanged(m_isStoryOpen);
     }
 }
@@ -93,15 +100,48 @@ void StoryManager::slotCloseStory()
     m_storyScene.reset(new StoryScene(m_typesCollector));
     m_isStoryOpen = false;
     m_isLoadedStory = false;
+    m_currentStoryInfo.clear();
     emit signalStoryStateChanged(m_isStoryOpen);
 }
 
 void StoryManager::slotSaveStory()
 {
-    // TODO
+    if (m_currentStoryInfo.filePath.isEmpty())
+        return;
+
+    if (!saveStory())
+        return; // TODO сделать какое-нить сообщение юзеру
 }
 
 void StoryManager::slotSaveAsStory()
 {
-    // TODO
+    const QString defaultFileName = m_currentStoryInfo.storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_currentStoryInfo.storyName;
+    const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
+    if (filePath.isEmpty())
+        return;
+
+    m_isLoadedStory = true;
+    m_currentStoryInfo.filePath = filePath;
+    if (!saveStory())
+        return; // TODO сделать какое-нить сообщение юзеру
+}
+
+bool StoryManager::saveStory()
+{
+    //m_currentStoryInfo.additionalViewParams; // TODO сделать запись доп параметров графического отображения story в отдельный файл
+
+    // Перезаполним данные нодов в текущей story
+    m_currentStoryInfo.nodeList.clear();
+    const StoryNodeItemList listNodes = m_storyScene->getStoryNodeList();
+    for (StoryNodeItemList::const_iterator it = listNodes.cbegin(); it != listNodes.cend(); ++it)
+    {
+        m_currentStoryInfo.nodeList << (*it)->getNodeInfo();
+    }
+    emit signalStoryStateChanged(m_isStoryOpen);
+    return JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo);
+}
+
+void StoryManager::slotUpdateStoryName(const QString& storyName)
+{
+    // TODO Сделать редактирование названия истории
 }

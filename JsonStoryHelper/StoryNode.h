@@ -22,6 +22,8 @@ public:
     void setTitle(const QString& title);
     void setText(const QString& text);
 
+    bool operator< (const StoryNode& other) const;
+
 private:
     int m_id;
     QString m_type;
