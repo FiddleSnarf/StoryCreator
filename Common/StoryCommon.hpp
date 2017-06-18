@@ -10,7 +10,6 @@ namespace StoryGUI
 {
     const QString NODE_MIME_TYPE = "story/node-template"; /**< Для передачи параметров через drag&drop. */
 
-
     typedef QMap<int, QPointF> SceneNodePositionMap; /**< key - nodeID, value - координата на сцене. */
 
     /** \struct StoryAdditionalInfo

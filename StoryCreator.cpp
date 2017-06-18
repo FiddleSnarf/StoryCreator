@@ -26,6 +26,7 @@ StoryCreator::~StoryCreator()
 
 void StoryCreator::initialize()
 {
+    setWindowTitle(tr("Story Creator v1.0"));
     showMaximized();
 
     initToolBar();
