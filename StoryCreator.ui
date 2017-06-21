@@ -60,7 +60,7 @@
        <attribute name="title">
         <string>Story redactor</string>
        </attribute>
-       <layout class="QGridLayout" name="gridLayout_2">
+       <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,11,2">
         <property name="leftMargin">
          <number>0</number>
         </property>
@@ -76,13 +76,6 @@
         <property name="spacing">
          <number>0</number>
         </property>
-        <item row="0" column="1">
-         <widget class="StoryView" name="storyView">
-          <property name="dragMode">
-           <enum>QGraphicsView::NoDrag</enum>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0" rowspan="2">
          <widget class="QListView" name="viewNodes">
           <property name="maximumSize">
@@ -108,12 +101,29 @@
           </property>
          </widget>
         </item>
+        <item row="0" column="1">
+         <widget class="StoryView" name="storyView">
+          <property name="dragMode">
+           <enum>QGraphicsView::NoDrag</enum>
+          </property>
+         </widget>
+        </item>
         <item row="1" column="1">
          <widget class="NodeInfoWidget" name="nodeInfoWidget" native="true">
           <property name="minimumSize">
            <size>
             <width>0</width>
             <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
+        <item row="0" column="2" rowspan="2">
+         <widget class="StoryNavigationWidget" name="widget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>120</width>
+            <height>0</height>
            </size>
           </property>
          </widget>
@@ -160,6 +170,12 @@
    <class>NodeInfoWidget</class>
    <extends>QWidget</extends>
    <header>Widgets\NodeInfoWidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>StoryNavigationWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets\StoryNavigationWidget.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
