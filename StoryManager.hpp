@@ -47,6 +47,14 @@ signals:
      */
     void signalStoryStateChanged(bool state);
 
+    /** \brief Сигнал испускается при добавлении/удалении нодов.
+     */
+    void signalCountStoryNodesChanged();
+
+    /** \brief Сигнал испускается при выделении ноды.
+     */
+    void signalItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
+
 public slots:
     /** \brief Слот вызывается при нажатии кнопки "Создать новую историю"
      */
@@ -84,6 +92,10 @@ private:
     /** \brief Получить данные истории полученные в процессе редактирования
      */
     void fillUpdatedStoryInfo(StoryCommon::StoryInfo& updatedStory) const;
+
+    /** \brief Коннектимся к сцене
+     */
+    void connectToScene();
 
 private:
     StoryTypesNodeCollector& m_typesCollector;  /**< Ссылка на класс хранящий информацию о типах нодов(и экшенов). */

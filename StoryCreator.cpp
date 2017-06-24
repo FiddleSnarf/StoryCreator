@@ -38,6 +38,7 @@ void StoryCreator::initialize()
     m_ui->itemsRedactorTab->setEnabled(false);
     m_actCloseStory->setEnabled(false);
     m_ui->nodeInfoWidget->setVisible(false);
+    m_ui->storyNavigationWidget->setCore(m_core);
 }
 
 void StoryCreator::initStoryView()
@@ -86,11 +87,8 @@ void StoryCreator::initToolBar()
 void StoryCreator::initConnects()
 {
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
-
-    // Для story scene/view
-    const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
-    connect(scenePtr.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
-    connect(scenePtr.data(), &StoryScene::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
+    connect(m_storyManager.data(), &StoryManager::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
+    connect(m_storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
 
     // Для toolbar
     connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCreateNewStory);
@@ -103,10 +101,9 @@ void StoryCreator::initConnects()
 
 void StoryCreator::storyClosed()
 {
+    // Т.к. сцена была пересоздана, переназначаем ее для вьюхи
     const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
     m_ui->storyView->setScene(scenePtr.data());
-    connect(scenePtr.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
-    connect(scenePtr.data(), &StoryScene::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
     m_ui->nodeInfoWidget->setVisible(false);
 }
 
@@ -131,7 +128,6 @@ void StoryCreator::slotStoryStateChanged(bool state)
     m_actSaveStory->setEnabled(m_storyManager->isStoryBeLoaded());
     slotCountStoryNodesChanged();
 
-    // Надо переконнектиться т.к. пересоздали сцену
     if (!state)
         storyClosed();
 }

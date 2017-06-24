@@ -22,6 +22,12 @@ StoryManager::~StoryManager()
 
 }
 
+void StoryManager::connectToScene()
+{
+    connect(m_storyScene.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryManager::signalCountStoryNodesChanged);
+    connect(m_storyScene.data(), &StoryScene::signalItemSelectedChanged, this, &StoryManager::signalItemSelectedChanged);
+}
+
 StoryScenePtr StoryManager::getStoryScene()
 {
     return m_storyScene;
@@ -63,6 +69,7 @@ void StoryManager::initialization()
         templateNodeList << templateNode;
     }
     m_storyNodeSelectModel->addTemplateNodesList(templateNodeList);
+    connectToScene();
 }
 
 void StoryManager::slotCreateNewStory()
@@ -121,6 +128,7 @@ void StoryManager::slotCloseStory()
     }
 
     m_storyScene.reset(new StoryScene(m_typesCollector));
+    connectToScene();
     m_isStoryOpen = false;
     m_isLoadedStory = false;
     m_currentStoryInfo.clear();
