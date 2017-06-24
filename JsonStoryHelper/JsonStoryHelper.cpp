@@ -83,12 +83,7 @@ bool JsonStoryHelper::saveJsonStory(QJsonObject& jsonStory, const StoryCommon::S
         return false;
 
     QJsonArray nodesArray;
-
-    // Отсортируем ноды по ID
-    StoryNodeList nodeList = storyInfo.nodeList;
-    qSort(nodeList);
-
-    foreach (const StoryNode& storyNode, nodeList)
+    foreach (const StoryNode& storyNode, storyInfo.nodeList)
     {
         QJsonObject nodeObject;
         storyNode.write(nodeObject);

@@ -105,6 +105,11 @@ namespace StoryCommon
                     nodeList == other.nodeList &&
                     additionalViewParams == other.additionalViewParams);
         }
+
+        bool operator!=(const StoryInfo& other) const
+        {
+            return !(*this == other);
+        }
     };
 
 

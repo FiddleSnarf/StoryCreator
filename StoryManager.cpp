@@ -1,3 +1,5 @@
+#include <QMessageBox>
+
 #include "StoryManager.hpp"
 #include "JsonStoryHelper/JsonStoryHelper.h"
 #include "Common/StoryTypesNodeCollector.hpp"
@@ -65,6 +67,8 @@ void StoryManager::initialization()
 
 void StoryManager::slotCreateNewStory()
 {
+    slotCloseStory();
+
     const StoryCommon::StoryInfo newStoryInfo(StoryCommon::CURR_JSON_VERSION);
     m_storyScene->initStoryInfo(newStoryInfo);
     m_isStoryOpen = true;
@@ -74,22 +78,24 @@ void StoryManager::slotCreateNewStory()
 
 void StoryManager::slotLoadStory()
 {
+    slotCloseStory();
+
     const QString filePath = JsonStoryHelper::selectLoadStoryFilePath();
     if (!filePath.isEmpty())
     {
         StoryCommon::StoryInfo storyInfo;
         if (!JsonStoryHelper::loadJsonStory(filePath, storyInfo))
         {
-            return; // TODO сделать какое-нить сообщение пользователю
+            QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error loading history!"));
+            return;
         }
 
         // TODO А вот тут надо бы сделать проверку StoryInfo на всякие ошибки, типа дублирование нодов и.т.д
         m_storyScene->initStoryInfo(storyInfo);
         m_isStoryOpen = true;
         m_isLoadedStory = true;
-        m_currentStoryInfo.version = storyInfo.version;
-        m_currentStoryInfo.filePath = storyInfo.filePath;
-        m_currentStoryInfo.storyName = storyInfo.storyName;
+        m_currentStoryInfo = storyInfo;
+        m_storyName = storyInfo.storyName;
 
         emit signalStoryStateChanged(m_isStoryOpen);
     }
@@ -97,51 +103,91 @@ void StoryManager::slotLoadStory()
 
 void StoryManager::slotCloseStory()
 {
+    if (!m_isStoryOpen)
+        return;
+
+    StoryCommon::StoryInfo updatedStory;
+    fillUpdatedStoryInfo(updatedStory);
+    if (m_currentStoryInfo != updatedStory)
+    {
+        if (QMessageBox::question(Q_NULLPTR, tr("Attention!"),
+            tr("The current history has been changed, do you want to save the changes?")) == QMessageBox::Yes)
+        {
+            if (!isStoryBeLoaded())
+                slotSaveAsStory();
+            else
+                saveStory(&updatedStory);
+        }
+    }
+
     m_storyScene.reset(new StoryScene(m_typesCollector));
     m_isStoryOpen = false;
     m_isLoadedStory = false;
     m_currentStoryInfo.clear();
+    m_storyName.clear();
     emit signalStoryStateChanged(m_isStoryOpen);
 }
 
 void StoryManager::slotSaveStory()
 {
-    if (m_currentStoryInfo.filePath.isEmpty())
+    if (!isStoryBeLoaded())
         return;
 
-    if (!saveStory())
-        return; // TODO сделать какое-нить сообщение юзеру
+    saveStory();
 }
 
 void StoryManager::slotSaveAsStory()
 {
-    const QString defaultFileName = m_currentStoryInfo.storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_currentStoryInfo.storyName;
+    const QString defaultFileName = m_storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_storyName;
     const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
     if (filePath.isEmpty())
         return;
 
     m_isLoadedStory = true;
     m_currentStoryInfo.filePath = filePath;
-    if (!saveStory())
-        return; // TODO сделать какое-нить сообщение юзеру
+    saveStory();
 }
 
-bool StoryManager::saveStory()
+void StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
 {
-    //m_currentStoryInfo.additionalViewParams; // TODO сделать запись доп параметров графического отображения story в отдельный файл
-
-    // Перезаполним данные нодов в текущей story
-    m_currentStoryInfo.nodeList.clear();
-    const StoryNodeItemList listNodes = m_storyScene->getStoryNodeList();
-    for (StoryNodeItemList::const_iterator it = listNodes.cbegin(); it != listNodes.cend(); ++it)
+    if (updatedStoryPtr)
     {
-        m_currentStoryInfo.nodeList << (*it)->getNodeInfo();
+        m_currentStoryInfo = *updatedStoryPtr;
+    }else
+    {
+        StoryCommon::StoryInfo updatedStoryInfo;
+        fillUpdatedStoryInfo(updatedStoryInfo);
+        m_currentStoryInfo = updatedStoryInfo;
     }
     emit signalStoryStateChanged(m_isStoryOpen);
-    return JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo);
+    if (!JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo))
+        QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error saving history!"));
 }
 
 void StoryManager::slotUpdateStoryName(const QString& storyName)
 {
-    // TODO Сделать редактирование названия истории
+    if (isStoryOpen())
+        m_storyName = storyName;
+}
+
+const QString& StoryManager::getCurrentStoryName() const
+{
+    return m_storyName;
+}
+
+void StoryManager::fillUpdatedStoryInfo(StoryCommon::StoryInfo& updatedStory) const
+{
+    updatedStory.version = m_currentStoryInfo.version;
+    updatedStory.filePath = m_currentStoryInfo.filePath;
+    updatedStory.storyName = m_storyName;
+    const StoryNodeItemList listNodes = m_storyScene->getStoryNodeList();
+    for (StoryNodeItemList::const_iterator it = listNodes.cbegin(); it != listNodes.cend(); ++it)
+    {
+        updatedStory.nodeList << (*it)->getNodeInfo();
+    }
+    // Отсортируем ноды по ID
+    qSort(updatedStory.nodeList);
+
+    // Обновим параметры отображения
+    //updatedStory.additionalViewParams = m_storyScene->getNodesViewParams(); // TODO
 }
