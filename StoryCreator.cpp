@@ -42,7 +42,7 @@ void StoryCreator::initialize()
 
 void StoryCreator::initStoryView()
 {
-    m_ui->storyView->setScene(m_storyManager->getStoryScene().data());
+    m_ui->storyView->setScene(m_storyManager->getStoryScene().data());          
 }
 
 void StoryCreator::initSelectTemplateNodesView()
