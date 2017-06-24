@@ -66,6 +66,7 @@ bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::S
         return false;
 
     storyInfo.version = jsonStory[StoryJsonTags::story_format_ver_tag].toString();
+    storyInfo.storyName = jsonStory[StoryJsonTags::story_name_tag].toString();
     const QJsonArray nodesArray = jsonStory[StoryJsonTags::story_node_arr_tag].toArray();
     for(int nodeIdx = 0; nodeIdx < nodesArray.size(); nodeIdx++)
     {
@@ -90,6 +91,7 @@ bool JsonStoryHelper::saveJsonStory(QJsonObject& jsonStory, const StoryCommon::S
         nodesArray.append(nodeObject);
     }
     jsonStory[StoryJsonTags::story_format_ver_tag] = storyInfo.version;
+    jsonStory[StoryJsonTags::story_name_tag] = storyInfo.storyName;
     jsonStory[StoryJsonTags::story_node_arr_tag] = nodesArray;
     return true;
 }
