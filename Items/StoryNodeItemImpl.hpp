@@ -28,7 +28,7 @@ class StoryNodeItem : public QGraphicsObject
     static const int FRAMES     = 30;
     static const int TIME_LINE  = 600;
 
-    static const int SELECTED_NODE_FRAME_WIDTH = 5; /**< Толщина рамки выделенного нода. */
+    static const int SELECTED_NODE_FRAME_WIDTH = 7; /**< Толщина рамки выделенного нода. */
 
 public:
     enum { Type = UserType + 1 };
