@@ -74,13 +74,17 @@ void StoryNavigationWidget::slotStoryStateChanged(bool state)
 
 void StoryNavigationWidget::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode)
 {
-    const int selectedId = selectedNode->getNodeInfo().getId();
-    if (state && m_currentSelectedNodeId == selectedId)
-        return;
+    if (state)
+    {
+        const int selectedId = selectedNode->getNodeInfo().getId();
+        if (state && m_currentSelectedNodeId == selectedId)
+            return;
+    }
 
     clearSelection();
     if (state)
     {
+        const int selectedId = selectedNode->getNodeInfo().getId();
         for (int i = 0; i < m_ui->nodesNavigationTable->rowCount(); i++)
         {
             QTableWidgetItem* idItem = m_ui->nodesNavigationTable->item(i, enIdColumn);

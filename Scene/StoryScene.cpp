@@ -25,14 +25,6 @@ int StoryScene::nodeCount() const
 
 const StoryNodeItemList& StoryScene::getStoryNodeList() const
 {
-    /*StoryNodeItemList storyNodes;
-    foreach(auto& item, items())
-    {
-        StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItemPtr>(item);
-        if (storyItem)
-            storyNodes << storyItem;
-    }
-    return storyNodes;*/
     return m_nodesList;
 }
 
@@ -95,6 +87,18 @@ void StoryScene::selectNodeForID(int nodeId, bool centerOn)
 {
     StoryNodeItemPtr storyNode = getNodeItemForID(nodeId);
     selectNode(storyNode, centerOn);
+}
+
+StoryNodeItemPtr StoryScene::getSelectedNodeItem() const
+{
+    QList<QGraphicsItem*> selectedNodeItems = selectedItems();
+    if (!selectedNodeItems.isEmpty())
+    {
+        /*if (selectedNodeItems.size() > 1) // TODO Если выделенных нодов > 1 то это не норма
+            qDebug() << tr("...");*/
+        return StoryNodeItemPtr(dynamic_cast<StoryNodeItem*>(selectedNodeItems.first()));
+    }
+    return StoryNodeItemPtr();
 }
 
 //=======================================================================================

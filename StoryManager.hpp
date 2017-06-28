@@ -50,6 +50,11 @@ public:
      */
     StoryNodeItemPtr getNodeItemForID(int nodeId) const;
 
+    /** \brief Получить указатель на выделенный итем нода.
+     *  \return В случае если нет выделенного нода вернет nullptr.
+     */
+    StoryNodeItemPtr getSelectedNodeItem() const;
+
     /** \brief Выделить нод с таким ID.
      *  \param [in] centerOn - Отцентрировать вьюху относительно нода.
      */

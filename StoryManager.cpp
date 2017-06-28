@@ -218,3 +218,8 @@ void StoryManager::selectNodeForID(int nodeId, bool centerOn)
 {
     m_storyScene->selectNodeForID(nodeId, centerOn);
 }
+
+StoryNodeItemPtr StoryManager::getSelectedNodeItem() const
+{
+    return m_storyScene->getSelectedNodeItem();
+}

@@ -50,6 +50,11 @@ public:
      */
     void selectNodeForID(int nodeId, bool centerOn = false);
 
+    /** \brief Получить указатель на выделенный итем нода.
+     *  \return В случае если нет выделенного нода вернет nullptr.
+     */
+    StoryNodeItemPtr getSelectedNodeItem() const;
+
 public slots:
 
     /** \brief Очистка сцены.

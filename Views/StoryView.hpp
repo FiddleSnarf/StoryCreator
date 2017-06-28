@@ -2,6 +2,7 @@
 
 #include <QGraphicsView>
 #include <QWheelEvent>
+#include "Core/ICore.hpp"
 
 
 /** \class StoryView
@@ -12,6 +13,10 @@ class StoryView : public QGraphicsView
 public:
     explicit StoryView(QWidget* parent = Q_NULLPTR);
     virtual ~StoryView();
+
+    /** \brief Установка коры
+     */
+    void setCore(ICorePtr core);
 
     /** \brief Установка зума (zoom = 2^x)
      */
@@ -44,4 +49,5 @@ private:
     const double m_zoomMin  = -3;   /**< Минимально допустимый масштаб (Уменьшение). */
     const double m_zoomStep = 0.1;  /**< Шаг масштабирования. */
     double m_currZoom;              /**< Текущий масштаб. */
+    ICorePtr m_core;                /**< Указатель на кору. */
 };

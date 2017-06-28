@@ -1,4 +1,5 @@
 #include "StoryView.hpp"
+#include "./StoryManager.hpp"
 #include <QMimeData>
 
 StoryView::StoryView(QWidget* parent) :
@@ -20,12 +21,26 @@ StoryView::~StoryView()
 
 }
 
+void StoryView::setCore(ICorePtr core)
+{
+    m_core = core;
+}
+
 void StoryView::wheelEvent(QWheelEvent* event)
 {
+    if (!m_core)
+    {
+        event->accept();
+        return;
+    }
+
     const bool inc = event->delta() > 0;
     if (inc)
     {
         zoomIn();
+        StoryNodeItemPtr selectedNodeItem = m_core->getStoryManager()->getSelectedNodeItem();
+        if (selectedNodeItem)
+            centerOn(selectedNodeItem);
     }
     else
     {

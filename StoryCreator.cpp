@@ -43,6 +43,7 @@ void StoryCreator::initialize()
 
 void StoryCreator::initStoryView()
 {
+    m_ui->storyView->setCore(m_core);
     m_ui->storyView->setScene(m_storyManager->getStoryScene().data());          
 }
 
