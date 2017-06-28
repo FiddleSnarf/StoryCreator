@@ -20,11 +20,11 @@ public:
 
     /** \brief Возвращает указатель на сцену
      */
-    StoryScenePtr getStoryScene();
+    StoryScenePtr getStoryScene() const;
 
     /** \brief Возвращает указатель на модель добавления довых нодов
      */
-    SelectNodeModelPtr getStoryNodeSelectModel();
+    SelectNodeModelPtr getStoryNodeSelectModel() const;
 
     /** \brief Возвращает текущее количество нодов
      */
@@ -41,6 +41,19 @@ public:
     /** \brief Получить имя текущей истории
      */
     const QString& getCurrentStoryName() const;
+
+    /** \brief Получить список нодов.
+     */
+    const StoryNodeItemList& getStoryNodeList() const;
+
+    /** \brief Получить указатель на итем нода по ID.
+     */
+    StoryNodeItemPtr getNodeItemForID(int nodeId) const;
+
+    /** \brief Выделить нод с таким ID.
+     *  \param [in] centerOn - Отцентрировать вьюху относительно нода.
+     */
+    void selectNodeForID(int nodeId, bool centerOn = false);
 
 signals:
     /** \brief Сигнал оповещает об изменении состояния истории (true - открыта, false - закрыта)

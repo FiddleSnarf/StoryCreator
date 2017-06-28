@@ -28,12 +28,12 @@ void StoryManager::connectToScene()
     connect(m_storyScene.data(), &StoryScene::signalItemSelectedChanged, this, &StoryManager::signalItemSelectedChanged);
 }
 
-StoryScenePtr StoryManager::getStoryScene()
+StoryScenePtr StoryManager::getStoryScene() const
 {
     return m_storyScene;
 }
 
-SelectNodeModelPtr StoryManager::getStoryNodeSelectModel()
+SelectNodeModelPtr StoryManager::getStoryNodeSelectModel() const
 {
     return m_storyNodeSelectModel;
 }
@@ -198,4 +198,23 @@ void StoryManager::fillUpdatedStoryInfo(StoryCommon::StoryInfo& updatedStory) co
 
     // Обновим параметры отображения
     //updatedStory.additionalViewParams = m_storyScene->getNodesViewParams(); // TODO
+}
+
+const StoryNodeItemList& StoryManager::getStoryNodeList() const
+{
+    if (m_storyScene)
+        return m_storyScene->getStoryNodeList();
+
+    static StoryNodeItemList emptyNodeList;
+    return emptyNodeList;
+}
+
+StoryNodeItemPtr StoryManager::getNodeItemForID(int nodeId) const
+{
+    return m_storyScene->getNodeItemForID(nodeId);
+}
+
+void StoryManager::selectNodeForID(int nodeId, bool centerOn)
+{
+    m_storyScene->selectNodeForID(nodeId, centerOn);
 }

@@ -31,11 +31,11 @@ public:
 
     /** \brief Получить список нодов.
      */
-    StoryNodeItemList getStoryNodeList() const;
+    const StoryNodeItemList& getStoryNodeList() const;
 
-    /** \brief Получить список выделенных нодов.
+    /** \brief Получить указатель на итем нода по ID.
      */
-    StoryNodeItemList getSelectedStoryNodeList() const;
+    StoryNodeItemPtr getNodeItemForID(int nodeId) const;
 
     /** \brief Инициализация сцены новой историей.
      */
@@ -44,6 +44,11 @@ public:
     /** \brief Получение свободного ID для нода.
      */
     int getFreeID() const;
+
+    /** \brief Выделить нод с таким ID.
+     *  \param [in] centerOn - Отцентрировать вьюху относительно нода.
+     */
+    void selectNodeForID(int nodeId, bool centerOn = false);
 
 public slots:
 
@@ -79,9 +84,14 @@ private:
      */
     bool addStoryNode(const StoryNode& nodeInfo, const QPointF& pos);
 
+    /** \brief Выделить нод.
+     */
+    void selectNode(StoryNodeItem* node, bool centerOn = false);
+
 private:
     StoryTypesNodeCollector& m_storyTypesNodeCollector;  /**< Класс хранящий информацию о возможных типах нодов. */
     std::set<int> m_idSet;                               /**< Множество выданных id-шников. */
+    StoryNodeItemList m_nodesList;                       /**< Список нодов. */
 };
 
 typedef QSharedPointer<StoryScene> StoryScenePtr;

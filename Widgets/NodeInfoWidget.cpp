@@ -24,6 +24,8 @@ void NodeInfoWidget::initialization()
         m_ui->nodeTypeComboBox->addItem(m_typesNodeCollector.getNodeTypeInfo(nodeTypeName).iconType, nodeTypeName);
     }
 
+    // TODO сделать валидацию ввода для title
+
     connect(m_ui->nodeTitleLineEdit, &QLineEdit::editingFinished, this, &NodeInfoWidget::slotUpdateNodeData);
     connect(m_ui->nodeTextEdit, &QTextEdit::textChanged, this, &NodeInfoWidget::slotUpdateNodeData);
     connect(m_ui->nodeTypeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NodeInfoWidget::slotUpdateNodeData);

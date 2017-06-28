@@ -1,5 +1,6 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
+#include <QGraphicsView>
 
 #include "StoryScene.hpp"
 
@@ -19,31 +20,30 @@ StoryScene::~StoryScene()
 
 int StoryScene::nodeCount() const
 {
-    return getStoryNodeList().size();
+    return m_nodesList.size();
 }
 
-StoryNodeItemList StoryScene::getStoryNodeList() const
+const StoryNodeItemList& StoryScene::getStoryNodeList() const
 {
-    StoryNodeItemList storyNodes;
+    /*StoryNodeItemList storyNodes;
     foreach(auto& item, items())
     {
         StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItemPtr>(item);
         if (storyItem)
             storyNodes << storyItem;
     }
-    return storyNodes;
+    return storyNodes;*/
+    return m_nodesList;
 }
 
-StoryNodeItemList StoryScene::getSelectedStoryNodeList() const
+StoryNodeItemPtr StoryScene::getNodeItemForID(int nodeId) const
 {
-    StoryNodeItemList selectedStoryNodes;
-    foreach(auto& item, selectedItems())
+    foreach(const StoryNodeItemPtr& nodeItem,m_nodesList)
     {
-        StoryNodeItem* storyItem = qgraphicsitem_cast<StoryNodeItemPtr>(item);
-        if (storyItem)
-            selectedStoryNodes << storyItem;
+        if (nodeItem->getNodeInfo().getId() == nodeId)
+            return nodeItem;
     }
-    return selectedStoryNodes;
+    return StoryNodeItemPtr();
 }
 
 int StoryScene::getFreeID() const
@@ -89,6 +89,12 @@ void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
         }
     }
     emit signalCountStoryNodesChanged();
+}
+
+void StoryScene::selectNodeForID(int nodeId, bool centerOn)
+{
+    StoryNodeItemPtr storyNode = getNodeItemForID(nodeId);
+    selectNode(storyNode, centerOn);
 }
 
 //=======================================================================================
@@ -152,24 +158,7 @@ void StoryScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
             QGraphicsScene::mousePressEvent(event);
             return;
         }
-
-        // Снимаем выделение со всех выделенных нодов
-        QList<QGraphicsItem*> selectedItemsList = selectedItems();
-        for(QList<QGraphicsItem*>::iterator it = selectedItemsList.begin(); it != selectedItemsList.end(); ++it)
-        {
-            StoryNodeItem* nodeItem = dynamic_cast<StoryNodeItem*>(*it);
-            if (nodeItem)
-                nodeItem->setNodeSelection(false);
-        }
-
-        // Если нажали на нод, то выделяем его
-        if (selectedNodeItem)
-        {
-            selectedNodeItem->setNodeSelection(true);
-            emit signalItemSelectedChanged(true, selectedNodeItem);
-        }
-        else
-            emit signalItemSelectedChanged(false, nullptr);
+        selectNode(selectedNodeItem);
     }
     QGraphicsScene::mousePressEvent(event);
 }
@@ -190,6 +179,7 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
+    m_nodesList << node;
     addItem(node);
     m_idSet.insert(newId);
     emit signalCountStoryNodesChanged();
@@ -204,9 +194,39 @@ bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
     node->setPos(pos);
     node->setZValue(NODE_Z_DEPTH);
 
+    m_nodesList << node;
     addItem(node);
     m_idSet.insert(node->getNodeInfo().getId());
     return true;
+}
+
+void StoryScene::selectNode(StoryNodeItem* node, bool centerOn)
+{
+    // Снимаем выделение со всех выделенных нодов
+    QList<QGraphicsItem*> selectedItemsList = selectedItems();
+    for(QList<QGraphicsItem*>::iterator it = selectedItemsList.begin(); it != selectedItemsList.end(); ++it)
+    {
+        StoryNodeItem* nodeItem = dynamic_cast<StoryNodeItem*>(*it);
+        if (nodeItem)
+            nodeItem->setNodeSelection(false);
+    }
+
+    // Если нажали на нод, то выделяем его
+    if (node)
+    {
+        node->setNodeSelection(true);
+        if (centerOn)
+        {
+            QList<QGraphicsView*> listViews = views();
+            for (QList<QGraphicsView*>::iterator viewIt = listViews.begin(); viewIt != listViews.end(); ++viewIt)
+            {
+                (*viewIt)->centerOn(node);
+            }
+        }
+        emit signalItemSelectedChanged(true, node);
+    }
+    else
+        emit signalItemSelectedChanged(false, nullptr);
 }
 
 //=======================================================================================
