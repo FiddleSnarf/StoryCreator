@@ -27,6 +27,14 @@ protected:
      */
     void wheelEvent (QWheelEvent* event) override;
 
+    /** \brief Обработка событий нажатия мыши
+     */
+    void mousePressEvent(QMouseEvent* event) override;
+
+    /** \brief Обработка событий перемещения мыши
+     */
+    void mouseMoveEvent(QMouseEvent* event) override;
+
 private:
 
     /** \brief Зум +
@@ -50,4 +58,7 @@ private:
     const double m_zoomStep = 0.1;  /**< Шаг масштабирования. */
     double m_currZoom;              /**< Текущий масштаб. */
     ICorePtr m_core;                /**< Указатель на кору. */
+
+    double m_originX;               /**< X координата (для перемещения по сцене). */
+    double m_originY;               /**< Y координата (для перемещения по сцене). */
 };

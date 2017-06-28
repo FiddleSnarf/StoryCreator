@@ -4,7 +4,9 @@
 
 StoryView::StoryView(QWidget* parent) :
     QGraphicsView(parent),
-    m_currZoom(0)
+    m_currZoom(0),
+    m_originX(0.),
+    m_originY(0.)
 {
     setAlignment( Qt::AlignTop | Qt::AlignLeft );
 
@@ -48,6 +50,33 @@ void StoryView::wheelEvent(QWheelEvent* event)
     }
 
     event->accept();
+}
+
+void StoryView::mousePressEvent(QMouseEvent* event)
+{
+    if (event->button() == Qt::RightButton)
+    {
+        // Сохраним оригинальную позицию.
+        m_originX = event->x();
+        m_originY = event->y();
+    }
+    QGraphicsView::mousePressEvent(event);
+}
+
+void StoryView::mouseMoveEvent(QMouseEvent* event)
+{
+    if (event->buttons() & Qt::RightButton)
+    {
+        QPointF oldp = mapToScene(m_originX, m_originY);
+        QPointF newp = mapToScene(event->pos());
+        QPointF translation = newp - oldp;
+
+        translate(translation.x(), translation.y());
+
+        m_originX = event->x();
+        m_originY = event->y();
+    }
+    QGraphicsView::mouseMoveEvent(event);
 }
 
 void StoryView::zoomIn()
