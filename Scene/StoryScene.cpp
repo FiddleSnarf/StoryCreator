@@ -80,7 +80,6 @@ void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
             counter++;
         }
     }
-    emit signalCountStoryNodesChanged();
 }
 
 void StoryScene::selectNodeForID(int nodeId, bool centerOn)
@@ -89,16 +88,21 @@ void StoryScene::selectNodeForID(int nodeId, bool centerOn)
     selectNode(storyNode, centerOn);
 }
 
-StoryNodeItemPtr StoryScene::getSelectedNodeItem() const
+StoryNodeItemList StoryScene::getSelectedNodeItems() const
 {
-    QList<QGraphicsItem*> selectedNodeItems = selectedItems();
-    if (!selectedNodeItems.isEmpty())
+    StoryNodeItemList selectedStoryNodeItems;
+    QList<QGraphicsItem*> selectedNodeItems = items();
+    foreach(QGraphicsItem* item, selectedNodeItems)
     {
-        /*if (selectedNodeItems.size() > 1) // TODO Если выделенных нодов > 1 то это не норма
-            qDebug() << tr("...");*/
-        return StoryNodeItemPtr(dynamic_cast<StoryNodeItem*>(selectedNodeItems.first()));
+        StoryNodeItemPtr storyItem = dynamic_cast<StoryNodeItemPtr>(item);
+        if (storyItem && storyItem->isNodeSelected())
+            selectedStoryNodeItems << storyItem;
     }
-    return StoryNodeItemPtr();
+
+    /*if (selectedStoryNodeItems.size() > 1)
+        qDebug() << tr("..."); // TODO Если выделенных нодов > 1 то это не норма*/
+
+    return selectedStoryNodeItems;
 }
 
 //=======================================================================================
@@ -157,7 +161,7 @@ void StoryScene::mousePressEvent(QGraphicsSceneMouseEvent* event)
     {
         // Если нажали на уже выделенный нод, то ничего не делаем
         StoryNodeItem* selectedNodeItem = dynamic_cast<StoryNodeItem*>(itemAt(event->scenePos(), QTransform()));
-        if (selectedNodeItem && selectedNodeItem->isSelected())
+        if (selectedNodeItem && selectedNodeItem->isNodeSelected())
         {
             QGraphicsScene::mousePressEvent(event);
             return;
@@ -186,7 +190,7 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
     m_nodesList << node;
     addItem(node);
     m_idSet.insert(newId);
-    emit signalCountStoryNodesChanged();
+    emit signalStoryNodeAdded(node);
     return true;
 }
 
@@ -201,18 +205,16 @@ bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
     m_nodesList << node;
     addItem(node);
     m_idSet.insert(node->getNodeInfo().getId());
+    emit signalStoryNodeAdded(node);
     return true;
 }
 
 void StoryScene::selectNode(StoryNodeItem* node, bool centerOn)
 {
     // Снимаем выделение со всех выделенных нодов
-    QList<QGraphicsItem*> selectedItemsList = selectedItems();
-    for(QList<QGraphicsItem*>::iterator it = selectedItemsList.begin(); it != selectedItemsList.end(); ++it)
+    foreach(StoryNodeItemPtr storyItem, getSelectedNodeItems())
     {
-        StoryNodeItem* nodeItem = dynamic_cast<StoryNodeItem*>(*it);
-        if (nodeItem)
-            nodeItem->setNodeSelection(false);
+        storyItem->setNodeSelection(false);
     }
 
     // Если нажали на нод, то выделяем его

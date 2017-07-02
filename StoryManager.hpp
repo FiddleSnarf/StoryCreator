@@ -65,9 +65,13 @@ signals:
      */
     void signalStoryStateChanged(bool state);
 
-    /** \brief Сигнал испускается при добавлении/удалении нодов.
+    /** \brief Сигнал испускается при добавлении нода.
      */
-    void signalCountStoryNodesChanged();
+    void signalStoryNodeAdded(StoryNodeItem* addedNode);
+
+    /** \brief Сигнал испускается при удалении нода.
+     */
+    void signalStoryNodeDeleted(int deletedNodeId);
 
     /** \brief Сигнал испускается при выделении ноды.
      */

@@ -50,10 +50,9 @@ public:
      */
     void selectNodeForID(int nodeId, bool centerOn = false);
 
-    /** \brief Получить указатель на выделенный итем нода.
-     *  \return В случае если нет выделенного нода вернет nullptr.
+    /** \brief Получить список выделенных нодов.
      */
-    StoryNodeItemPtr getSelectedNodeItem() const;
+    StoryNodeItemList getSelectedNodeItems() const;
 
 public slots:
 
@@ -67,9 +66,13 @@ signals:
      */
     void signalItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
 
-    /** \brief Сигнал испускается при добавлении/удалении нодов.
+    /** \brief Сигнал испускается при добавлении нода.
      */
-    void signalCountStoryNodesChanged();
+    void signalStoryNodeAdded(StoryNodeItem* addedNode);
+
+    /** \brief Сигнал испускается при удалении нода.
+     */
+    void signalStoryNodeDeleted(int deletedNodeId);
 
 protected:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;

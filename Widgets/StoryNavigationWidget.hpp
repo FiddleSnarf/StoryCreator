@@ -23,8 +23,25 @@ class StoryNavigationWidget : public QWidget
         enCountColumn
     };
 
-    typedef QPair<QString, bool> NodeRowInfo;
-    typedef QMap<int, NodeRowInfo> NodeRowMap;
+    struct NodeNavigationInfo
+    {
+        NodeNavigationInfo() : nodeItemPtr(nullptr)
+        {}
+
+        void updateInfo()
+        {
+            if (nodeItemPtr)
+            {
+                title = nodeItemPtr->getNodeInfo().getTitle();
+                text = nodeItemPtr->getNodeInfo().getText();
+            }
+        }
+
+        StoryNodeItem* nodeItemPtr;
+        QString title;
+        QString text;
+    };
+    typedef QMap<int, NodeNavigationInfo> NodeNavigationInfoMap;
 
 public:
     explicit StoryNavigationWidget(QWidget* parent = Q_NULLPTR);
@@ -36,7 +53,7 @@ private slots:
     void slotStoryStateChanged(bool state);
     void slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
     void slotNavigationItemClicked(class QTableWidgetItem* item);
-    void slotUserAddedNode(int nodeID);
+    void slotUserAddedNode(StoryNodeItem* addedNode);
     void slotUserDeletedNode(int nodeID);
 
 private:
@@ -51,6 +68,6 @@ private:
     QScopedPointer<Ui::StoryNavigationWidget> m_ui;
     ICorePtr m_core;
 
-    NodeRowMap m_nodeRowMap;
+    NodeNavigationInfoMap m_nodeNaviInfoMap;
     int m_currentSelectedNodeId;
 };

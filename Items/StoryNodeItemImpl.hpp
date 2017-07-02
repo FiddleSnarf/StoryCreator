@@ -60,6 +60,10 @@ public:
      */
     const QUuid& getNodeGUID();
 
+    /** \brief Выделен ли нод.
+     */
+    bool isNodeSelected() const;
+
 private:
     /** \brief Инициализация начальных параметров.
      */
@@ -101,6 +105,7 @@ private:
     QTimeLine m_errorTimeline;      /**< Для пульсации рамки нода в случае ошибки */
 
     QUuid m_guid;                   /**< Совсем уникальный идентификатор нода */
+    bool m_isSelected;              /**< Флаг выделения нода */
 };
 
 typedef class StoryNodeItem* StoryNodeItemPtr;

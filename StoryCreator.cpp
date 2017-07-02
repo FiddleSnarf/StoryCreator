@@ -44,7 +44,6 @@ void StoryCreator::initialize()
 void StoryCreator::initStoryView()
 {
     m_ui->storyView->setCore(m_core);
-    m_ui->storyView->setAlignment(Qt::AlignCenter);
     m_ui->storyView->setScene(m_storyManager->getStoryScene().data());          
 }
 
@@ -89,7 +88,8 @@ void StoryCreator::initToolBar()
 void StoryCreator::initConnects()
 {
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
-    connect(m_storyManager.data(), &StoryManager::signalCountStoryNodesChanged, this, &StoryCreator::slotCountStoryNodesChanged);
+    connect(m_storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryCreator::slotCountStoryNodesChanged);
+    connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryCreator::slotCountStoryNodesChanged);
     connect(m_storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
 
     // Для toolbar

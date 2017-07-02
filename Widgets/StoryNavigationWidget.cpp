@@ -46,58 +46,48 @@ void StoryNavigationWidget::initConnects()
     if (!m_core)
         return;
 
-    connect(m_core->getStoryManager().data(), &StoryManager::signalStoryStateChanged, this, &StoryNavigationWidget::slotStoryStateChanged);
-    connect(m_core->getStoryManager().data(), &StoryManager::signalItemSelectedChanged, this, &StoryNavigationWidget::slotItemSelectedChanged);
+    StoryManagerPtr storyManager = m_core->getStoryManager();
+    connect(storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryNavigationWidget::slotStoryStateChanged);
+    connect(storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryNavigationWidget::slotItemSelectedChanged);
+    connect(storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryNavigationWidget::slotUserAddedNode);
+    connect(storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryNavigationWidget::slotUserDeletedNode);
     connect(m_ui->nodesNavigationTable, &QTableWidget::itemClicked, this, &StoryNavigationWidget::slotNavigationItemClicked);
 }
 
 void StoryNavigationWidget::slotStoryStateChanged(bool state)
 {
-    StoryManagerPtr storyManager = m_core->getStoryManager();
-    if (state)
+    if (!state)
     {
-        foreach(const StoryNodeItemPtr& node ,storyManager->getStoryNodeList())
-        {
-            const StoryNode& storyNodeInfo = node->getNodeInfo();
-            const int nodeId = storyNodeInfo.getId();
-            const QString nodeTitle = storyNodeInfo.getTitle();
-            const bool isValid = storyNodeInfo.isValid();
-            m_nodeRowMap[nodeId] = NodeRowInfo(nodeTitle, isValid);
-        }
-        refillNodeTable();
-    }else
-    {
-        m_nodeRowMap.clear();
+        m_nodeNaviInfoMap.clear();
         clearNodeTable();
     }
 }
 
 void StoryNavigationWidget::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode)
-{
+{       
     if (state)
     {
         const int selectedId = selectedNode->getNodeInfo().getId();
-        if (state && m_currentSelectedNodeId == selectedId)
+        if (m_currentSelectedNodeId == selectedId)
             return;
-    }
+        else
+            clearSelection();
 
-    clearSelection();
-    if (state)
-    {
-        const int selectedId = selectedNode->getNodeInfo().getId();
-        for (int i = 0; i < m_ui->nodesNavigationTable->rowCount(); i++)
+        for (int rowIdx = 0; rowIdx < m_ui->nodesNavigationTable->rowCount(); rowIdx++)
         {
-            QTableWidgetItem* idItem = m_ui->nodesNavigationTable->item(i, enIdColumn);
+            QTableWidgetItem* idItem = m_ui->nodesNavigationTable->item(rowIdx, enIdColumn);
             if (idItem->text().toInt() == selectedId)
             {
                 m_currentSelectedNodeId = selectedId;
                 idItem->setSelected(true);
-                m_ui->nodesNavigationTable->item(i, enTitleColumn)->setSelected(true);
+                m_ui->nodesNavigationTable->item(rowIdx, enTitleColumn)->setSelected(true);
                 m_ui->nodesNavigationTable->scrollToItem(idItem, QAbstractItemView::PositionAtCenter);
                 return;
             }
         }
     }
+    else
+        clearSelection();
 }
 
 void StoryNavigationWidget::slotNavigationItemClicked(QTableWidgetItem* item)
@@ -109,6 +99,7 @@ void StoryNavigationWidget::slotNavigationItemClicked(QTableWidgetItem* item)
 
 void StoryNavigationWidget::clearSelection()
 {
+    m_currentSelectedNodeId = -1;
     QList<QTableWidgetItem*> selectedItems = m_ui->nodesNavigationTable->selectedItems();
     foreach(QTableWidgetItem* item, selectedItems)
     {
@@ -116,14 +107,22 @@ void StoryNavigationWidget::clearSelection()
     }
 }
 
-void StoryNavigationWidget::slotUserAddedNode(int nodeID)
+void StoryNavigationWidget::slotUserAddedNode(StoryNodeItem* addedNode)
 {
-    StoryNodeItemPtr nodeItem = m_core->getStoryManager()->getNodeItemForID(nodeID);
-    if (nodeItem)
-    {
-        const StoryNode& storyNodeInfo = nodeItem->getNodeInfo();
+    const StoryNode& storyNodeInfo = addedNode->getNodeInfo();
+
+    NodeNavigationInfo naviInfo;
+    naviInfo.title = storyNodeInfo.getTitle();
+    naviInfo.text = storyNodeInfo.getText();
+    naviInfo.nodeItemPtr = addedNode;
+    m_nodeNaviInfoMap[storyNodeInfo.getId()] = naviInfo;
+
+    // Теперь проверим если ноды пошли не по порядку, перезаполним таблицу, иначе просто добавим новую строку
+    const int lastRowIndex = m_ui->nodesNavigationTable->rowCount();
+    if (lastRowIndex != 0 && m_ui->nodesNavigationTable->item(lastRowIndex - 1, enIdColumn)->text().toInt() > addedNode->getNodeInfo().getId())
+        refillNodeTable();
+    else
         appendNodeRow(storyNodeInfo.getId(), storyNodeInfo.getTitle(), storyNodeInfo.isValid());
-    }
 }
 
 void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
@@ -133,33 +132,21 @@ void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
 
 void StoryNavigationWidget::appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid)
 {
-    m_nodeRowMap[nodeId] = NodeRowInfo(nodeTitle, nodeIsValid);
-    const int lastRowIndex = m_ui->nodesNavigationTable->rowCount();
-    m_ui->nodesNavigationTable->setRowCount(lastRowIndex + 1);
-    if (lastRowIndex > 0)
-    {
-        QTableWidgetItem* preItem = m_ui->nodesNavigationTable->item(lastRowIndex - 1, enIdColumn);
-        const int preItemId = preItem->text().toInt();
-        if (nodeId < preItemId)
-        {
-            refillNodeTable();
-            return;
-        }
-    }
-
     QTableWidgetItem* idItem = new QTableWidgetItem(QString::number(nodeId));
-    idItem->setFont(QFont("Arial", 14, QFont::Bold,QFont::StyleItalic));
+    idItem->setFont(QFont("Arial", 14, QFont::Bold, QFont::StyleItalic));
     idItem->setTextAlignment(Qt::AlignCenter);
     idItem->setFlags(idItem->flags() & ~Qt::ItemIsEditable);
 
     QTableWidgetItem* titleItem = new QTableWidgetItem(nodeTitle);
     titleItem->setFlags(titleItem->flags() & ~Qt::ItemIsEditable);
-    //titleItem->setFont(QFont("Arial", 14, QFont::Bold,QFont::StyleItalic)); // TODO подобрать font
+    titleItem->setFont(QFont("Arial", 10)); // TODO подобрать font
 
     const QColor backgroundColor = getColorForNodeRow(nodeIsValid);
     idItem->setBackgroundColor(backgroundColor);
     titleItem->setBackgroundColor(backgroundColor);
 
+    const int lastRowIndex = m_ui->nodesNavigationTable->rowCount();
+    m_ui->nodesNavigationTable->setRowCount(lastRowIndex + 1);
     m_ui->nodesNavigationTable->setItem(lastRowIndex, enIdColumn, idItem);
     m_ui->nodesNavigationTable->setItem(lastRowIndex, enTitleColumn, titleItem);
 }
@@ -167,9 +154,11 @@ void StoryNavigationWidget::appendNodeRow(int nodeId, const QString& nodeTitle, 
 void StoryNavigationWidget::refillNodeTable()
 {
     clearNodeTable();
-    for(NodeRowMap::const_iterator it = m_nodeRowMap.cbegin(); it != m_nodeRowMap.cend(); ++it)
+    for(NodeNavigationInfoMap::const_iterator it = m_nodeNaviInfoMap.cbegin(); it != m_nodeNaviInfoMap.cend(); ++it)
     {
-        appendNodeRow(it.key(), (*it).first, (*it).second);
+        NodeNavigationInfo nodeNaviInfo = *it;
+        const StoryNode& nodeInfo = nodeNaviInfo.nodeItemPtr->getNodeInfo();
+        appendNodeRow(it.key(), nodeInfo.getTitle(), nodeInfo.isValid());
     }
 }
 
@@ -182,5 +171,5 @@ void StoryNavigationWidget::clearNodeTable()
 
 QColor StoryNavigationWidget::getColorForNodeRow(bool isValid) const
 {
-    return isValid ? QColor(Qt::green) : QColor(Qt::red); // TODO подобрать цвета
+    return isValid ? QColor("#69BF83") : QColor("#B53F3F"); // TODO подобрать цвета
 }

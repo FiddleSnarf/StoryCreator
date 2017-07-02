@@ -8,7 +8,8 @@
 
 StoryNodeItem::StoryNodeItem(const StoryNode& nodeInfo, QGraphicsItem* parent) :
     QGraphicsObject(parent),
-    m_boundingRect(StoryGUI::DEFAULT_NODE_RECT)
+    m_boundingRect(StoryGUI::DEFAULT_NODE_RECT),
+    m_isSelected(false)
 {
     const int id = nodeInfo.getId();
     if (id < 0)
@@ -27,7 +28,8 @@ StoryNodeItem::StoryNodeItem(const StoryNode& nodeInfo, QGraphicsItem* parent) :
 StoryNodeItem::StoryNodeItem(int nodeID, const QString &typeNode, QGraphicsItem* parent) :
     QGraphicsObject(parent),
     m_boundingRect(StoryGUI::DEFAULT_NODE_RECT),
-    m_nodeInfo(nodeID, typeNode)
+    m_nodeInfo(nodeID, typeNode),
+    m_isSelected(false)
 {
     initialization();
 }
@@ -84,7 +86,12 @@ void StoryNodeItem::setNodeSelection(bool state)
         m_selectedTimeline.stop();
         setDefaultPen();
     }
-    setSelected(state);
+    m_isSelected = state;
+}
+
+bool StoryNodeItem::isNodeSelected() const
+{
+    return m_isSelected;
 }
 
 //=======================================================================================

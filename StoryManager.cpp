@@ -24,7 +24,8 @@ StoryManager::~StoryManager()
 
 void StoryManager::connectToScene()
 {
-    connect(m_storyScene.data(), &StoryScene::signalCountStoryNodesChanged, this, &StoryManager::signalCountStoryNodesChanged);
+    connect(m_storyScene.data(), &StoryScene::signalStoryNodeAdded, this, &StoryManager::signalStoryNodeAdded);
+    connect(m_storyScene.data(), &StoryScene::signalStoryNodeDeleted, this, &StoryManager::signalStoryNodeDeleted);
     connect(m_storyScene.data(), &StoryScene::signalItemSelectedChanged, this, &StoryManager::signalItemSelectedChanged);
 }
 
@@ -221,5 +222,9 @@ void StoryManager::selectNodeForID(int nodeId, bool centerOn)
 
 StoryNodeItemPtr StoryManager::getSelectedNodeItem() const
 {
-    return m_storyScene->getSelectedNodeItem();
+    StoryNodeItemList selectedItems = m_storyScene->getSelectedNodeItems();
+    if (!selectedItems.isEmpty())
+        return selectedItems.first();
+
+    return StoryNodeItemPtr();
 }
