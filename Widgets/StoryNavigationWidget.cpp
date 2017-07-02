@@ -51,6 +51,7 @@ void StoryNavigationWidget::initConnects()
     connect(storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryNavigationWidget::slotItemSelectedChanged);
     connect(storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryNavigationWidget::slotUserAddedNode);
     connect(storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryNavigationWidget::slotUserDeletedNode);
+    connect(storyManager.data(), &StoryManager::signalNodeInfoUpdated, this, &StoryNavigationWidget::slotUserEditNode);
     connect(m_ui->nodesNavigationTable, &QTableWidget::itemClicked, this, &StoryNavigationWidget::slotNavigationItemClicked);
 }
 
@@ -130,6 +131,26 @@ void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
     // TODO
 }
 
+void StoryNavigationWidget::slotUserEditNode(int nodeID)
+{
+    NodeNavigationInfo& nodeNaviInfo = m_nodeNaviInfoMap[nodeID];
+    nodeNaviInfo.updateInfo();
+    for (int rowIdx = 0; rowIdx < m_ui->nodesNavigationTable->rowCount(); rowIdx++)
+    {
+        QTableWidgetItem* idItem = m_ui->nodesNavigationTable->item(rowIdx, enIdColumn);
+        if (idItem->text().toInt() == nodeID)
+        {
+            QTableWidgetItem* titleItem = m_ui->nodesNavigationTable->item(rowIdx, enTitleColumn);
+            titleItem->setText(nodeNaviInfo.title);
+
+            const QColor backgroundColor = getColorForNodeRow(nodeNaviInfo.nodeItemPtr->getNodeInfo().isValid());
+            idItem->setBackgroundColor(backgroundColor);
+            titleItem->setBackgroundColor(backgroundColor);
+            return;
+        }
+    }
+}
+
 void StoryNavigationWidget::appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid)
 {
     QTableWidgetItem* idItem = new QTableWidgetItem(QString::number(nodeId));
@@ -171,5 +192,5 @@ void StoryNavigationWidget::clearNodeTable()
 
 QColor StoryNavigationWidget::getColorForNodeRow(bool isValid) const
 {
-    return isValid ? QColor("#69BF83") : QColor("#B53F3F"); // TODO подобрать цвета
+    return isValid ? QColor("#69BF83") : QColor("#B53F3F");
 }

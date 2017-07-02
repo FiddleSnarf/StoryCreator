@@ -79,6 +79,8 @@ void NodeInfoWidget::slotUpdateNodeData()
     nodeInfo.setType(m_ui->nodeTypeComboBox->currentText());
     nodeInfo.setTitle(m_ui->nodeTitleLineEdit->text());
     nodeInfo.setText(m_ui->nodeTextEdit->toPlainText());
+
+    emit signalNodeInfoUpdated(nodeInfo.getId());
 }
 
 void NodeInfoWidget::blockUISignals()

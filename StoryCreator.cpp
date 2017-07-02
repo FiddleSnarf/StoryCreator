@@ -92,6 +92,9 @@ void StoryCreator::initConnects()
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryCreator::slotCountStoryNodesChanged);
     connect(m_storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
 
+    // Подписываемся на сигнал редактирования нода (от виджета редактирования, вообще это не оч правильно конечно)
+    connect(m_ui->nodeInfoWidget, &NodeInfoWidget::signalNodeInfoUpdated, m_storyManager.data(), &StoryManager::signalNodeInfoUpdated);
+
     // Для toolbar
     connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCreateNewStory);
     connect(m_actLoadStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotLoadStory);

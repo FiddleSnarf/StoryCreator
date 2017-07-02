@@ -55,6 +55,7 @@ private slots:
     void slotNavigationItemClicked(class QTableWidgetItem* item);
     void slotUserAddedNode(StoryNodeItem* addedNode);
     void slotUserDeletedNode(int nodeID);
+    void slotUserEditNode(int nodeID);
 
 private:
     void initialization();

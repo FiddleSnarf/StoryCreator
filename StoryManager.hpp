@@ -77,6 +77,10 @@ signals:
      */
     void signalItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
 
+    /** \brief Сигнал испускается при изменении данных нода.
+     */
+    void signalNodeInfoUpdated(int nodeId);
+
 public slots:
     /** \brief Слот вызывается при нажатии кнопки "Создать новую историю"
      */

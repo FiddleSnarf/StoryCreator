@@ -24,6 +24,9 @@ public:
 protected:
     virtual void hideEvent(QHideEvent* event) override;
 
+signals:
+    void signalNodeInfoUpdated(int nodeId);
+
 private slots:
     void slotUpdateNodeData();
 
