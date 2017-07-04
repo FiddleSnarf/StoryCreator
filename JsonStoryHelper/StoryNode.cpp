@@ -14,8 +14,7 @@ StoryNode::StoryNode(int id, const QString& type) :
     m_type(type),
     m_isValid(false)
 {
-    if (id > 0 && !type.isEmpty())
-        m_isValid = true;
+
 }
 
 StoryNode::~StoryNode()
@@ -23,7 +22,7 @@ StoryNode::~StoryNode()
 
 }
 
-bool StoryNode::operator< (const StoryNode& other) const
+bool StoryNode::operator<(const StoryNode& other) const
 {
     return m_id < other.getId();
 }
@@ -37,23 +36,17 @@ bool StoryNode::operator==(const StoryNode& other) const
             m_actionList == other.getNodeActionList());
 }
 
+bool StoryNode::operator!=(const StoryNode& other) const
+{
+    return !(*this == other);
+}
+
 void StoryNode::read(const QJsonObject& jsonNode)
 {
-    if (!jsonNode.contains(StoryJsonTags::nodeID_tag) || !jsonNode.contains(StoryJsonTags::type_tag))
-    {
-        m_isValid = false;
-        return;
-    }
-
     m_id = jsonNode[StoryJsonTags::nodeID_tag].toInt();
     m_type = jsonNode[StoryJsonTags::type_tag].toString();
     m_title = jsonNode[StoryJsonTags::title_tag].toString();
     m_text = jsonNode[StoryJsonTags::text_tag].toString();
-
-    if (m_id < 0 || m_type.isEmpty())
-        m_isValid = false;
-    else
-        m_isValid = true;
 
     if (jsonNode.contains(StoryJsonTags::actions_tag))
     {
@@ -121,18 +114,37 @@ const NodeActionList& StoryNode::getNodeActionList() const
     return m_actionList;
 }
 
+void StoryNode::setId(int id)
+{
+    m_id = id;
+    checkValid();
+}
+
 void StoryNode::setType(const QString& type)
 {
     m_type = type;
-    m_isValid = !type.isEmpty();
+    checkValid();
 }
 
 void StoryNode::setTitle(const QString& title)
 {
     m_title = title;
+    checkValid();
 }
 
 void StoryNode::setText(const QString& text)
 {
     m_text = text;
+    checkValid();
+}
+
+void StoryNode::setNodeActionList(const NodeActionList& actionList)
+{
+    m_actionList = actionList;
+}
+
+void StoryNode::checkValid()
+{
+    // m_isValid =
+    // TODO Сделать класс накопления ошибок NodeChecker (нужно чтобы он мог представить список ошибок нода в текстовом формате)
 }

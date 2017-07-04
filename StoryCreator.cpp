@@ -34,8 +34,8 @@ void StoryCreator::initialize()
     initStoryView();
     initSelectTemplateNodesView();
 
-    m_ui->nodeRedactorTab->setEnabled(false);
-    m_ui->itemsRedactorTab->setEnabled(false);
+    m_ui->nodeEditorTab->setEnabled(false);
+    m_ui->itemsEditorTab->setEnabled(false);
     m_actCloseStory->setEnabled(false);
     m_ui->nodeInfoWidget->setVisible(false);
     m_ui->storyNavigationWidget->setCore(m_core);
@@ -87,19 +87,21 @@ void StoryCreator::initToolBar()
 
 void StoryCreator::initConnects()
 {
+    // Подписываемся на изменения истории
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryCreator::slotCountStoryNodesChanged);
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryCreator::slotCountStoryNodesChanged);
     connect(m_storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
+    connect(m_storyManager.data(), &StoryManager::signalStorySaved, this, &StoryCreator::slotStorySaved);
 
-    // Подписываемся на сигнал редактирования нода (от виджета редактирования, вообще это не оч правильно конечно)
-    connect(m_ui->nodeInfoWidget, &NodeInfoWidget::signalNodeInfoUpdated, m_storyManager.data(), &StoryManager::signalNodeInfoUpdated);
+    // Подписываемся на изменения данных нодов
+    connect(m_storyManager.data(), &StoryManager::signalDataNodeChanged, this, &StoryCreator::slotNodesDataChanged);
+    connect(m_storyManager.data(), &StoryManager::signalGeometryNodeChanged, this, &StoryCreator::slotNodesDataChanged);
 
-    // Для toolbar
+    // Подписываемся на кнопки тулбара
     connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCreateNewStory);
     connect(m_actLoadStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotLoadStory);
     connect(m_actCloseStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCloseStory);
-
     connect(m_actSaveStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
     connect(m_actSaveAsStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveAsStory);
 }
@@ -110,6 +112,7 @@ void StoryCreator::storyClosed()
     const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
     m_ui->storyView->setScene(scenePtr.data());
     m_ui->nodeInfoWidget->setVisible(false);
+    slotStorySaved();
 }
 
 //=======================================================================================
@@ -126,8 +129,8 @@ void StoryCreator::slotCountStoryNodesChanged()
 
 void StoryCreator::slotStoryStateChanged(bool state)
 {
-    m_ui->nodeRedactorTab->setEnabled(state);
-    m_ui->itemsRedactorTab->setEnabled(state);
+    m_ui->nodeEditorTab->setEnabled(state);
+    m_ui->itemsEditorTab->setEnabled(state);
     m_actCloseStory->setEnabled(state);
     m_saveMenu->setEnabled(state);
     m_actSaveStory->setEnabled(m_storyManager->isStoryBeLoaded());
@@ -147,6 +150,25 @@ void StoryCreator::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNo
         m_ui->nodeInfoWidget->setCurrentNodeItem(selectedNode);
     }
     m_ui->nodeInfoWidget->setVisible(state);
+}
+
+void StoryCreator::slotNodesDataChanged()
+{
+    QString nodeEditorTabText = m_ui->tabStory->tabText(enNodeEditorTabIdx);
+    if (!nodeEditorTabText.contains("*"))
+        m_ui->tabStory->setTabText(enNodeEditorTabIdx, nodeEditorTabText + "*");
+
+    if (m_storyManager->isStoryBeLoaded())
+        m_actSaveStory->setEnabled(true);
+}
+
+void StoryCreator::slotStorySaved()
+{
+    m_ui->tabStory->setTabText(enNodeEditorTabIdx, m_ui->tabStory->tabText(enNodeEditorTabIdx).remove(QChar('*')));
+    m_ui->tabStory->setTabText(enItemsEditorTabIdx, m_ui->tabStory->tabText(enItemsEditorTabIdx).remove(QChar('*')));
+
+    if (m_storyManager->isStoryBeLoaded())
+        m_actSaveStory->setEnabled(false);
 }
 
 //=======================================================================================

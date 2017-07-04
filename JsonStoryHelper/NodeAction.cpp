@@ -19,6 +19,11 @@ bool NodeAction::operator==(const NodeAction& other) const
             m_text == other.getActionText());
 }
 
+bool NodeAction::operator!=(const NodeAction& other) const
+{
+    return !(*this == other);
+}
+
 void NodeAction::read(const QJsonObject& jsonAction)
 {
     if (!jsonAction.contains(StoryJsonTags::type_tag))

@@ -59,14 +59,54 @@ void StoryNodeItem::setIcon(const QIcon& icon)
     m_icon = icon;
 }
 
-StoryNode& StoryNodeItem::getNodeInfo()
+const StoryNode& StoryNodeItem::getNodeInfo() const
 {
     return m_nodeInfo;
 }
 
-const StoryNode& StoryNodeItem::getNodeInfo() const
+void StoryNodeItem::setNodeInfo(const StoryNode& storyNode)
 {
-    return m_nodeInfo;
+    if (m_nodeInfo != storyNode)
+    {
+        m_nodeInfo = storyNode;
+        emit signalDataNodeChanged(m_nodeInfo.getId());
+    }
+}
+
+void StoryNodeItem::setNodeTitle(const QString& title)
+{
+    if (m_nodeInfo.getTitle() != title)
+    {
+        m_nodeInfo.setTitle(title);
+        emit signalDataNodeChanged(m_nodeInfo.getId());
+    }
+}
+
+void StoryNodeItem::setNodeType(const QString& type)
+{
+    if (m_nodeInfo.getType() != type)
+    {
+        m_nodeInfo.setType(type);
+        emit signalDataNodeChanged(m_nodeInfo.getId());
+    }
+}
+
+void StoryNodeItem::setNodeText(const QString& text)
+{
+    if (m_nodeInfo.getText() != text)
+    {
+        m_nodeInfo.setText(text);
+        emit signalDataNodeChanged(m_nodeInfo.getId());
+    }
+}
+
+void StoryNodeItem::setNodeActionList(const NodeActionList& actionList)
+{
+    if (m_nodeInfo.getNodeActionList() != actionList)
+    {
+        m_nodeInfo.setNodeActionList(actionList);
+        emit signalDataNodeChanged(m_nodeInfo.getId());
+    }
 }
 
 bool StoryNodeItem::isHeadNode() const
@@ -107,6 +147,14 @@ void StoryNodeItem::initialization()
 
     initSelectedPulse();
     initErrorPulse();
+
+    connect(this, &QGraphicsObject::xChanged, this, &StoryNodeItem::slotGeometryNodeChanged);
+    connect(this, &QGraphicsObject::yChanged, this, &StoryNodeItem::slotGeometryNodeChanged);
+}
+
+void StoryNodeItem::slotGeometryNodeChanged()
+{
+    emit signalGeometryNodeChanged(m_nodeInfo.getId());
 }
 
 void StoryNodeItem::initSelectedPulse()

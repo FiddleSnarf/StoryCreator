@@ -1,6 +1,8 @@
 #include <QGraphicsSceneDragDropEvent>
 #include <QMimeData>
 #include <QGraphicsView>
+#include <QMessageBox>
+#include <QDebug>
 
 #include "StoryScene.hpp"
 
@@ -115,6 +117,27 @@ void StoryScene::slotClearScene()
     m_idSet.clear();
 }
 
+void StoryScene::slotDeleteSelectedNode()
+{
+    const StoryNodeItemList items = getSelectedNodeItems();
+    if (items.isEmpty())
+        return;
+
+    QMessageBox::StandardButton button = QMessageBox::question(nullptr, tr("Delete node"), tr("Are you sure you want to delete the selected nodes?"));
+    if (button == QMessageBox::Yes)
+    {
+        foreach (auto itemPtr, items)
+        {
+            const int nodeId = itemPtr->getNodeInfo().getId();
+            if (!m_nodesList.removeOne(itemPtr))
+                qDebug() << tr("Bad delete node"); // TODO не забудь сделать вывод в лог (имя файла и строка тоже нужны)
+
+            removeItem(itemPtr);
+            emit signalStoryNodeDeleted(nodeId);
+        }
+    }
+}
+
 //=======================================================================================
 
 //===================================== protected =======================================
@@ -182,6 +205,8 @@ bool StoryScene::addEmptyStoryNode(const QString& nodeType, const QIcon& icon, c
         return false;
 
     StoryNodeItem* node = new StoryNodeItem(newId, nodeType);
+    connect(node, &StoryNodeItem::signalDataNodeChanged, this, &StoryScene::signalDataNodeChanged);
+    connect(node, &StoryNodeItem::signalGeometryNodeChanged, this, &StoryScene::signalGeometryNodeChanged);
     node->setFlag(QGraphicsItem::ItemIsMovable, true);
     node->setIcon(icon);
     node->setPos(pos);
@@ -206,6 +231,8 @@ bool StoryScene::addStoryNode(const StoryNode& nodeInfo, const QPointF& pos)
     addItem(node);
     m_idSet.insert(node->getNodeInfo().getId());
     emit signalStoryNodeAdded(node);
+    connect(node, &StoryNodeItem::signalDataNodeChanged, this, &StoryScene::signalDataNodeChanged);
+    connect(node, &StoryNodeItem::signalGeometryNodeChanged, this, &StoryScene::signalGeometryNodeChanged);
     return true;
 }
 

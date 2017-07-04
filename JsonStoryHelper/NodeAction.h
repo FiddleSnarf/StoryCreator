@@ -14,6 +14,7 @@ public:
     bool isValid() const;
 
     bool operator==(const NodeAction& other) const;
+    bool operator!=(const NodeAction& other) const;
 
     QString getActionLogic() const;
     QString getActionType() const;

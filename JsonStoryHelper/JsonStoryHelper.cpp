@@ -72,8 +72,7 @@ bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::S
     {
         StoryNode node;
         node.read(nodesArray[nodeIdx].toObject());
-        if (node.isValid())
-            storyInfo.nodeList << node; // TODO надо еще подумать добавлять ли невалидные ноды или нет (наверное лучше добавлять, и отображать как недоделанные, чтобы иметь возможность их редактировать)
+        storyInfo.nodeList << node;
     }
     return true;
 }

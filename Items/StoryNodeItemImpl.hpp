@@ -43,10 +43,33 @@ public:
      */
     void setIcon(const QIcon& icon);
 
+    // ================== Методы для работы с nodeInfo ==========================
+
     /** \brief Получить информацию о ноде.
      */
-    StoryNode& getNodeInfo();
     const StoryNode& getNodeInfo() const;
+
+    /** \brief Полностью заменить информацию о ноде.
+     */
+    void setNodeInfo(const StoryNode& storyNode);
+
+    /** \brief Установить заголовок нода.
+     */
+    void setNodeTitle(const QString& title);
+
+    /** \brief Установить тип нода.
+     */
+    void setNodeType(const QString& type);
+
+    /** \brief Установить текст нода.
+     */
+    void setNodeText(const QString& text);
+
+    /** \brief Установить список экшенов нода.
+     */
+    void setNodeActionList(const NodeActionList& actionList);
+
+    // ==========================================================================
 
     /** \brief Говорит о том является ли нод головным.
      */
@@ -63,6 +86,20 @@ public:
     /** \brief Выделен ли нод.
      */
     bool isNodeSelected() const;
+
+signals:
+    /** \brief Сигнал оповещает о том что данные нода были изменены.
+     */
+    void signalDataNodeChanged(int nodeId);
+
+    /** \brief Сигнал оповещает о том что геометрия нода была изменена.
+     */
+    void signalGeometryNodeChanged(int nodeId);
+
+private slots:
+    /** \brief Слот вызывается когда геометрия нода была изменена.
+     */
+    void slotGeometryNodeChanged();
 
 private:
     /** \brief Инициализация начальных параметров.

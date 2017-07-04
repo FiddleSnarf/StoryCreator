@@ -60,6 +60,10 @@ public slots:
      */
     void slotClearScene();
 
+    /** \brief Удаление выделенных нодов.
+     */
+    void slotDeleteSelectedNode();
+
 signals:
 
     /** \brief Сигнал испускается при выделении ноды.
@@ -74,13 +78,20 @@ signals:
      */
     void signalStoryNodeDeleted(int deletedNodeId);
 
+    /** \brief Сигнал оповещает о том что данные нода были изменены.
+     */
+    void signalDataNodeChanged(int nodeId);
+
+    /** \brief Сигнал оповещает о том что геометрия нода была изменена.
+     */
+    void signalGeometryNodeChanged(int nodeId);
+
 protected:
     virtual void dragEnterEvent(QGraphicsSceneDragDropEvent* event) override;
     virtual void dragLeaveEvent(QGraphicsSceneDragDropEvent* event) override;
     virtual void dragMoveEvent(QGraphicsSceneDragDropEvent* event) override;
     virtual void dropEvent(QGraphicsSceneDragDropEvent* event) override;
     virtual void mousePressEvent(QGraphicsSceneMouseEvent* event) override;
-
 
 private:
 

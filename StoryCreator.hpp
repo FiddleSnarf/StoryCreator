@@ -20,6 +20,15 @@ class StoryCreator : public QMainWindow
 
     static const QString NODE_COUNT_CAPT;
 
+    /** \enum EnStoryCreatorTabs
+     *  \brief Перечисление вкладок главного окна StoryCreater.
+     */
+    enum EnStoryCreatorTabs
+    {
+        enNodeEditorTabIdx = 0,
+        enItemsEditorTabIdx
+    };
+
 public:
     explicit StoryCreator(ICorePtr core, QWidget* parent = Q_NULLPTR);
     virtual ~StoryCreator();
@@ -45,6 +54,14 @@ private slots:
     /** \brief Слот вызывается при изменении состояния выделения нодов.
      */
     void slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
+
+    /** \brief Слот вызывается при любом изменении данных или геометрии нодов.
+     */
+    void slotNodesDataChanged();
+
+    /** \brief Слот вызывается при успешном сохранении истории.
+     */
+    void slotStorySaved();
 
 
 private:

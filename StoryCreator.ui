@@ -56,9 +56,9 @@
       <property name="tabBarAutoHide">
        <bool>false</bool>
       </property>
-      <widget class="QWidget" name="nodeRedactorTab">
+      <widget class="QWidget" name="nodeEditorTab">
        <attribute name="title">
-        <string>Story redactor</string>
+        <string>Node editor</string>
        </attribute>
        <layout class="QGridLayout" name="gridLayout_2" columnstretch="2,11,2">
         <property name="leftMargin">
@@ -130,9 +130,9 @@
         </item>
        </layout>
       </widget>
-      <widget class="QWidget" name="itemsRedactorTab">
+      <widget class="QWidget" name="itemsEditorTab">
        <attribute name="title">
-        <string>Items and NPC</string>
+        <string>Items editor</string>
        </attribute>
       </widget>
      </widget>
@@ -145,7 +145,7 @@
      <x>0</x>
      <y>0</y>
      <width>951</width>
-     <height>19</height>
+     <height>21</height>
     </rect>
    </property>
   </widget>

@@ -79,6 +79,16 @@ void StoryView::mouseMoveEvent(QMouseEvent* event)
     QGraphicsView::mouseMoveEvent(event);
 }
 
+void StoryView::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Delete)
+    {
+        StoryScene* scenePtr = dynamic_cast<StoryScene*>(scene());
+        if (scenePtr)
+            scenePtr->slotDeleteSelectedNode();
+    }
+}
+
 void StoryView::zoomIn()
 {
     if (m_currZoom < m_zoomMax)

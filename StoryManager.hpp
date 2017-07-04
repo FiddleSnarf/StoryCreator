@@ -79,7 +79,15 @@ signals:
 
     /** \brief Сигнал испускается при изменении данных нода.
      */
-    void signalNodeInfoUpdated(int nodeId);
+    void signalDataNodeChanged(int nodeId);
+
+    /** \brief Сигнал испускается при изменении геометрии (положения на сцене) нода.
+     */
+    void signalGeometryNodeChanged(int nodeId);
+
+    /** \brief Сигнал испускается при успешном сохранении истории.
+     */
+    void signalStorySaved();
 
 public slots:
     /** \brief Слот вызывается при нажатии кнопки "Создать новую историю"
@@ -106,14 +114,19 @@ public slots:
      */
     void slotUpdateStoryName(const QString& storyName);
 
+    /** \brief Удаление выделенных нодов.
+     */
+    void slotDeleteSelectedNode();
+
 private:
     /** \brief Инициализация начальными параметрами
      */
     void initialization();
 
     /** \brief Сохранить либо указанную историю, либо текущую
+     *  \return Результат сохранения истории.
      */
-    void saveStory(StoryCommon::StoryInfo* updatedStoryPtr = Q_NULLPTR);
+    bool saveStory(StoryCommon::StoryInfo* updatedStoryPtr = Q_NULLPTR);
 
     /** \brief Получить данные истории полученные в процессе редактирования
      */
@@ -128,7 +141,7 @@ private:
     StoryScenePtr m_storyScene;                 /**< Указатель на сцену. */
     SelectNodeModelPtr m_storyNodeSelectModel;  /**< Указатель на модель выбора новых нодов. */
 
-    StoryCommon::StoryInfo m_currentStoryInfo;  /**< Указатель на сцену. */
+    StoryCommon::StoryInfo m_currentStoryInfo;  /**< Данные текущей истории. */
     QString m_storyName;                        /**< Имя(название) текущей истории. */
     bool m_isStoryOpen;                         /**< Флаг, открыта ли история. */
     bool m_isLoadedStory;                       /**< Имеет ли текущая история путь к файлу для сохранения. */

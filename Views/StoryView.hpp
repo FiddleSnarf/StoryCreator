@@ -35,6 +35,10 @@ protected:
      */
     void mouseMoveEvent(QMouseEvent* event) override;
 
+    /** \brief Обработка событий нажатия клавиш клавиатуры
+     */
+    void keyPressEvent(QKeyEvent* event) override;
+
 private:
 
     /** \brief Зум +

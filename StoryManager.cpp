@@ -27,6 +27,9 @@ void StoryManager::connectToScene()
     connect(m_storyScene.data(), &StoryScene::signalStoryNodeAdded, this, &StoryManager::signalStoryNodeAdded);
     connect(m_storyScene.data(), &StoryScene::signalStoryNodeDeleted, this, &StoryManager::signalStoryNodeDeleted);
     connect(m_storyScene.data(), &StoryScene::signalItemSelectedChanged, this, &StoryManager::signalItemSelectedChanged);
+
+    connect(m_storyScene.data(), &StoryScene::signalDataNodeChanged, this, &StoryManager::signalDataNodeChanged);
+    connect(m_storyScene.data(), &StoryScene::signalGeometryNodeChanged, this, &StoryManager::signalGeometryNodeChanged);
 }
 
 StoryScenePtr StoryManager::getStoryScene() const
@@ -107,6 +110,9 @@ void StoryManager::slotLoadStory()
 
         emit signalStoryStateChanged(m_isStoryOpen);
     }
+
+    // Испускаем сигнал о том что нет несохраненных данных
+    emit signalStorySaved();
 }
 
 void StoryManager::slotCloseStory()
@@ -157,7 +163,7 @@ void StoryManager::slotSaveAsStory()
     saveStory();
 }
 
-void StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
+bool StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
 {
     if (updatedStoryPtr)
     {
@@ -170,7 +176,13 @@ void StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
     }
     emit signalStoryStateChanged(m_isStoryOpen);
     if (!JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo))
+    {
         QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error saving history!"));
+        return false;
+    }
+
+    emit signalStorySaved();
+    return true;
 }
 
 void StoryManager::slotUpdateStoryName(const QString& storyName)
@@ -227,4 +239,9 @@ StoryNodeItemPtr StoryManager::getSelectedNodeItem() const
         return selectedItems.first();
 
     return StoryNodeItemPtr();
+}
+
+void StoryManager::slotDeleteSelectedNode()
+{
+    m_storyScene->slotDeleteSelectedNode();
 }

@@ -26,7 +26,7 @@ void NodeInfoWidget::initialization()
 
     // TODO сделать валидацию ввода для title
 
-    connect(m_ui->nodeTitleLineEdit, &QLineEdit::editingFinished, this, &NodeInfoWidget::slotUpdateNodeData);
+    connect(m_ui->nodeTitleLineEdit, &QLineEdit::textChanged, this, &NodeInfoWidget::slotUpdateNodeData);
     connect(m_ui->nodeTextEdit, &QTextEdit::textChanged, this, &NodeInfoWidget::slotUpdateNodeData);
     connect(m_ui->nodeTypeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NodeInfoWidget::slotUpdateNodeData);
     //connect(m_ui->actionTable); // TODO
@@ -75,19 +75,13 @@ void NodeInfoWidget::updateUI()
 
 void NodeInfoWidget::slotUpdateNodeData()
 {
-    StoryNode& nodeInfo = m_currentNodeItem->getNodeInfo();
-    const QString newType = m_ui->nodeTypeComboBox->currentText();
-    const QString newTitle = m_ui->nodeTitleLineEdit->text();
-    const QString newText = m_ui->nodeTextEdit->toPlainText();
-    const bool isRealUpdate = nodeInfo.getType() != newType || nodeInfo.getTitle() != newTitle || nodeInfo.getText() != newText;
-
-    nodeInfo.setType(newType);
-    nodeInfo.setTitle(newTitle);
-    nodeInfo.setText(newText);
-    // TODO обновление actions
-
-    if (isRealUpdate)
-        emit signalNodeInfoUpdated(nodeInfo.getId());
+    if (m_currentNodeItem)
+    {
+        m_currentNodeItem->setNodeType(m_ui->nodeTypeComboBox->currentText());
+        m_currentNodeItem->setNodeTitle(m_ui->nodeTitleLineEdit->text());
+        m_currentNodeItem->setNodeText(m_ui->nodeTextEdit->toPlainText());
+        // TODO обновление actions
+    }
 }
 
 void NodeInfoWidget::blockUISignals()

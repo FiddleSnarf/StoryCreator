@@ -49,13 +49,21 @@ public:
 
     void setCore(ICorePtr core);
 
+signals:
+    void signalDeleteKeyPressed();
+
+protected:
+    /** \brief Обработка событий нажатия клавиш клавиатуры
+     */
+    void keyPressEvent(QKeyEvent* event) override;
+
 private slots:
     void slotStoryStateChanged(bool state);
     void slotItemSelectedChanged(bool state, StoryNodeItem* selectedNode);
     void slotNavigationItemClicked(class QTableWidgetItem* item);
     void slotUserAddedNode(StoryNodeItem* addedNode);
     void slotUserDeletedNode(int nodeID);
-    void slotUserEditNode(int nodeID);
+    void slotUserEditedNode(int nodeID);
 
 private:
     void initialization();

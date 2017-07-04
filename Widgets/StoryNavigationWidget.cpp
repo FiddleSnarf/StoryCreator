@@ -16,6 +16,12 @@ StoryNavigationWidget::~StoryNavigationWidget()
 
 }
 
+void StoryNavigationWidget::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Delete)
+        emit signalDeleteKeyPressed();
+}
+
 void StoryNavigationWidget::initialization()
 {
     // Разрешаем выделение только одного элемента
@@ -51,8 +57,10 @@ void StoryNavigationWidget::initConnects()
     connect(storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryNavigationWidget::slotItemSelectedChanged);
     connect(storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryNavigationWidget::slotUserAddedNode);
     connect(storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryNavigationWidget::slotUserDeletedNode);
-    connect(storyManager.data(), &StoryManager::signalNodeInfoUpdated, this, &StoryNavigationWidget::slotUserEditNode);
+    connect(storyManager.data(), &StoryManager::signalDataNodeChanged, this, &StoryNavigationWidget::slotUserEditedNode);
     connect(m_ui->nodesNavigationTable, &QTableWidget::itemClicked, this, &StoryNavigationWidget::slotNavigationItemClicked);
+
+    connect(this, &StoryNavigationWidget::signalDeleteKeyPressed, storyManager.data(), &StoryManager::slotDeleteSelectedNode);
 }
 
 void StoryNavigationWidget::slotStoryStateChanged(bool state)
@@ -128,10 +136,12 @@ void StoryNavigationWidget::slotUserAddedNode(StoryNodeItem* addedNode)
 
 void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
 {
-    // TODO
+    clearSelection();
+    m_nodeNaviInfoMap.remove(nodeID);
+    refillNodeTable();
 }
 
-void StoryNavigationWidget::slotUserEditNode(int nodeID)
+void StoryNavigationWidget::slotUserEditedNode(int nodeID)
 {
     NodeNavigationInfo& nodeNaviInfo = m_nodeNaviInfoMap[nodeID];
     nodeNaviInfo.updateInfo();

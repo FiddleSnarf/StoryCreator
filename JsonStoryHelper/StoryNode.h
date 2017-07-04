@@ -4,6 +4,7 @@
 
 class StoryNode
 {
+
 public:
     StoryNode();
     StoryNode(int id, const QString& type);
@@ -19,14 +20,19 @@ public:
     QString getText() const;
     const NodeActionList& getNodeActionList() const;
 
+    void setId(int id);
     void setType(const QString& type);
     void setTitle(const QString& title);
     void setText(const QString& text);
+    void setNodeActionList(const NodeActionList& actionList);
 
     bool operator< (const StoryNode& other) const;
     bool operator==(const StoryNode& other) const;
+    bool operator!=(const StoryNode& other) const;
 
 private:
+    void checkValid();
+
     int m_id;
     QString m_type;
     QString m_title;
