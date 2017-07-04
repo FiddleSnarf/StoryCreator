@@ -76,11 +76,18 @@ void NodeInfoWidget::updateUI()
 void NodeInfoWidget::slotUpdateNodeData()
 {
     StoryNode& nodeInfo = m_currentNodeItem->getNodeInfo();
-    nodeInfo.setType(m_ui->nodeTypeComboBox->currentText());
-    nodeInfo.setTitle(m_ui->nodeTitleLineEdit->text());
-    nodeInfo.setText(m_ui->nodeTextEdit->toPlainText());
+    const QString newType = m_ui->nodeTypeComboBox->currentText();
+    const QString newTitle = m_ui->nodeTitleLineEdit->text();
+    const QString newText = m_ui->nodeTextEdit->toPlainText();
+    const bool isRealUpdate = nodeInfo.getType() != newType || nodeInfo.getTitle() != newTitle || nodeInfo.getText() != newText;
 
-    emit signalNodeInfoUpdated(nodeInfo.getId());
+    nodeInfo.setType(newType);
+    nodeInfo.setTitle(newTitle);
+    nodeInfo.setText(newText);
+    // TODO обновление actions
+
+    if (isRealUpdate)
+        emit signalNodeInfoUpdated(nodeInfo.getId());
 }
 
 void NodeInfoWidget::blockUISignals()
