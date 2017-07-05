@@ -4,7 +4,8 @@
 
 StoryNode::StoryNode() :
     m_id(-1),
-    m_isValid(false)
+    m_isValid(false),
+    m_errorFlags(0)
 {
 
 }
@@ -12,7 +13,8 @@ StoryNode::StoryNode() :
 StoryNode::StoryNode(int id, const QString& type) :
     m_id(id),
     m_type(type),
-    m_isValid(false)
+    m_isValid(false),
+    m_errorFlags(0)
 {
 
 }
@@ -62,6 +64,7 @@ void StoryNode::read(const QJsonObject& jsonNode)
             }
         }
     }
+    checkValid();
 }
 
 void StoryNode::write(QJsonObject& jsonObject) const
@@ -145,6 +148,19 @@ void StoryNode::setNodeActionList(const NodeActionList& actionList)
 
 void StoryNode::checkValid()
 {
-    // m_isValid =
-    // TODO Сделать класс накопления ошибок NodeChecker (нужно чтобы он мог представить список ошибок нода в текстовом формате)
+    (m_id < 0) ? m_errorFlags |= enIdIncorrectFlag : m_errorFlags &= ~enIdIncorrectFlag;
+    m_type.isEmpty() ? m_errorFlags |= enTypeEmptyFlag : m_errorFlags &= ~enTypeEmptyFlag;
+    m_title.isEmpty() ? m_errorFlags |= enTitleEmptyFlag : m_errorFlags &= ~enTitleEmptyFlag;
+    m_text.isEmpty() ? m_errorFlags |= enTextEmptyFlag : m_errorFlags &= ~enTextEmptyFlag;
+    m_isValid = m_errorFlags == 0;
+}
+
+const QStringList& StoryNode::getErrorsList()
+{
+    m_errorsList.clear();
+    if (m_errorFlags & enIdIncorrectFlag) m_errorsList << QObject::tr("Node ID is incorrect");
+    if (m_errorFlags & enTypeEmptyFlag) m_errorsList << QObject::tr("Node type is empty");
+    if (m_errorFlags & enTitleEmptyFlag) m_errorsList << QObject::tr("Node title is empty");
+    if (m_errorFlags & enTextEmptyFlag) m_errorsList << QObject::tr("Node text is empty");
+    return m_errorsList;
 }
