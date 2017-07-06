@@ -18,13 +18,14 @@ NodeInfoWidget::~NodeInfoWidget()
 
 void NodeInfoWidget::initialization()
 {
+    // Добавил валидацию ввода для title (максимум 100 символов , русские-английские буквы ,.!?-)
+    m_ui->nodeTitleLineEdit->setValidator(new QRegExpValidator(QRegExp(QString::fromLocal8Bit("[A-Za-zА-Яа-я1-9,.!?-]{1,100}")), this));
+
     blockUISignals();
     foreach(const QString& nodeTypeName, m_typesNodeCollector.getNodesNameList())
     {
         m_ui->nodeTypeComboBox->addItem(m_typesNodeCollector.getNodeTypeInfo(nodeTypeName).iconType, nodeTypeName);
     }
-
-    // TODO сделать валидацию ввода для title
 
     connect(m_ui->nodeTitleLineEdit, &QLineEdit::textChanged, this, &NodeInfoWidget::slotUpdateNodeData);
     connect(m_ui->nodeTextEdit, &QTextEdit::textChanged, this, &NodeInfoWidget::slotUpdateNodeData);
