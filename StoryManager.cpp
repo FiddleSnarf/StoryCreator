@@ -128,9 +128,26 @@ void StoryManager::slotCloseStory()
             tr("The current history has been changed, do you want to save the changes?")) == QMessageBox::Yes)
         {
             if (!isStoryBeLoaded())
-                slotSaveAsStory();
+            {
+                const QString defaultFileName = m_storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_storyName;
+                const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
+                if (filePath.isEmpty())
+                    return;
+
+                m_isLoadedStory = true;
+                m_currentStoryInfo.filePath = filePath;
+                if (!saveStory())
+                {
+                    m_isLoadedStory = false;
+                    m_currentStoryInfo.filePath.clear();
+                    return;
+                }
+            }
             else
-                saveStory(&updatedStory);
+            {
+                if (!saveStory(&updatedStory))
+                    return;
+            }
         }
     }
 
@@ -165,6 +182,7 @@ void StoryManager::slotSaveAsStory()
 
 bool StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
 {
+    const StoryCommon::StoryInfo tempCopyStory = m_currentStoryInfo;
     if (updatedStoryPtr)
     {
         m_currentStoryInfo = *updatedStoryPtr;
@@ -178,6 +196,7 @@ bool StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
     if (!JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo))
     {
         QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error saving history!"));
+        m_currentStoryInfo = tempCopyStory;
         return false;
     }
 
