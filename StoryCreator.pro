@@ -27,7 +27,8 @@ SOURCES += main.cpp\
     JsonStoryHelper/JsonStoryHelper.cpp \
     Common/StoryTypesNodeCollector.cpp \
     Widgets/NodeInfoWidget.cpp \
-    Widgets/StoryNavigationWidget.cpp
+    Widgets/StoryNavigationWidget.cpp \
+    Widgets/SearchLineWidget.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \
@@ -45,12 +46,14 @@ HEADERS  += \
     Common/StoryJsonTags.hpp \
     Common/StoryTypesNodeCollector.hpp \
     Widgets/NodeInfoWidget.hpp \
-    Widgets/StoryNavigationWidget.hpp
+    Widgets/StoryNavigationWidget.hpp \
+    Widgets/SearchLineWidget.hpp
 
 FORMS    += \
     StoryCreator.ui \
     Widgets/NodeInfoWidget.ui \
-    Widgets/StoryNavigationWidget.ui
+    Widgets/StoryNavigationWidget.ui \
+    Widgets/SearchLineWidget.ui
 
 RESOURCES += \
     resources.qrc

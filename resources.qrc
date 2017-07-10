@@ -8,4 +8,7 @@
         <file>Resources/load_story.png</file>
         <file>Resources/save_story.png</file>
     </qresource>
+    <qresource prefix="/other">
+        <file>Resources/search.png</file>
+    </qresource>
 </RCC>

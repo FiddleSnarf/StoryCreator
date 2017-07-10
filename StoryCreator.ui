@@ -76,6 +76,16 @@
         <property name="spacing">
          <number>0</number>
         </property>
+        <item row="1" column="1">
+         <widget class="NodeInfoWidget" name="nodeInfoWidget" native="true">
+          <property name="minimumSize">
+           <size>
+            <width>0</width>
+            <height>30</height>
+           </size>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0" rowspan="2">
          <widget class="QListView" name="viewNodes">
           <property name="maximumSize">
@@ -108,24 +118,35 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="1">
-         <widget class="NodeInfoWidget" name="nodeInfoWidget" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>0</width>
-            <height>30</height>
-           </size>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="2" rowspan="2">
-         <widget class="StoryNavigationWidget" name="storyNavigationWidget" native="true">
-          <property name="minimumSize">
-           <size>
-            <width>120</width>
-            <height>0</height>
-           </size>
-          </property>
+         <widget class="QWidget" name="naviPanel" native="true">
+          <layout class="QVBoxLayout" name="verticalLayout" stretch="0,10">
+           <property name="leftMargin">
+            <number>0</number>
+           </property>
+           <property name="topMargin">
+            <number>0</number>
+           </property>
+           <property name="rightMargin">
+            <number>0</number>
+           </property>
+           <property name="bottomMargin">
+            <number>0</number>
+           </property>
+           <item>
+            <widget class="SearchLineWidget" name="searchLine" native="true"/>
+           </item>
+           <item>
+            <widget class="StoryNavigationWidget" name="storyNavigationWidget" native="true">
+             <property name="minimumSize">
+              <size>
+               <width>120</width>
+               <height>0</height>
+              </size>
+             </property>
+            </widget>
+           </item>
+          </layout>
          </widget>
         </item>
        </layout>
@@ -145,7 +166,7 @@
      <x>0</x>
      <y>0</y>
      <width>951</width>
-     <height>21</height>
+     <height>19</height>
     </rect>
    </property>
   </widget>
@@ -176,6 +197,12 @@
    <class>StoryNavigationWidget</class>
    <extends>QWidget</extends>
    <header>Widgets\StoryNavigationWidget.hpp</header>
+   <container>1</container>
+  </customwidget>
+  <customwidget>
+   <class>SearchLineWidget</class>
+   <extends>QWidget</extends>
+   <header>Widgets\SearchLineWidget.hpp</header>
    <container>1</container>
   </customwidget>
  </customwidgets>
