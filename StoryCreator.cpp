@@ -104,6 +104,7 @@ void StoryCreator::initConnects()
     connect(m_actCloseStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCloseStory);
     connect(m_actSaveStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
     connect(m_actSaveAsStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveAsStory);
+    connect(m_saveMenu->menuAction(), &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
 }
 
 void StoryCreator::storyClosed()

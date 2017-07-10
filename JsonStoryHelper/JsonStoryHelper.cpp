@@ -57,7 +57,7 @@ QString JsonStoryHelper::selectLoadStoryFilePath()
 QString JsonStoryHelper::selectSaveStoryFilePath(const QString& defaultFileName)
 {
     const QString defaultPathName = QApplication::applicationDirPath() + "/" + defaultFileName;
-    return QFileDialog::getSaveFileName(Q_NULLPTR, "Open story", defaultPathName, StoryCommon::STORY_FILE_EXTENSION);
+    return QFileDialog::getSaveFileName(Q_NULLPTR, "Save story", defaultPathName, StoryCommon::STORY_FILE_EXTENSION);
 }
 
 bool JsonStoryHelper::loadJsonStory(const QJsonObject &jsonStory, StoryCommon::StoryInfo& storyInfo)
