@@ -64,15 +64,26 @@ void StoryCreator::initToolBar()
 
     QList<QAction*> actions;
     m_saveMenu = new QMenu(this);
+
     m_actSaveStory = new QAction(QIcon(":/tool_bar_icons/Resources/save_story.png"), tr("Save"));
+    m_actSaveStory->setShortcut(QKeySequence::Save);
+
     m_actSaveAsStory = new QAction(QIcon(":/tool_bar_icons/Resources/save_story.png"), tr("Save as..."));
+    m_actSaveAsStory->setShortcut(QKeySequence::SaveAs);
+
     m_saveMenu->addAction(m_actSaveStory);
     m_saveMenu->addAction(m_actSaveAsStory);
     m_saveMenu->setIcon(QIcon(":/tool_bar_icons/Resources/save_story.png"));
 
     m_actCreateNewStory = new QAction(QIcon(":/tool_bar_icons/Resources/new_story.png"), tr("Create new story"));
+    m_actCreateNewStory->setShortcut(QKeySequence::New);
+
     m_actLoadStory = new QAction(QIcon(":/tool_bar_icons/Resources/load_story.png"), tr("Open story"));
+    m_actLoadStory->setShortcut(QKeySequence::Open);
+
     m_actCloseStory = new QAction(QIcon(":/tool_bar_icons/Resources/close_story.png"), tr("Close story"));
+    m_actCloseStory->setShortcut(QKeySequence::Close);
+
     actions << m_actCreateNewStory << m_actLoadStory << m_saveMenu->menuAction() << m_actCloseStory;
     m_ui->mainToolBar->addActions(actions);
 
