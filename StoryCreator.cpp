@@ -22,6 +22,14 @@ StoryCreator::~StoryCreator()
 
 }
 
+void StoryCreator::closeEvent(QCloseEvent* event)
+{
+    if (m_storyManager)
+        m_storyManager->closeStory();
+
+    QWidget::closeEvent(event);
+}
+
 //===================================== private =========================================
 
 void StoryCreator::initialize()

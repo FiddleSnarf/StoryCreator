@@ -60,6 +60,21 @@ public:
      */
     void selectNodeForID(int nodeId, bool centerOn = false);
 
+    /** \brief Сохранить текущую историю
+     *  \return Результат сохранения истории
+     */
+    bool saveStory();
+
+    /** \brief Сохранить текущую историю как ...
+     *  \return Результат сохранения истории
+     */
+    bool saveStoryAs(const QString& fullFilePath);
+
+    /** \brief Закрыть историю
+     *  \return Результат закрытия истории
+     */
+    bool closeStory();
+
 signals:
     /** \brief Сигнал оповещает об изменении состояния истории (true - открыта, false - закрыта)
      */
@@ -122,21 +137,6 @@ private:
     /** \brief Инициализация начальными параметрами
      */
     void initialization();
-
-    /** \brief Сохранить текущую историю
-     *  \return Результат сохранения истории
-     */
-    bool saveStory();
-
-    /** \brief Сохранить текущую историю как ...
-     *  \return Результат сохранения истории
-     */
-    bool saveStoryAs(const QString& fullFilePath);
-
-    /** \brief Закрыть историю
-     *  \return Результат закрытия истории
-     */
-    bool closeStory();
 
     /** \brief Получить данные истории полученные в процессе редактирования
      */

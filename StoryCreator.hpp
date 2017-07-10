@@ -33,6 +33,9 @@ public:
     explicit StoryCreator(ICorePtr core, QWidget* parent = Q_NULLPTR);
     virtual ~StoryCreator();
 
+protected:
+    void closeEvent(QCloseEvent* event) override;
+
 private:
     void initialize();
     void initToolBar();
