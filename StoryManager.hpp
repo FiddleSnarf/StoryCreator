@@ -123,10 +123,20 @@ private:
      */
     void initialization();
 
-    /** \brief Сохранить либо указанную историю, либо текущую
-     *  \return Результат сохранения истории.
+    /** \brief Сохранить текущую историю
+     *  \return Результат сохранения истории
      */
-    bool saveStory(StoryCommon::StoryInfo* updatedStoryPtr = Q_NULLPTR);
+    bool saveStory();
+
+    /** \brief Сохранить текущую историю как ...
+     *  \return Результат сохранения истории
+     */
+    bool saveStoryAs(const QString& fullFilePath);
+
+    /** \brief Закрыть историю
+     *  \return Результат закрытия истории
+     */
+    bool closeStory();
 
     /** \brief Получить данные истории полученные в процессе редактирования
      */

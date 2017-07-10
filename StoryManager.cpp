@@ -117,8 +117,60 @@ void StoryManager::slotLoadStory()
 
 void StoryManager::slotCloseStory()
 {
-    if (!m_isStoryOpen)
+    closeStory();
+}
+
+void StoryManager::slotSaveStory()
+{
+    if (isStoryBeLoaded())
+        saveStory();
+    else
+        slotSaveAsStory();
+}
+
+void StoryManager::slotSaveAsStory()
+{
+    const QString defaultFileName = m_storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_storyName;
+    const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
+    if (filePath.isEmpty())
         return;
+
+    saveStoryAs(filePath);
+}
+
+bool StoryManager::saveStory()
+{
+    StoryCommon::StoryInfo updatedStoryInfo;
+    fillUpdatedStoryInfo(updatedStoryInfo);
+    emit signalStoryStateChanged(m_isStoryOpen);
+    if (!JsonStoryHelper::saveJsonStory(updatedStoryInfo.filePath, updatedStoryInfo))
+    {
+        QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error saving history!"));
+        return false;
+    }
+
+    m_currentStoryInfo = updatedStoryInfo;
+    emit signalStorySaved();
+    return true;
+}
+
+bool StoryManager::saveStoryAs(const QString& fullFilePath)
+{
+    m_isLoadedStory = true;
+    m_currentStoryInfo.filePath = fullFilePath;
+    if (!saveStory())
+    {
+        m_isLoadedStory = false;
+        m_currentStoryInfo.filePath.clear();
+        return false;
+    }
+    return true;
+}
+
+bool StoryManager::closeStory()
+{
+    if (!m_isStoryOpen)
+        return false;
 
     StoryCommon::StoryInfo updatedStory;
     fillUpdatedStoryInfo(updatedStory);
@@ -132,21 +184,15 @@ void StoryManager::slotCloseStory()
                 const QString defaultFileName = m_storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_storyName;
                 const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
                 if (filePath.isEmpty())
-                    return;
+                    return false;
 
-                m_isLoadedStory = true;
-                m_currentStoryInfo.filePath = filePath;
-                if (!saveStory())
-                {
-                    m_isLoadedStory = false;
-                    m_currentStoryInfo.filePath.clear();
-                    return;
-                }
+                if (!saveStoryAs(filePath))
+                    return false;
             }
             else
             {
-                if (!saveStory(&updatedStory))
-                    return;
+                if (!saveStory())
+                    return false;
             }
         }
     }
@@ -158,61 +204,7 @@ void StoryManager::slotCloseStory()
     m_currentStoryInfo.clear();
     m_storyName.clear();
     emit signalStoryStateChanged(m_isStoryOpen);
-}
-
-void StoryManager::slotSaveStory()
-{
-    if (!isStoryBeLoaded())
-        return;
-
-    saveStory();
-}
-
-void StoryManager::slotSaveAsStory()
-{
-    const QString defaultFileName = m_storyName.isEmpty() ? DEF_STORY_FILE_NAME : m_storyName;
-    const QString filePath = JsonStoryHelper::selectSaveStoryFilePath(defaultFileName);
-    if (filePath.isEmpty())
-        return;
-
-    m_isLoadedStory = true;
-    m_currentStoryInfo.filePath = filePath;
-    saveStory();
-}
-
-bool StoryManager::saveStory(StoryCommon::StoryInfo* updatedStoryPtr)
-{
-    const StoryCommon::StoryInfo tempCopyStory = m_currentStoryInfo;
-    if (updatedStoryPtr)
-    {
-        m_currentStoryInfo = *updatedStoryPtr;
-    }else
-    {
-        StoryCommon::StoryInfo updatedStoryInfo;
-        fillUpdatedStoryInfo(updatedStoryInfo);
-        m_currentStoryInfo = updatedStoryInfo;
-    }
-    emit signalStoryStateChanged(m_isStoryOpen);
-    if (!JsonStoryHelper::saveJsonStory(m_currentStoryInfo.filePath, m_currentStoryInfo))
-    {
-        QMessageBox::warning(Q_NULLPTR, tr("Attention!"), tr("Error saving history!"));
-        m_currentStoryInfo = tempCopyStory;
-        return false;
-    }
-
-    emit signalStorySaved();
     return true;
-}
-
-void StoryManager::slotUpdateStoryName(const QString& storyName)
-{
-    if (isStoryOpen())
-        m_storyName = storyName;
-}
-
-const QString& StoryManager::getCurrentStoryName() const
-{
-    return m_storyName;
 }
 
 void StoryManager::fillUpdatedStoryInfo(StoryCommon::StoryInfo& updatedStory) const
@@ -258,6 +250,17 @@ StoryNodeItemPtr StoryManager::getSelectedNodeItem() const
         return selectedItems.first();
 
     return StoryNodeItemPtr();
+}
+
+void StoryManager::slotUpdateStoryName(const QString& storyName)
+{
+    if (isStoryOpen())
+        m_storyName = storyName;
+}
+
+const QString& StoryManager::getCurrentStoryName() const
+{
+    return m_storyName;
 }
 
 void StoryManager::slotDeleteSelectedNode()

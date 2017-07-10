@@ -133,7 +133,6 @@ void StoryCreator::slotStoryStateChanged(bool state)
     m_ui->itemsEditorTab->setEnabled(state);
     m_actCloseStory->setEnabled(state);
     m_saveMenu->setEnabled(state);
-    m_actSaveStory->setEnabled(m_storyManager->isStoryBeLoaded());
     slotCountStoryNodesChanged();
 
     if (!state)
@@ -157,18 +156,12 @@ void StoryCreator::slotNodesDataChanged()
     QString nodeEditorTabText = m_ui->tabStory->tabText(enNodeEditorTabIdx);
     if (!nodeEditorTabText.contains("*"))
         m_ui->tabStory->setTabText(enNodeEditorTabIdx, nodeEditorTabText + "*");
-
-    if (m_storyManager->isStoryBeLoaded())
-        m_actSaveStory->setEnabled(true);
 }
 
 void StoryCreator::slotStorySaved()
 {
     m_ui->tabStory->setTabText(enNodeEditorTabIdx, m_ui->tabStory->tabText(enNodeEditorTabIdx).remove(QChar('*')));
     m_ui->tabStory->setTabText(enItemsEditorTabIdx, m_ui->tabStory->tabText(enItemsEditorTabIdx).remove(QChar('*')));
-
-    if (m_storyManager->isStoryBeLoaded())
-        m_actSaveStory->setEnabled(false);
 }
 
 //=======================================================================================
