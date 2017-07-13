@@ -15,6 +15,9 @@ public:
     explicit SearchLineWidget(QWidget* parent = Q_NULLPTR);
     virtual ~SearchLineWidget();
 
+signals:
+    void signalTextChanged(const QString& text);
+
 private:
     QScopedPointer<Ui::SearchLineWidget> m_ui;
 };

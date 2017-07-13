@@ -58,7 +58,9 @@ void StoryNavigationWidget::initConnects()
     connect(storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryNavigationWidget::slotUserAddedNode);
     connect(storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryNavigationWidget::slotUserDeletedNode);
     connect(storyManager.data(), &StoryManager::signalDataNodeChanged, this, &StoryNavigationWidget::slotUserEditedNode);
+
     connect(m_ui->nodesNavigationTable, &QTableWidget::itemClicked, this, &StoryNavigationWidget::slotNavigationItemClicked);
+    connect(m_ui->searchLine, &SearchLineWidget::signalTextChanged, this, &StoryNavigationWidget::slotSearchTextChanged);
 
     connect(this, &StoryNavigationWidget::signalDeleteKeyPressed, storyManager.data(), &StoryManager::slotDeleteSelectedNode);
 }
@@ -203,4 +205,10 @@ void StoryNavigationWidget::clearNodeTable()
 QColor StoryNavigationWidget::getColorForNodeRow(bool isValid) const
 {
     return isValid ? QColor("#69BF83") : QColor("#B53F3F");
+}
+
+void StoryNavigationWidget::slotSearchTextChanged(const QString& searchText)
+{
+    bool isInteger = false;
+    const int searchInt = searchText.toInt(&isInteger);
 }

@@ -64,6 +64,7 @@ private slots:
     void slotUserAddedNode(StoryNodeItem* addedNode);
     void slotUserDeletedNode(int nodeID);
     void slotUserEditedNode(int nodeID);
+    void slotSearchTextChanged(const QString& searchText);
 
 private:
     void initialization();

@@ -7,6 +7,8 @@ SearchLineWidget::SearchLineWidget(QWidget* parent) :
 {
     m_ui->setupUi(this);
     m_ui->iconLabel->setPixmap(QIcon(":/other/Resources/search.png").pixmap(20,20));
+
+    connect(m_ui->searchLine, &QLineEdit::textChanged, this, &SearchLineWidget::signalTextChanged);
 }
 
 SearchLineWidget::~SearchLineWidget()
