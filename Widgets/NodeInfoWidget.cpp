@@ -100,3 +100,9 @@ void NodeInfoWidget::unblockUISignals()
     m_ui->nodeTypeComboBox->blockSignals(false);
     m_ui->actionTable->blockSignals(false);
 }
+
+void NodeInfoWidget::slotNodeDeleted()
+{
+    // так как сейчас можно удалить только выделенный нод, то при удалении просто скрываем панель редактирования
+    hide();
+}

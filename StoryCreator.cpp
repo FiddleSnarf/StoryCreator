@@ -124,6 +124,9 @@ void StoryCreator::initConnects()
     connect(m_actSaveStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
     connect(m_actSaveAsStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveAsStory);
     connect(m_saveMenu->menuAction(), &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
+
+    // Подписываем окно редактирования выделенного нода на его удаление
+    connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, m_ui->nodeInfoWidget, &NodeInfoWidget::slotNodeDeleted);
 }
 
 void StoryCreator::storyClosed()

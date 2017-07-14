@@ -21,6 +21,9 @@ public:
 
     void setCurrentNodeItem(StoryNodeItem* node);
 
+public slots:
+    void slotNodeDeleted();
+
 protected:
     virtual void hideEvent(QHideEvent* event) override;
 
