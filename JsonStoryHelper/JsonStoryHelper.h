@@ -14,5 +14,7 @@ public:
 
 private:
     static bool loadJsonStory(const QJsonObject& jsonStory, StoryCommon::StoryInfo& storyInfo);
+    static bool loadJsonStoryG(const QJsonObject& jsonStory, StoryCommon::StoryInfo& storyInfo);
     static bool saveJsonStory(QJsonObject& jsonStory, const StoryCommon::StoryInfo& storyInfo);
+    static bool saveJsonStoryG(QJsonObject& jsonStory, const StoryCommon::StoryInfo& storyInfo);
 };

@@ -8,7 +8,9 @@
 
 namespace StoryGUI
 {
-    const QString NODE_MIME_TYPE = "story/node-template"; /**< Для передачи параметров через drag&drop. */
+    const QString NODE_MIME_TYPE = "story/node-template";   /**< Для передачи параметров через drag&drop. */
+    const QString GRAPHIC_FILE_EX = "g";                    /**< Дополнение к расширению файла с графическими настройками истории. */
+    const QString NODE_COORDS_SPLITTER = ";";               /**< Разделитель для координат в файле графических настроек истории. */
 
     typedef QMap<int, QPointF> SceneNodePositionMap; /**< key - nodeID, value - координата на сцене. */
 
@@ -20,13 +22,10 @@ namespace StoryGUI
      */
     struct StoryAdditionalInfo
     {
-        SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
-
-        /** \brief Проверка на валидность
-         */
-        bool isValid() const
+        StoryAdditionalInfo(){}
+        StoryAdditionalInfo(const SceneNodePositionMap& coordsNodes)
         {
-            return !nodesPosMap.isEmpty();
+            nodesPosMap = coordsNodes;
         }
 
         void clear()
@@ -38,6 +37,8 @@ namespace StoryGUI
         {
             return nodesPosMap == other.nodesPosMap;
         }
+
+        SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
     };
 
     const int DEFAULT_NODE_WIDTH = 150;

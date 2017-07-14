@@ -221,7 +221,7 @@ void StoryManager::fillUpdatedStoryInfo(StoryCommon::StoryInfo& updatedStory) co
     qSort(updatedStory.nodeList);
 
     // Обновим параметры отображения
-    //updatedStory.additionalViewParams = m_storyScene->getNodesViewParams(); // TODO
+    updatedStory.additionalViewParams = StoryGUI::StoryAdditionalInfo(m_storyScene->getNodesCoordinates());
 }
 
 const StoryNodeItemList& StoryManager::getStoryNodeList() const

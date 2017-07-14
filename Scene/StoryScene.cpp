@@ -55,15 +55,15 @@ int StoryScene::getFreeID() const
 
 void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 {
-    // Добавляем все ноды на сцену
-    if (storyInfo.additionalViewParams.isValid())
+    // Проверяем корректность графических параметров истории, если они в порядке добавляем все ноды на сцену с текущими координатами
+    if (storyInfo.additionalViewParams.nodesPosMap.size() == storyInfo.nodeList.size())
     {
         foreach(const StoryNode& node, storyInfo.nodeList)
         {
             addStoryNode(node, storyInfo.additionalViewParams.nodesPosMap[node.getId()]);
         }
     }
-    else
+    else // Иначе распределяем ноды по сцене автоматически
     {
         // TODO А вот тут должно быть умное авто-размещение нодов по сцене (пока что временная шляпа)
         const int SHIFT = 5;
@@ -105,6 +105,16 @@ StoryNodeItemList StoryScene::getSelectedNodeItems() const
         qDebug() << tr("..."); // TODO Если выделенных нодов > 1 то это не норма*/
 
     return selectedStoryNodeItems;
+}
+
+StoryGUI::SceneNodePositionMap StoryScene::getNodesCoordinates() const
+{
+    StoryGUI::SceneNodePositionMap nodesCoordsMap;
+    foreach(const StoryNodeItemPtr& node, getStoryNodeList())
+    {
+        nodesCoordsMap[node->getNodeInfo().getId()] = node->scenePos();
+    }
+    return nodesCoordsMap;
 }
 
 //=======================================================================================

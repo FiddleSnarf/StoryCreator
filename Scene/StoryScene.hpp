@@ -54,6 +54,10 @@ public:
      */
     StoryNodeItemList getSelectedNodeItems() const;
 
+    /** \brief Получить координаты всех нодов на сцене.
+     */
+    StoryGUI::SceneNodePositionMap getNodesCoordinates() const;
+
 public slots:
 
     /** \brief Очистка сцены.
