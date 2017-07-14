@@ -16,3 +16,23 @@ SearchLineWidget::~SearchLineWidget()
 
 }
 
+QString SearchLineWidget::getText() const
+{
+    return m_ui->searchLine->text();
+}
+
+void SearchLineWidget::setText(const QString& text)
+{
+    m_ui->searchLine->setText(text);
+}
+
+void SearchLineWidget::setMaxLengthText(int length)
+{
+    m_ui->searchLine->setMaxLength(length);
+}
+
+void SearchLineWidget::clear()
+{
+    m_ui->searchLine->clear();
+}
+

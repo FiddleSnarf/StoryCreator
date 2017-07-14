@@ -15,6 +15,11 @@ public:
     explicit SearchLineWidget(QWidget* parent = Q_NULLPTR);
     virtual ~SearchLineWidget();
 
+    QString getText() const;
+    void setText(const QString& text);
+    void setMaxLengthText(int length);
+    void clear();
+
 signals:
     void signalTextChanged(const QString& text);
 

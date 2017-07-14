@@ -25,21 +25,13 @@ class StoryNavigationWidget : public QWidget
 
     struct NodeNavigationInfo
     {
-        NodeNavigationInfo() : nodeItemPtr(nullptr)
+        NodeNavigationInfo() :
+            nodeItemPtr(nullptr),
+            isVisible(false)
         {}
 
-        void updateInfo()
-        {
-            if (nodeItemPtr)
-            {
-                title = nodeItemPtr->getNodeInfo().getTitle();
-                text = nodeItemPtr->getNodeInfo().getText();
-            }
-        }
-
         StoryNodeItem* nodeItemPtr;
-        QString title;
-        QString text;
+        bool isVisible;
     };
     typedef QMap<int, NodeNavigationInfo> NodeNavigationInfoMap;
 
@@ -71,9 +63,11 @@ private:
     void initConnects();
     void clearSelection();
     void clearNodeTable();
-    void appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid);
+    void appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid, bool isVisible);
     void refillNodeTable();
     QColor getColorForNodeRow(bool isValid) const;
+    void checkVisibleNaviItem(NodeNavigationInfo& item, Qt::CaseSensitivity cs = Qt::CaseSensitive);
+    void checkVisibleNaviItem(NodeNavigationInfo& item, const QString& searchText, bool textIsInteger, Qt::CaseSensitivity cs = Qt::CaseSensitive);
 
     QScopedPointer<Ui::StoryNavigationWidget> m_ui;
     ICorePtr m_core;

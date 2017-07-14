@@ -39,6 +39,8 @@ void StoryNavigationWidget::initialization()
     m_ui->nodesNavigationTable->setHorizontalHeaderLabels(labels);
 
     m_ui->nodesNavigationTable->setColumnWidth(enIdColumn, 60);
+
+    m_ui->searchLine->setMaxLengthText(50); //TODO тоже в конфиг
 }
 
 void StoryNavigationWidget::setCore(ICorePtr core)
@@ -71,6 +73,7 @@ void StoryNavigationWidget::slotStoryStateChanged(bool state)
     {
         m_nodeNaviInfoMap.clear();
         clearNodeTable();
+        m_ui->searchLine->clear();
     }
 }
 
@@ -120,20 +123,22 @@ void StoryNavigationWidget::clearSelection()
 
 void StoryNavigationWidget::slotUserAddedNode(StoryNodeItem* addedNode)
 {
-    const StoryNode& storyNodeInfo = addedNode->getNodeInfo();
+    const int nodeId = addedNode->getNodeInfo().getId();
 
     NodeNavigationInfo naviInfo;
-    naviInfo.title = storyNodeInfo.getTitle();
-    naviInfo.text = storyNodeInfo.getText();
     naviInfo.nodeItemPtr = addedNode;
-    m_nodeNaviInfoMap[storyNodeInfo.getId()] = naviInfo;
+    checkVisibleNaviItem(naviInfo);
+    m_nodeNaviInfoMap[nodeId] = naviInfo;
 
     // Теперь проверим если ноды пошли не по порядку, перезаполним таблицу, иначе просто добавим новую строку
     const int lastRowIndex = m_ui->nodesNavigationTable->rowCount();
     if (lastRowIndex != 0 && m_ui->nodesNavigationTable->item(lastRowIndex - 1, enIdColumn)->text().toInt() > addedNode->getNodeInfo().getId())
         refillNodeTable();
     else
-        appendNodeRow(storyNodeInfo.getId(), storyNodeInfo.getTitle(), storyNodeInfo.isValid());
+    {
+        const StoryNode& node = addedNode->getNodeInfo();
+        appendNodeRow(node.getId(), node.getTitle(), node.isValid(), naviInfo.isVisible);
+    }
 }
 
 void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
@@ -146,25 +151,15 @@ void StoryNavigationWidget::slotUserDeletedNode(int nodeID)
 void StoryNavigationWidget::slotUserEditedNode(int nodeID)
 {
     NodeNavigationInfo& nodeNaviInfo = m_nodeNaviInfoMap[nodeID];
-    nodeNaviInfo.updateInfo();
-    for (int rowIdx = 0; rowIdx < m_ui->nodesNavigationTable->rowCount(); rowIdx++)
-    {
-        QTableWidgetItem* idItem = m_ui->nodesNavigationTable->item(rowIdx, enIdColumn);
-        if (idItem->text().toInt() == nodeID)
-        {
-            QTableWidgetItem* titleItem = m_ui->nodesNavigationTable->item(rowIdx, enTitleColumn);
-            titleItem->setText(nodeNaviInfo.title);
-
-            const QColor backgroundColor = getColorForNodeRow(nodeNaviInfo.nodeItemPtr->getNodeInfo().isValid());
-            idItem->setBackgroundColor(backgroundColor);
-            titleItem->setBackgroundColor(backgroundColor);
-            return;
-        }
-    }
+    checkVisibleNaviItem(nodeNaviInfo);
+    refillNodeTable();
 }
 
-void StoryNavigationWidget::appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid)
+void StoryNavigationWidget::appendNodeRow(int nodeId, const QString& nodeTitle, bool nodeIsValid, bool isVisible)
 {
+    if (!isVisible)
+        return;
+
     QTableWidgetItem* idItem = new QTableWidgetItem(QString::number(nodeId));
     idItem->setFont(QFont("Arial", 14, QFont::Bold, QFont::StyleItalic));
     idItem->setTextAlignment(Qt::AlignCenter);
@@ -189,9 +184,8 @@ void StoryNavigationWidget::refillNodeTable()
     clearNodeTable();
     for(NodeNavigationInfoMap::const_iterator it = m_nodeNaviInfoMap.cbegin(); it != m_nodeNaviInfoMap.cend(); ++it)
     {
-        NodeNavigationInfo nodeNaviInfo = *it;
-        const StoryNode& nodeInfo = nodeNaviInfo.nodeItemPtr->getNodeInfo();
-        appendNodeRow(it.key(), nodeInfo.getTitle(), nodeInfo.isValid());
+        const StoryNode& node = it->nodeItemPtr->getNodeInfo();
+        appendNodeRow(it.key(), node.getTitle(), node.isValid(), it->isVisible);
     }
 }
 
@@ -204,11 +198,39 @@ void StoryNavigationWidget::clearNodeTable()
 
 QColor StoryNavigationWidget::getColorForNodeRow(bool isValid) const
 {
-    return isValid ? QColor("#69BF83") : QColor("#B53F3F");
+    return isValid ? QColor("#69BF83") : QColor("#B53F3F"); // TODO настройку таких вещей надо будет вытащить в ConfigManager
 }
 
 void StoryNavigationWidget::slotSearchTextChanged(const QString& searchText)
 {
     bool isInteger = false;
-    const int searchInt = searchText.toInt(&isInteger);
+    searchText.toInt(&isInteger);
+
+    for(NodeNavigationInfoMap::iterator it = m_nodeNaviInfoMap.begin(); it != m_nodeNaviInfoMap.end(); ++it)
+    {
+        checkVisibleNaviItem(*it, searchText, isInteger);
+    }
+    refillNodeTable();
+}
+
+void StoryNavigationWidget::checkVisibleNaviItem(NodeNavigationInfo& item, Qt::CaseSensitivity cs)
+{
+    const QString searchText = m_ui->searchLine->getText();
+    bool isInteger = false;
+    searchText.toInt(&isInteger);
+    checkVisibleNaviItem(item, searchText, isInteger, cs);
+}
+
+void StoryNavigationWidget::checkVisibleNaviItem(NodeNavigationInfo& item, const QString& searchText, bool textIsInteger, Qt::CaseSensitivity cs)
+{
+    if(searchText.isEmpty())
+    {
+        item.isVisible = true;
+        return;
+    }
+    const StoryNode& node = item.nodeItemPtr->getNodeInfo();
+    item.isVisible = node.getTitle().contains(searchText, cs) || node.getText().contains(searchText, cs);
+
+    if (textIsInteger)
+        item.isVisible |= node.getId() == searchText.toInt();
 }
