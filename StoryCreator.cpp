@@ -135,6 +135,7 @@ void StoryCreator::storyClosed()
     const StoryScenePtr scenePtr = m_storyManager->getStoryScene();
     m_ui->storyView->setScene(scenePtr.data());
     m_ui->nodeInfoWidget->setVisible(false);
+    m_ui->storyView->resetZoom();
     slotStorySaved();
 }
 

@@ -107,7 +107,7 @@ void StoryView::zoomOut()
     }
 }
 
-void StoryView::unZoom()
+void StoryView::resetZoom()
 {
     m_currZoom = 0;
     setupMatrix();

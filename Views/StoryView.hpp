@@ -22,6 +22,10 @@ public:
      */
     void setZoom(double zoom);
 
+    /** \brief Установить нулевой зум
+     */
+    void resetZoom();
+
 protected:
     /** \brief Обработка событий колесика мыши
      */
@@ -48,10 +52,6 @@ private:
     /** \brief Зум -
      */
     void zoomOut();
-
-    /** \brief Установить нулевой зум
-     */
-    void unZoom();
 
     /** \brief Задать новую матрицу масштабирования
      */
