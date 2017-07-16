@@ -57,3 +57,5 @@ FORMS    += \
 
 RESOURCES += \
     resources.qrc
+
+win32:RC_FILE = icon.rc
