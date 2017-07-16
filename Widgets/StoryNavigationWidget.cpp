@@ -63,7 +63,7 @@ void StoryNavigationWidget::initConnects()
 
     connect(m_ui->nodesNavigationTable, &QTableWidget::itemClicked, this, &StoryNavigationWidget::slotNavigationItemClicked);
     connect(m_ui->searchLine, &SearchLineWidget::signalTextChanged, this, &StoryNavigationWidget::slotSearchTextChanged);
-
+    connect(m_ui->searchLine, &SearchLineWidget::signalTextChanged, this, &StoryNavigationWidget::signalSearchTextChanged);
     connect(this, &StoryNavigationWidget::signalDeleteKeyPressed, storyManager.data(), &StoryManager::slotDeleteSelectedNode);
 }
 

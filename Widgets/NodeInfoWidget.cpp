@@ -1,5 +1,6 @@
 #include "NodeInfoWidget.hpp"
 #include "Items/StoryNodeItemImpl.hpp"
+#include "Common/StoryCommon.hpp"
 #include "ui_NodeInfoWidget.h"
 
 NodeInfoWidget::NodeInfoWidget(QWidget* parent) :
@@ -32,6 +33,15 @@ void NodeInfoWidget::initialization()
     connect(m_ui->nodeTypeComboBox, static_cast<void(QComboBox::*)(int)>(&QComboBox::currentIndexChanged), this, &NodeInfoWidget::slotUpdateNodeData);
     //connect(m_ui->actionTable); // TODO
     unblockUISignals();
+
+    initHighlightParams();
+}
+
+void NodeInfoWidget::initHighlightParams()
+{
+    QTextCharFormat format;
+    format.setBackground(StoryGUI::SEARCH_HIGHTLIGHT_COLOR);
+    m_highlightSelection.format = format;
 }
 
 void NodeInfoWidget::hideEvent(QHideEvent* event)
@@ -70,6 +80,8 @@ void NodeInfoWidget::updateUI()
                 m_ui->nodeTypeComboBox->setCurrentIndex(idx);
         }
         //m_ui->actionTable-> // TODO
+
+        updateSelectionSearchedText();
     }
     unblockUISignals();
 }
@@ -105,4 +117,26 @@ void NodeInfoWidget::slotNodeDeleted()
 {
     // так как сейчас можно удалить только выделенный нод, то при удалении просто скрываем панель редактирования
     hide();
+}
+
+void NodeInfoWidget::slotSearchTextChanged(const QString& searchedText)
+{
+    m_searchedText = searchedText;
+    updateSelectionSearchedText();
+}
+
+void NodeInfoWidget::updateSelectionSearchedText()
+{
+    if (m_ui->nodeTextEdit->toPlainText().isEmpty())
+        return;
+
+    QList<QTextEdit::ExtraSelection> listExSelection;
+    QTextCursor cursor;
+    do
+    {
+        cursor = QTextCursor(m_ui->nodeTextEdit->document()->find(m_searchedText, cursor, QTextDocument::FindCaseSensitively));
+        m_highlightSelection.cursor = cursor;
+        listExSelection << m_highlightSelection;
+    }while(!cursor.isNull());
+    m_ui->nodeTextEdit->setExtraSelections(listExSelection);
 }

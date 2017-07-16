@@ -66,6 +66,10 @@ private slots:
      */
     void slotStorySaved();
 
+    /** \brief Слот вызывается при переключении вкладок редактора истории.
+     */
+    void slotTabStoryCreatorChanged(int index);
+
 
 private:
     QScopedPointer<Ui::StoryCreator> m_ui;

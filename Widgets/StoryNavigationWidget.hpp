@@ -43,6 +43,7 @@ public:
 
 signals:
     void signalDeleteKeyPressed();
+    void signalSearchTextChanged(const QString& requiredText);
 
 protected:
     /** \brief Обработка событий нажатия клавиш клавиатуры

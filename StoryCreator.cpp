@@ -106,6 +106,8 @@ void StoryCreator::initToolBar()
 
 void StoryCreator::initConnects()
 {
+    connect(m_ui->tabStory, &QTabWidget::currentChanged, this, &StoryCreator::slotTabStoryCreatorChanged);
+
     // Подписываемся на изменения истории
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryCreator::slotCountStoryNodesChanged);
@@ -125,8 +127,9 @@ void StoryCreator::initConnects()
     connect(m_actSaveAsStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveAsStory);
     connect(m_saveMenu->menuAction(), &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
 
-    // Подписываем окно редактирования выделенного нода на его удаление
+    // Подписываем окно редактирования нодов на необходимые события
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, m_ui->nodeInfoWidget, &NodeInfoWidget::slotNodeDeleted);
+    connect(m_ui->storyNavigationWidget, &StoryNavigationWidget::signalSearchTextChanged, m_ui->nodeInfoWidget, &NodeInfoWidget::slotSearchTextChanged);
 }
 
 void StoryCreator::storyClosed()
@@ -186,6 +189,19 @@ void StoryCreator::slotStorySaved()
 {
     m_ui->tabStory->setTabText(enNodeEditorTabIdx, m_ui->tabStory->tabText(enNodeEditorTabIdx).remove(QChar('*')));
     m_ui->tabStory->setTabText(enItemsEditorTabIdx, m_ui->tabStory->tabText(enItemsEditorTabIdx).remove(QChar('*')));
+}
+
+void StoryCreator::slotTabStoryCreatorChanged(int index)
+{
+    if (!m_storyManager)
+        return;
+
+    if (index == enNodeEditorTabIdx)
+    {
+        StoryNodeItemPtr selectedNode = m_storyManager->getSelectedNodeItem();
+        if(selectedNode)
+            m_ui->nodeInfoWidget->setCurrentNodeItem(selectedNode);
+    }
 }
 
 //=======================================================================================
