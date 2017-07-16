@@ -5,7 +5,6 @@
 #include <QSize>
 #include <QPen>
 #include <QTimeLine>
-#include <QUuid>
 
 #include "JsonStoryHelper/StoryNode.h"
 
@@ -19,8 +18,6 @@ class StoryNodeItem : public QGraphicsObject
     Q_OBJECT
 
     // Параметры для мигания
-    static const int RED_MIN    = 180;
-    static const int RED_MAX    = 255;
     static const int GREEN_MIN  = 130;
     static const int GREEN_MAX  = 190;
     static const int GREEN_MIN_HEAD  = 25;
@@ -79,10 +76,6 @@ public:
      */
     void setNodeSelection(bool state);
 
-    /** \brief Получить GUID нода.
-     */
-    const QUuid& getNodeGUID();
-
     /** \brief Выделен ли нод.
      */
     bool isNodeSelected() const;
@@ -139,9 +132,6 @@ private:
     StoryNode m_nodeInfo;   /**< Информация о ноде в том виде в котором она хранится в json. */
 
     QTimeLine m_selectedTimeline;   /**< Для пульсации рамки нода во время выделения */
-    QTimeLine m_errorTimeline;      /**< Для пульсации рамки нода в случае ошибки */
-
-    QUuid m_guid;                   /**< Совсем уникальный идентификатор нода */
     bool m_isSelected;              /**< Флаг выделения нода */
 };
 

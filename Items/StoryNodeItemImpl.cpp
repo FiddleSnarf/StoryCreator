@@ -39,11 +39,6 @@ StoryNodeItem::~StoryNodeItem()
 
 }
 
-const QUuid& StoryNodeItem::getNodeGUID()
-{
-    return m_guid;
-}
-
 void StoryNodeItem::setDefaultPen()
 {
     m_borderPen = isHeadNode() ? StoryGUI::HEAD_NODE_PEN : StoryGUI::NODE_PEN;
@@ -139,14 +134,11 @@ bool StoryNodeItem::isNodeSelected() const
 
 void StoryNodeItem::initialization()
 {
-    m_guid = QUuid::createUuid();
-
     setFlag(QGraphicsItem::ItemIsSelectable);
     setDefaultPen();
     setDefaultBrush();
 
     initSelectedPulse();
-    initErrorPulse();
 
     connect(this, &QGraphicsObject::xChanged, this, &StoryNodeItem::slotGeometryNodeChanged);
     connect(this, &QGraphicsObject::yChanged, this, &StoryNodeItem::slotGeometryNodeChanged);
@@ -188,30 +180,6 @@ void StoryNodeItem::initSelectedPulse()
             m_selectedTimeline.setDirection(QTimeLine::Forward);
 
         m_selectedTimeline.start();
-    });
-}
-
-void StoryNodeItem::initErrorPulse()
-{
-    m_errorTimeline.setDuration(TIME_LINE);
-    m_errorTimeline.setEasingCurve(QEasingCurve::OutQuad);
-    m_errorTimeline.setFrameRange(0, FRAMES);
-
-    connect(&m_errorTimeline, &QTimeLine::valueChanged, [=](double value)
-    {
-        const int red = ((RED_MAX - RED_MIN) * value) + RED_MIN;
-        m_borderPen.setColor(QColor(red, 0, 0));
-        update();
-    });
-
-    connect(&m_errorTimeline, &QTimeLine::finished, [=]()
-    {
-        if (m_errorTimeline.direction() == QTimeLine::Forward)
-            m_errorTimeline.setDirection(QTimeLine::Backward);
-        else if (m_errorTimeline.direction() == QTimeLine::Backward)
-            m_errorTimeline.setDirection(QTimeLine::Forward);
-
-        m_errorTimeline.start();
     });
 }
 
