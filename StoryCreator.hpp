@@ -46,9 +46,6 @@ private:
     void storyClosed();
 
 private slots:
-    /** \brief Слот вызывается при добавлении/удалении нодов.
-     */
-    void slotCountStoryNodesChanged();
 
     /** \brief Слот вызывается при открытии/закрытии истории.
      */
@@ -60,7 +57,7 @@ private slots:
 
     /** \brief Слот вызывается при любом изменении данных или геометрии нодов.
      */
-    void slotNodesDataChanged();
+    void slotStoryDataChanged();
 
     /** \brief Слот вызывается при успешном сохранении истории.
      */
@@ -85,6 +82,6 @@ private:
     QPointer<QAction>   m_actSaveAsStory;
 
     // Status bar
-    QPointer<QLabel> m_nodeCounterView; // TODO всю эту шляпу заменить на отдельный статус бар
+    QPointer<class StatusBarWidget> m_statusBar;
 };
 

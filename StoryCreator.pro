@@ -28,7 +28,8 @@ SOURCES += main.cpp\
     Common/StoryTypesNodeCollector.cpp \
     Widgets/NodeInfoWidget.cpp \
     Widgets/StoryNavigationWidget.cpp \
-    Widgets/SearchLineWidget.cpp
+    Widgets/SearchLineWidget.cpp \
+    Widgets/StatusBarWidget.cpp
 
 HEADERS  += \
     Items/StoryNodeItemImpl.hpp \
@@ -47,13 +48,15 @@ HEADERS  += \
     Common/StoryTypesNodeCollector.hpp \
     Widgets/NodeInfoWidget.hpp \
     Widgets/StoryNavigationWidget.hpp \
-    Widgets/SearchLineWidget.hpp
+    Widgets/SearchLineWidget.hpp \
+    Widgets/StatusBarWidget.hpp
 
 FORMS    += \
     StoryCreator.ui \
     Widgets/NodeInfoWidget.ui \
     Widgets/StoryNavigationWidget.ui \
-    Widgets/SearchLineWidget.ui
+    Widgets/SearchLineWidget.ui \
+    Widgets/StatusBarWidget.ui
 
 RESOURCES += \
     resources.qrc

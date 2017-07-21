@@ -254,8 +254,11 @@ StoryNodeItemPtr StoryManager::getSelectedNodeItem() const
 
 void StoryManager::slotUpdateStoryName(const QString& storyName)
 {
-    if (isStoryOpen())
+    if (isStoryOpen() && m_storyName != storyName)
+    {
         m_storyName = storyName;
+        emit signalStoryNameChanged(storyName);
+    }
 }
 
 const QString& StoryManager::getCurrentStoryName() const

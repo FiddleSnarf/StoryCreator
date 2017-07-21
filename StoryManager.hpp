@@ -104,6 +104,10 @@ signals:
      */
     void signalStorySaved();
 
+    /** \brief Сигнал испускается при изменении имени истории.
+     */
+    void signalStoryNameChanged(const QString& storyName);
+
 public slots:
     /** \brief Слот вызывается при нажатии кнопки "Создать новую историю"
      */

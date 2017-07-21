@@ -1,5 +1,6 @@
 #include "StoryCreator.hpp"
 #include "StoryManager.hpp"
+#include "Widgets/StatusBarWidget.hpp"
 #include "ui_StoryCreator.h"
 #include <QGraphicsItem>
 
@@ -100,8 +101,9 @@ void StoryCreator::initToolBar()
 
     m_ui->mainToolBar->addSeparator();
     m_ui->mainToolBar->addSeparator();
-    m_nodeCounterView = new QLabel(NODE_COUNT_CAPT.arg("---"));
-    m_ui->mainToolBar->addWidget(m_nodeCounterView);
+    m_statusBar = new StatusBarWidget();
+    m_statusBar->setStoryManager(m_storyManager.data());
+    m_ui->mainToolBar->addWidget(m_statusBar);
 }
 
 void StoryCreator::initConnects()
@@ -110,14 +112,13 @@ void StoryCreator::initConnects()
 
     // Подписываемся на изменения истории
     connect(m_storyManager.data(), &StoryManager::signalStoryStateChanged, this, &StoryCreator::slotStoryStateChanged);
-    connect(m_storyManager.data(), &StoryManager::signalStoryNodeAdded, this, &StoryCreator::slotCountStoryNodesChanged);
-    connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, this, &StoryCreator::slotCountStoryNodesChanged);
     connect(m_storyManager.data(), &StoryManager::signalItemSelectedChanged, this, &StoryCreator::slotItemSelectedChanged);
     connect(m_storyManager.data(), &StoryManager::signalStorySaved, this, &StoryCreator::slotStorySaved);
 
     // Подписываемся на изменения данных нодов
-    connect(m_storyManager.data(), &StoryManager::signalDataNodeChanged, this, &StoryCreator::slotNodesDataChanged);
-    connect(m_storyManager.data(), &StoryManager::signalGeometryNodeChanged, this, &StoryCreator::slotNodesDataChanged);
+    connect(m_storyManager.data(), &StoryManager::signalDataNodeChanged, this, &StoryCreator::slotStoryDataChanged);
+    connect(m_storyManager.data(), &StoryManager::signalGeometryNodeChanged, this, &StoryCreator::slotStoryDataChanged);
+    connect(m_storyManager.data(), &StoryManager::signalStoryNameChanged, this, &StoryCreator::slotStoryDataChanged);
 
     // Подписываемся на кнопки тулбара
     connect(m_actCreateNewStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotCreateNewStory);
@@ -146,21 +147,12 @@ void StoryCreator::storyClosed()
 
 //============================================ private slots ============================
 
-void StoryCreator::slotCountStoryNodesChanged()
-{
-    if (m_storyManager->isStoryOpen())
-        m_nodeCounterView->setText(NODE_COUNT_CAPT.arg(m_storyManager->getCountStoryNodes()));
-    else
-        m_nodeCounterView->setText(NODE_COUNT_CAPT.arg("---"));
-}
-
 void StoryCreator::slotStoryStateChanged(bool state)
 {
     m_ui->nodeEditorTab->setEnabled(state);
     m_ui->itemsEditorTab->setEnabled(state);
     m_actCloseStory->setEnabled(state);
     m_saveMenu->setEnabled(state);
-    slotCountStoryNodesChanged();
 
     if (!state)
         storyClosed();
@@ -178,7 +170,7 @@ void StoryCreator::slotItemSelectedChanged(bool state, StoryNodeItem* selectedNo
     m_ui->nodeInfoWidget->setVisible(state);
 }
 
-void StoryCreator::slotNodesDataChanged()
+void StoryCreator::slotStoryDataChanged()
 {
     QString nodeEditorTabText = m_ui->tabStory->tabText(enNodeEditorTabIdx);
     if (!nodeEditorTabText.contains("*"))
