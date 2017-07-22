@@ -56,7 +56,7 @@ int StoryScene::getFreeID() const
 void StoryScene::initStoryInfo(const StoryCommon::StoryInfo& storyInfo)
 {
     // Проверяем корректность графических параметров истории, если они в порядке добавляем все ноды на сцену с текущими координатами
-    if (storyInfo.additionalViewParams.nodesPosMap.size() == storyInfo.nodeList.size())
+    if (storyInfo.additionalViewParams.state == StoryGUI::EnDisplayDataStates::enExistOk)
     {
         foreach(const StoryNode& node, storyInfo.nodeList)
         {

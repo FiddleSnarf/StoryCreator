@@ -7,8 +7,15 @@
         <file>Resources/new_story.png</file>
         <file>Resources/load_story.png</file>
         <file>Resources/save_story.png</file>
+        <file>Resources/save_jpeg_icon.png</file>
     </qresource>
     <qresource prefix="/other">
         <file>Resources/search.png</file>
+    </qresource>
+    <qresource prefix="/graphic_file_state">
+        <file>Resources/error_gr_file.png</file>
+        <file>Resources/no_gr_file.png</file>
+        <file>Resources/null.png</file>
+        <file>Resources/ok_gr_file.png</file>
     </qresource>
 </RCC>

@@ -23,11 +23,13 @@ private slots:
     void slotStoryNameEdit(const QString& storyName);
     void slotNodeCountChanged();
     void slotStoryStateChanged(bool state);
+    void slotUpdateDisplayDataFileIndicator();
 
 private:
     void initialization();
     void updateUI();
     void resetData();
+    void resetDisplayDataIndicator();
 
     QScopedPointer<Ui::StatusBarWidget> m_ui;
     StoryManager* m_storyManager;

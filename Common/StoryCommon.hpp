@@ -14,6 +14,17 @@ namespace StoryGUI
 
     typedef QMap<int, QPointF> SceneNodePositionMap; /**< key - nodeID, value - координата на сцене. */
 
+    /** \enum EnDisplayDataStates
+     *  \brief Перечисление состояний наличия для истории файла с параметрами отображения
+     */
+    enum EnDisplayDataStates
+    {
+        enExistOk = 0,
+        enExistErr,
+        enNoExist,
+        enUnknown
+    };
+
     /** \struct StoryAdditionalInfo
      *  \brief Структура описывает параметры отображения story на графической сцене.
      *  \note Эти дополнительные параметры будут храниться в отдельном файле.
@@ -22,8 +33,12 @@ namespace StoryGUI
      */
     struct StoryAdditionalInfo
     {
-        StoryAdditionalInfo(){}
-        StoryAdditionalInfo(const SceneNodePositionMap& coordsNodes)
+        StoryAdditionalInfo() : state(EnDisplayDataStates::enUnknown)
+        {
+
+        }
+
+        StoryAdditionalInfo(const SceneNodePositionMap& coordsNodes) : state(EnDisplayDataStates::enUnknown)
         {
             nodesPosMap = coordsNodes;
         }
@@ -39,6 +54,7 @@ namespace StoryGUI
         }
 
         SceneNodePositionMap nodesPosMap;   /**< Позиция нодов на сцене. */
+        EnDisplayDataStates state;      /**< Статус данных отображения истории. */
     };
 
     const int DEFAULT_NODE_WIDTH = 150;
@@ -52,7 +68,6 @@ namespace StoryGUI
     const int DEFAULT_SCENE_WIDTH = 1200;
     const int DEFAULT_SCENE_HEIGHT = 1200;
 
-    const QColor SEARCH_HIGHTLIGHT_COLOR(Qt::green);
 }
 
 namespace StoryCommon
@@ -92,6 +107,7 @@ namespace StoryCommon
             filePath.clear();
             nodeList.clear();
             additionalViewParams.clear();
+            additionalViewParams.state = StoryGUI::EnDisplayDataStates::enUnknown;
         }
 
         /** \brief Проверка на валидность

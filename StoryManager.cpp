@@ -84,6 +84,7 @@ void StoryManager::slotCreateNewStory()
     m_storyScene->initStoryInfo(newStoryInfo);
     m_isStoryOpen = true;
     m_currentStoryInfo.version = newStoryInfo.version;
+    checkDisplayDataStory(m_currentStoryInfo);
     emit signalStoryStateChanged(m_isStoryOpen);
 }
 
@@ -102,6 +103,7 @@ void StoryManager::slotLoadStory()
         }
 
         // TODO А вот тут надо бы сделать проверку StoryInfo на всякие ошибки, типа дублирование нодов и.т.д
+        checkDisplayDataStory(storyInfo);
         m_storyScene->initStoryInfo(storyInfo);
         m_isStoryOpen = true;
         m_isLoadedStory = true;
@@ -150,6 +152,7 @@ bool StoryManager::saveStory()
     }
 
     m_currentStoryInfo = updatedStoryInfo;
+    checkDisplayDataStory(m_currentStoryInfo);
     emit signalStorySaved();
     return true;
 }
@@ -269,4 +272,34 @@ const QString& StoryManager::getCurrentStoryName() const
 void StoryManager::slotDeleteSelectedNode()
 {
     m_storyScene->slotDeleteSelectedNode();
+}
+
+StoryGUI::EnDisplayDataStates StoryManager::getDisplayDataState() const
+{
+    return m_currentStoryInfo.additionalViewParams.state;
+}
+
+void StoryManager::checkDisplayDataStory(StoryCommon::StoryInfo &storyInfo) const
+{
+    if (storyInfo.filePath.isEmpty())
+    {
+        storyInfo.additionalViewParams.state = StoryGUI::EnDisplayDataStates::enNoExist;
+        return;
+    }
+
+    // Проверяем есть ли файл с графическими параметрами истории
+    const QString gFilePath = storyInfo.filePath + StoryGUI::GRAPHIC_FILE_EX;
+    if (!QFile::exists(gFilePath))
+    {
+        storyInfo.additionalViewParams.state = StoryGUI::EnDisplayDataStates::enNoExist;
+        return;
+    }
+
+    if (storyInfo.additionalViewParams.nodesPosMap.size() != storyInfo.nodeList.size()) // TODO тут нужна бы проверка получше
+    {
+        storyInfo.additionalViewParams.state = StoryGUI::EnDisplayDataStates::enExistErr;
+        return;
+    }
+
+    storyInfo.additionalViewParams.state = StoryGUI::EnDisplayDataStates::enExistOk;
 }

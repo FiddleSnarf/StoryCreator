@@ -75,6 +75,11 @@ public:
      */
     bool closeStory();
 
+    /** \brief Получить статус данных отображения текущей истории.
+     *  \return Статус
+     */
+    StoryGUI::EnDisplayDataStates getDisplayDataState() const;
+
 signals:
     /** \brief Сигнал оповещает об изменении состояния истории (true - открыта, false - закрыта)
      */
@@ -149,6 +154,10 @@ private:
     /** \brief Коннектимся к сцене
      */
     void connectToScene();
+
+    /** \brief Проверка корректности данных отображения истории
+     */
+    void checkDisplayDataStory(StoryCommon::StoryInfo& storyInfo) const;
 
 private:
     StoryTypesNodeCollector& m_typesCollector;  /**< Ссылка на класс хранящий информацию о типах нодов(и экшенов). */

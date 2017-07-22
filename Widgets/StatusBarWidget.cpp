@@ -18,9 +18,10 @@ StatusBarWidget::~StatusBarWidget()
 
 void StatusBarWidget::initialization()
 {
-    m_ui->storyNameLineEdit->setValidator(new QRegExpValidator(QRegExp(QString::fromLocal8Bit("[A-Za-zА-Яа-я1-9]{1,50}")), this));
-    updateUI();
+    m_ui->storyNameLineEdit->setValidator(new QRegExpValidator(QRegExp(QString::fromLocal8Bit("[A-Za-zА-Яа-я1-9,.!?-]{1,100}")), this));
     resetData();
+    resetDisplayDataIndicator();
+    updateUI();
 }
 
 void StatusBarWidget::setStoryManager(StoryManager* storyManager)
@@ -32,6 +33,9 @@ void StatusBarWidget::setStoryManager(StoryManager* storyManager)
     connect(m_storyManager, &StoryManager::signalStoryNodeDeleted, this, &StatusBarWidget::slotNodeCountChanged);
 
     connect(m_ui->storyNameLineEdit, &QLineEdit::textChanged, this, &StatusBarWidget::slotStoryNameEdit);
+
+    connect(m_storyManager, &StoryManager::signalStoryStateChanged, this, &StatusBarWidget::slotUpdateDisplayDataFileIndicator);
+    connect(m_storyManager, &StoryManager::signalStorySaved, this, &StatusBarWidget::slotUpdateDisplayDataFileIndicator);
 }
 
 void StatusBarWidget::slotStoryNameEdit(const QString& storyName)
@@ -76,4 +80,35 @@ void StatusBarWidget::resetData()
 {
     m_ui->storyNameLineEdit->setText(QString());
     m_ui->lcdNodeCount->display("-----");
+}
+
+void StatusBarWidget::resetDisplayDataIndicator()
+{
+    m_ui->graphicFileIndicator->setPixmap(QIcon(":/graphic_file_state/Resources/null.png").pixmap(20, 20));
+    m_ui->graphicFileIndicator->setToolTip(tr("No history selected"));
+}
+
+void StatusBarWidget::slotUpdateDisplayDataFileIndicator()
+{
+    if (!m_storyManager)
+        return;
+
+    switch (m_storyManager->getDisplayDataState())
+    {
+        case StoryGUI::enExistOk:
+            m_ui->graphicFileIndicator->setPixmap(QIcon(":/graphic_file_state/Resources/ok_gr_file.png").pixmap(20, 20));
+            m_ui->graphicFileIndicator->setToolTip(tr("Story display data is correct"));
+            break;
+        case StoryGUI::enExistErr:
+            m_ui->graphicFileIndicator->setPixmap(QIcon(":/graphic_file_state/Resources/error_gr_file.png").pixmap(20, 20));
+            m_ui->graphicFileIndicator->setToolTip(tr("Story display data is incorrect"));
+            break;
+        case StoryGUI::enNoExist:
+            m_ui->graphicFileIndicator->setPixmap(QIcon(":/graphic_file_state/Resources/no_gr_file.png").pixmap(20, 20));
+            m_ui->graphicFileIndicator->setToolTip(tr("Story display data is missing"));
+            break;
+        case StoryGUI::enUnknown:
+            resetDisplayDataIndicator();
+            break;
+    }
 }
