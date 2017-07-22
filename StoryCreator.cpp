@@ -3,6 +3,8 @@
 #include "Widgets/StatusBarWidget.hpp"
 #include "ui_StoryCreator.h"
 #include <QGraphicsItem>
+#include <QMessageBox>
+#include <QFileDialog>
 
 
 const QString StoryCreator::NODE_COUNT_CAPT = QObject::tr("Node count: %1");
@@ -45,7 +47,6 @@ void StoryCreator::initialize()
 
     m_ui->nodeEditorTab->setEnabled(false);
     m_ui->itemsEditorTab->setEnabled(false);
-    m_actCloseStory->setEnabled(false);
     m_ui->nodeInfoWidget->setVisible(false);
     m_ui->storyNavigationWidget->setCore(m_core);
 }
@@ -93,10 +94,13 @@ void StoryCreator::initToolBar()
     m_actCloseStory = new QAction(QIcon(":/tool_bar_icons/Resources/close_story.png"), tr("Close story"));
     m_actCloseStory->setShortcut(QKeySequence::Close);
 
-    actions << m_actCreateNewStory << m_actLoadStory << m_saveMenu->menuAction() << m_actCloseStory;
+    m_actExportPng = new QAction(QIcon(":/tool_bar_icons/Resources/export_to_png.png"), tr("Export story to PNG"));
+
+    actions << m_actCreateNewStory << m_actLoadStory << m_saveMenu->menuAction() << m_actCloseStory << m_actExportPng;
     m_ui->mainToolBar->addActions(actions);
 
     m_actCloseStory->setEnabled(false);
+    m_actExportPng->setEnabled(false);
     m_saveMenu->setEnabled(false);
 
     m_ui->mainToolBar->addSeparator();
@@ -127,6 +131,7 @@ void StoryCreator::initConnects()
     connect(m_actSaveStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
     connect(m_actSaveAsStory, &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveAsStory);
     connect(m_saveMenu->menuAction(), &QAction::triggered, m_storyManager.data(), &StoryManager::slotSaveStory);
+    connect(m_actExportPng, &QAction::triggered, this, &StoryCreator::slotExportToPng);
 
     // Подписываем окно редактирования нодов на необходимые события
     connect(m_storyManager.data(), &StoryManager::signalStoryNodeDeleted, m_ui->nodeInfoWidget, &NodeInfoWidget::slotNodeDeleted);
@@ -152,6 +157,7 @@ void StoryCreator::slotStoryStateChanged(bool state)
     m_ui->nodeEditorTab->setEnabled(state);
     m_ui->itemsEditorTab->setEnabled(state);
     m_actCloseStory->setEnabled(state);
+    m_actExportPng->setEnabled(state);
     m_saveMenu->setEnabled(state);
 
     if (!state)
@@ -194,6 +200,32 @@ void StoryCreator::slotTabStoryCreatorChanged(int index)
         if(selectedNode)
             m_ui->nodeInfoWidget->setCurrentNodeItem(selectedNode);
     }
+}
+
+void StoryCreator::slotExportToPng()
+{
+    if (!m_storyManager)
+        return;
+
+    if (m_storyManager->getStoryNodeList().isEmpty())
+    {
+        QMessageBox::information(this, tr("Abort"), tr("Story does not contain nodes"));
+        return;
+    }
+
+    const QString storyName = m_storyManager->getCurrentStoryName();
+    const QString defaultPath = QApplication::applicationDirPath() + "//" + (storyName.isEmpty() ? tr("story") : storyName);
+    const QString fileName = QFileDialog::getSaveFileName(this, tr("Export to png"), defaultPath, "*.png");
+    if (fileName.isEmpty())
+        return;
+
+    StoryScenePtr scene = m_storyManager->getStoryScene();
+    QImage image(scene->width(), scene->height(), QImage::Format_ARGB32_Premultiplied);
+    image.fill(0);
+    QPainter painter(&image);
+    scene->render(&painter);
+    if (!image.save(fileName))
+        QMessageBox::warning(this, tr("Abort"), tr("Failed to save image"));
 }
 
 //=======================================================================================

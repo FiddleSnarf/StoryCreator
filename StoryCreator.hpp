@@ -67,6 +67,10 @@ private slots:
      */
     void slotTabStoryCreatorChanged(int index);
 
+    /** \brief Слот вызывается при нажатии кнопки "Экспорт в Png".
+     */
+    void slotExportToPng();
+
 
 private:
     QScopedPointer<Ui::StoryCreator> m_ui;
@@ -80,6 +84,7 @@ private:
     QPointer<QAction>   m_actCloseStory;
     QPointer<QAction>   m_actSaveStory;
     QPointer<QAction>   m_actSaveAsStory;
+    QPointer<QAction>   m_actExportPng;
 
     // Status bar
     QPointer<class StatusBarWidget> m_statusBar;

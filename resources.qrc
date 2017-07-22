@@ -7,7 +7,7 @@
         <file>Resources/new_story.png</file>
         <file>Resources/load_story.png</file>
         <file>Resources/save_story.png</file>
-        <file>Resources/save_jpeg_icon.png</file>
+        <file>Resources/export_to_png.png</file>
     </qresource>
     <qresource prefix="/other">
         <file>Resources/search.png</file>
