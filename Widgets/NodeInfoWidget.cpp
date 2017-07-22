@@ -63,7 +63,6 @@ void NodeInfoWidget::updateUI()
     if (!m_currentNodeItem)
     {
         // Очищаем данные на форме
-        m_ui->nodeIdLabel->setText("---");
         m_ui->nodeTitleLineEdit->clear();
         m_ui->nodeTextEdit->clear();
         m_ui->nodeTypeComboBox->setCurrentIndex(-1);
@@ -71,7 +70,6 @@ void NodeInfoWidget::updateUI()
     }else
     {
         const StoryNode& nodeInfo = m_currentNodeItem->getNodeInfo();
-        m_ui->nodeIdLabel->setText(QString::number(nodeInfo.getId())); // TODO выводить подпись, если это head node
         m_ui->nodeTitleLineEdit->setText(nodeInfo.getTitle());
         m_ui->nodeTextEdit->setText(nodeInfo.getText());
         for(int idx = 0; idx < m_ui->nodeTypeComboBox->count(); idx++)

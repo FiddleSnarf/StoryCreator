@@ -84,7 +84,7 @@ void StoryCreator::initToolBar()
     m_saveMenu->addAction(m_actSaveStory);
     m_saveMenu->addAction(m_actSaveAsStory);
     m_saveMenu->setIcon(QIcon(":/tool_bar_icons/Resources/save_story.png"));
-    m_saveMenu->setToolTip(tr("Save story"));
+    m_saveMenu->menuAction()->setToolTip(tr("Save story"));
 
     m_actCreateNewStory = new QAction(QIcon(":/tool_bar_icons/Resources/new_story.png"), tr("Create new story"));
     m_actCreateNewStory->setShortcut(QKeySequence::New);
