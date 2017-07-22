@@ -68,6 +68,7 @@ namespace StoryGUI
     const int DEFAULT_SCENE_WIDTH = 1200;
     const int DEFAULT_SCENE_HEIGHT = 1200;
 
+    const QColor SEARCH_HIGHTLIGHT_COLOR("#ABDBB0");
 }
 
 namespace StoryCommon
