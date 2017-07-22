@@ -40,6 +40,13 @@
    </item>
    <item>
     <widget class="QTableWidget" name="nodesNavigationTable">
+     <property name="styleSheet">
+      <string notr="true">QTableView::item:selected
+ {
+  	 	background: #6596ba;
+    	color: #024a7d;
+ }</string>
+     </property>
      <property name="frameShape">
       <enum>QFrame::StyledPanel</enum>
      </property>

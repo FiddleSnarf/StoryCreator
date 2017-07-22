@@ -37,6 +37,14 @@ void StoryNavigationWidget::initialization()
     QStringList labels;
     labels << tr("Node ID") << tr("Title");
     m_ui->nodesNavigationTable->setHorizontalHeaderLabels(labels);
+    QTableWidgetItem* idHeadItem = m_ui->nodesNavigationTable->horizontalHeaderItem(enIdColumn);
+    QTableWidgetItem* titleHeadItem = m_ui->nodesNavigationTable->horizontalHeaderItem(enTitleColumn);
+    QFont idFont(idHeadItem->font());
+    QFont titleFont(titleHeadItem->font());
+    idFont.setBold(true);
+    titleFont.setBold(true);
+    idHeadItem->setFont(idFont);
+    titleHeadItem->setFont(titleFont);
 
     m_ui->nodesNavigationTable->setColumnWidth(enIdColumn, 60);
 
