@@ -61,4 +61,6 @@ FORMS    += \
 RESOURCES += \
     resources.qrc
 
+TRANSLATIONS += Translations\story_creator_ru.ts
+
 win32:RC_FILE = icon.rc
