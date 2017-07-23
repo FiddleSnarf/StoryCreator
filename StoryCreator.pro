@@ -64,3 +64,17 @@ RESOURCES += \
 TRANSLATIONS += Translations\story_creator_ru.ts
 
 win32:RC_FILE = icon.rc
+
+
+CONFIG(release, debug|release): DESTDIR = $$OUT_PWD/release
+CONFIG(debug, debug|release): DESTDIR = $$OUT_PWD/debug
+
+copy_tr_files.path = $$DESTDIR/Translations
+copy_tr_files.files = Translations/*.qm
+
+copy_config_files.path = $$DESTDIR
+copy_config_files.files = Configuration
+
+INSTALLS += \
+    copy_tr_files \
+    copy_config_files

@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>563</width>
+    <width>569</width>
     <height>23</height>
    </rect>
   </property>
@@ -105,7 +105,7 @@
    <item>
     <widget class="QLabel" name="graphicFileLabel">
      <property name="text">
-      <string>Display data file:</string>
+      <string>Display data:</string>
      </property>
     </widget>
    </item>
